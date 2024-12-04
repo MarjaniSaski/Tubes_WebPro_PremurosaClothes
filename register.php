@@ -19,7 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Menyisipkan data ke tabel user dengan prepared statement untuk menghindari SQL Injection
     $sql = $conn->prepare("INSERT INTO `user` (first_name, last_name, gender, username, email, phone, password, role) 
-                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
     $sql->bind_param("ssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $password, $role);
 
     if ($sql->execute()) {
