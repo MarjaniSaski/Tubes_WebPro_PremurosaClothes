@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'buyer') {
-    header("Location: login.php"); // Redirect jika bukan admin
+    header("Location: login.php");
     exit;
 }
 define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes')
