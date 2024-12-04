@@ -1,12 +1,12 @@
 <?php
 session_start();
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
-    header("Location: login.php"); // Redirect jika bukan admin
-    exit;
+    header("Location: login.php");
+    exit; // Pastikan eksekusi dihentikan setelah header
 }
-define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes')
-
+define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,6 +33,7 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes')
             <div class="flex justify-center">
                 <img class="justify-content-center" src="<?= HOST ?>/foto/logoPremurosa.png" alt="Premurosa Homes Logo" width="150" height="auto">
             </div>
+
 
             <!-- Menu Items -->
             <div class="relative">
