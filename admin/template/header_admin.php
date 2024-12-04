@@ -104,7 +104,7 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes')
                 </a>
 
                 <!-- Logout Button with Link -->
-                <a href="\Tubes_WebPro_PremurosaClothes/login.php" class="relative group">
+                <a href="<?= HOST ?>/login.php" class="relative group">
                     <button 
                         class="bg-purple-600 w-10 h-10 flex items-center justify-center rounded-full shadow-md text-white 
                             hover:bg-purple-700 hover:scale-105 transition-transform duration-200">
