@@ -2,7 +2,7 @@
 include "template/header_admin.php"
 ?>
  <!-- Main Content -->
- <div class="w-3/4 p-8">
+ <div class="p-8">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-2xl font-bold">Swap</h2>
                 <div class="relative inline-block text-left">

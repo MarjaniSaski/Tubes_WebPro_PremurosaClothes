@@ -1,8 +1,12 @@
 <?php
 include "template/header_admin.php"
 ?>
+<<<<<<< HEAD
+  
+=======
   <!-- Main Content -->
   <div class="flex-1">
+>>>>>>> 5ad8fb6e78065e4241d5432584d05680bd00728d
             <!-- Statistics -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4">
                 <!-- Total Penjualan -->
