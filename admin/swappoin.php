@@ -20,13 +20,40 @@ if (isset($_POST['btnsubmit'])) {
     if (mysqli_affected_rows($conn) > 0) {
         header("location:swappoin.php"); //untuk mendirect data ke mana
     } else {
-        echo "Penambahan data mahasiswa gagal";
+        echo "Penambahan produk gagal";
     }
 }
 
 $sqlStatement = "SELECT * FROM produk";
 $query = mysqli_query($conn, $sqlStatement);
 $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
+?>
+
+<?php
+if (isset($_POST['btnvoucher'])) {
+    $voucher_code = $_POST['voucher_code'];
+    $voucher_name = $_POST['voucher_name'];
+    $discount = $_POST['discount'];
+    $points = $_POST['points'];
+    $usage_period = $_POST['usage_period'];
+    $max_period = $_POST['max_period'];
+    $usage_quota = $_POST['usage_quota'];
+    $max_amount = $_POST['max_amount'];
+
+    $sqlStatement = "INSERT INTO vouchers VALUES('$voucher_code	','$voucher_name','$discount','$discount','$usage_period','$max_period','$usage_quota', '$max_amount')";
+    // echo $sqlStatement;
+    $query = mysqli_query($conn, $sqlStatement);
+    if (mysqli_affected_rows($conn) > 0) {
+        header("location:swappoin.php"); //untuk mendirect data ke mana
+    } else {
+        echo "Penambahan voucher gagal";
+    }
+}
+
+$sqlStatement = "SELECT * FROM vouchers";
+$query = mysqli_query($conn, $sqlStatement);
+$datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -222,6 +249,7 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                     <h2 class="text-xl font-bold mb-4">Voucher List</h2>
                     <table class="min-w-full table-auto bg-white shadow-md rounded-lg">
                         <thead>
+
                             <tr class="bg-white-100 text-sm">
                                 <th class="px-6 py-3 text-left">Voucher Name</th>
                                 <th class="px-6 py-3 text-left">Voucher Code</th>
@@ -232,7 +260,30 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                             </tr>
                         </thead>
                         <tbody id="voucher-table-body">
-                            <!-- Data Voucher akan tampil di sini -->
+                        <?php
+                            foreach ($datavoucher as $key => $vouchers) {
+                            ?>
+                                <tr class="bg-white-200 text-sm">
+                                    <td class="px-6 py-3 text-left"><?= $vouchers['voucher_name'] ?></td>
+                                    <td class="px-6 py-3 text-left"><?= $vouchers['voucher_code'] ?></td>
+                                    <td class="px-6 py-3 text-left"><?= $vouchers['discount'] ?></td>
+                                    <td class="px-6 py-3 text-left"><?= $vouchers['points'] ?></td>
+                                    <td class="px-6 py-3 text-left"><?= $vouchers['usage_period'] ?></td>
+                                    <td>
+                                        <a href="editprodukswap.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>">
+                                            <button class="bg-blue-500 text-black text-sm px-2 py-1 rounded-lg shadow">
+                                                Edit
+                                            </button>
+                                        </a>
+                                        <a href="deleteprodukswap.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>"
+                                            onclick="return confirm('Yakin akan menghapus data?')">
+                                            <button class="bg-red-500 text-black py-1 px-2 rounded-lg shadow">Delete</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div>
@@ -289,40 +340,40 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium mb-1">Voucher Name</label>
-                        <input type="text" placeholder="Add voucher name" class="w-full border rounded px-3 py-2">
+                        <input type="text" name="voucher_name" placeholder="Add voucher name" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Voucher Code</label>
-                        <input type="text" placeholder="Add voucher code" class="w-full border rounded px-3 py-2">
+                        <input type="text" name="voucher_code" placeholder="Add voucher code" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Discount</label>
-                        <input type="text" placeholder="% DISC" class="w-full border rounded px-3 py-2">
+                        <input type="text" name="discount" placeholder="% DISC" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Poin</label>
-                        <input type="text" placeholder="Add poin" class="w-full border rounded px-3 py-2">
+                        <input type="text" name="points" placeholder="Add poin" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Usage Period</label>
-                        <input type="datetime-local" class="w-full border rounded px-3 py-2">
+                        <input type="datetime-local" name="usage_period" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Max Period</label>
-                        <input type="datetime-local" class="w-full border rounded px-3 py-2">
+                        <input type="datetime-local" name="max_period" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Usage Quota</label>
-                        <input type="text" placeholder="Add max quota" class="w-full border rounded px-3 py-2">
+                        <input type="text" name="usage_quota" placeholder="Add max quota" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Max Amount</label>
-                        <input type="text" placeholder="Add max amount for buyer" class="w-full border rounded px-3 py-2">
+                        <input type="text" name="max_amount" placeholder="Add max amount for buyer" class="w-full border rounded px-3 py-2">
                     </div>
                 </div>
                 <div class="flex justify-end mt-6 space-x-4">
                     <button type="button" onclick="hidePopupAddVoucher()" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
-                    <button type="submit" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Save</button>
+                    <button type="submit" name="btnvoucher" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Save</button>
                 </div>
             </form>
         </div>
