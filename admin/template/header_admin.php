@@ -79,6 +79,17 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes')
                 </ul>
             </div>
         </div>
+         <!-- Header -->
+         <div class="bg-white p-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold">Dashboard</h1>
+                <p class="text-gray-500 text-sm">Waktu update terakhir: GMT+7 12:00</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="bg-purple-200 p-2 rounded-full shadow-md">🔔</button>
+                <button class="bg-purple-200 p-2 rounded-full shadow-md">✈</button>
+            </div>
+        </div>
         <script>
             // JavaScript to toggle the dropdown visibility
             const button = document.querySelector('button');
