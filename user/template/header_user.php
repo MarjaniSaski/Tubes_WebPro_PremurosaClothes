@@ -4,7 +4,7 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'buyer') {
     header("Location: login.php"); // Redirect jika bukan admin
     exit;
 }
-define('HOST', 'http://localhost/TUBES/Tubes_WebPro_PremurosaClothes')
+define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes')
 ?>
 <!DOCTYPE html>
 <html lang="en">
