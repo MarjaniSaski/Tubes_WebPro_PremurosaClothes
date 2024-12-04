@@ -270,12 +270,12 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
                                     <td class="px-6 py-3 text-left"><?= $vouchers['points'] ?></td>
                                     <td class="px-6 py-3 text-left"><?= $vouchers['usage_period'] ?></td>
                                     <td>
-                                        <a href="editprodukswap.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>">
+                                        <a href="editvoucher.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>">
                                             <button class="bg-blue-500 text-black text-sm px-2 py-1 rounded-lg shadow">
                                                 Edit
                                             </button>
                                         </a>
-                                        <a href="deleteprodukswap.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>"
+                                        <a href="deletevoucher.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>"
                                             onclick="return confirm('Yakin akan menghapus data?')">
                                             <button class="bg-red-500 text-black py-1 px-2 rounded-lg shadow">Delete</button>
                                         </a>
