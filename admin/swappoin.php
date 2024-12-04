@@ -1,24 +1,23 @@
-
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/PREMUROSA2/config.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 //buat 
 if (isset($_POST['btnsubmit'])) {
     $id_produk = $_POST['id_produk'];
     $nama = $_POST['nama'];
     $poin = $_POST['poin'];
-    $foto =$_FILES['foto'];
-    if (!empty($foto['name'])){
-        $photoName = time(). '_'.$foto['name'];
-        move_uploaded_file($foto['tmp_name'],'../images/'.$photoName);
+    $foto = $_FILES['foto'];
+    if (!empty($foto['name'])) {
+        $photoName = time() . '_' . $foto['name'];
+        move_uploaded_file($foto['tmp_name'], '../images/' . $photoName);
     } else {
         $photoName = "";
     }
     $detail = $_POST['detail'];
-   
-    $sqlStatement = "INSERT INTO produk VALUES('$id_produk','$nama','$poin','$foto','$detail')";
+
+    $sqlStatement = "INSERT INTO produk VALUES('$id_produk','$nama','$poin','$photoName','$detail')";
     // echo $sqlStatement;
     $query = mysqli_query($conn, $sqlStatement);
-    if(mysqli_affected_rows($conn) > 0) {
+    if (mysqli_affected_rows($conn) > 0) {
         header("location:swappoin.php"); //untuk mendirect data ke mana
     } else {
         echo "Penambahan data mahasiswa gagal";
@@ -49,10 +48,10 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        
         /* Sidebar tetap di tempat */
         .sidebar {
-            width: 16rem; /* Tetapkan lebar sidebar */
+            width: 16rem;
+            /* Tetapkan lebar sidebar */
             position: fixed;
             top: 0;
             left: 0;
@@ -65,21 +64,26 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
         .header {
             position: fixed;
             top: 0;
-            left: 16rem; /* Menyesuaikan dengan sidebar */
+            left: 16rem;
+            /* Menyesuaikan dengan sidebar */
             right: 0;
             z-index: 1000;
-            padding: 1rem; /* Beri padding untuk estetika */
+            padding: 1rem;
+            /* Beri padding untuk estetika */
         }
 
         /* Konten utama dengan margin untuk menghindari tumpang tindih */
         .main-content {
-            margin-left: 16rem; /* Sama dengan lebar sidebar */
-            margin-top: 4rem; /* Untuk menghindari tumpang tindih dengan header */
+            margin-left: 16rem;
+            /* Sama dengan lebar sidebar */
+            margin-top: 4rem;
+            /* Untuk menghindari tumpang tindih dengan header */
         }
 
 
         .table-container {
-            margin-top: 0; /* Hapus margin atas */
+            margin-top: 0;
+            /* Hapus margin atas */
         }
 
         /* Styling pop-up */
@@ -127,31 +131,31 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                 <img src="/tubes/images/logopremurosa.png" alt="Premurosa Logo" class="w-30 h-30">
             </div>
             <div class="mt-6 space-y-4 text-sm">
-                <button 
+                <button
                     class="w-full py-3 px-4 text-left text-black rounded-lg hover:bg-pink-200 font-medium flex items-center pl-10"
                     onclick="window.location.href='home_admin.php'">
                     <i class="bi bi-grid-fill me-2" style="margin-right: 8px;"></i>
                     <span>DASHBOARD</span>
                 </button>
-                <button 
+                <button
                     class="w-full py-3 px-4 text-left text-black rounded-lg hover:bg-pink-200 font-medium flex items-center pl-10"
                     onclick="window.location.href='products.php'">
                     <i class="bi bi-box-seam" style="margin-right: 8px;"></i>
                     <span>PRODUCTS</span>
                 </button>
-                <button 
+                <button
                     class="w-full py-3 px-4 text-left text-black rounded-lg hover:bg-pink-200 font-medium flex items-center pl-10"
                     onclick="window.location.href='order_list.php'">
                     <i class="fa-solid fa-list-check" style="margin-right: 8px;"></i>
                     <span>ORDER LIST</span>
                 </button>
-                <button 
+                <button
                     class="w-full py-3 px-4 text-left text-black rounded-lg hover:bg-pink-200 font-medium flex items-center pl-10"
                     onclick="window.location.href='swap_poin.php'">
                     <i class="fa-solid fa-repeat" style="margin-right: 8px;"></i>
                     <span>SWAP</span>
                 </button>
-                <button 
+                <button
                     class="w-full py-3 px-4 text-left text-black rounded-lg hover:bg-pink-200 font-medium flex items-center pl-10"
                     onclick="window.location.href='message.php'">
                     <i class="fa-regular fa-envelope" style="margin-right: 8px;"></i>
@@ -166,19 +170,19 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
             <div class="bg-white p-4 flex justify-between items-center">
                 <div>
                     <h1 class="text-xl font-bold">
-                    <a href="swap.html" class="text-black-600 hover:text-black-800">Swap</a> > Poin
+                        <a href="swap.html" class="text-black-600 hover:text-black-800">Swap</a> > Poin
                     </h1>
                 </div>
 
                 <div class="flex items-center space-x-4">
                     <!-- Notification Button with Link -->
                     <a href="notifications.html" class="relative group">
-                        <button 
+                        <button
                             class="bg-purple-600 w-10 h-10 flex items-center justify-center rounded-full shadow-md text-white 
                                 hover:bg-purple-700 hover:scale-105 transition-transform duration-200">
                             <i class="fa-regular fa-bell"></i>
                         </button>
-                        <span 
+                        <span
                             class="absolute -buttom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs 
                                 px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                             Notification
@@ -187,15 +191,15 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
                     <!-- Logout Button with Link -->
                     <a href="/tubes/logout.php" class="relative group">
-                        <button 
+                        <button
                             class="bg-purple-600 w-10 h-10 flex items-center justify-center rounded-full shadow-md text-white 
                                 hover:bg-purple-700 hover:scale-105 transition-transform duration-200">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i>
                         </button>
-                        <span 
+                        <span
                             class="absolute -buttom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs 
                                 px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                Logout
+                            Logout
                         </span>
                     </a>
                 </div>
@@ -227,7 +231,7 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                                 <th class="px-6 py-3 text-left">Actions</th>
                             </tr>
                         </thead>
-                            <tbody id="voucher-table-body">
+                        <tbody id="voucher-table-body">
                             <!-- Data Voucher akan tampil di sini -->
                         </tbody>
                     </table>
@@ -247,29 +251,29 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                             </tr>
                         </thead>
                         <tbody id="product-table-body">
-                        <?php
-                        foreach ($data as $key => $produk ){
-                        ?>
-                            <tr class="bg-white-200 text-sm">
-                                <td class="px-6 py-3 text-left"><?= $produk ['nama']?></td>
-                                <td class="px-6 py-3 text-left"><?= $produk ['id_produk']?></td>
-                                <td class="px-6 py-3 text-left"><?= $produk ['poin']?></td>
-                                <td class="px-6 py-3 text-left"><?= $produk ['detail']?></td>
-                                <td>
-                                    <a href="editprodukswap.php?id_produk=<?= urlencode($produk['id_produk']) ?>">
-                                    <button class="bg-blue-500 text-black text-sm px-2 py-1 rounded-lg shadow">
-                                        Edit
-                                    </button>
-                                    </a>
-                                    <a href="deleteprodukswap.php?id_produk=<?= urlencode($produk['id_produk']) ?>" 
-                                    onclick="return confirm('Yakin akan menghapus data?')">
-                                        <button class="bg-red-500 text-black py-1 px-2 rounded-lg shadow">Delete</button>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php
-                        }
-                        ?>
+                            <?php
+                            foreach ($data as $key => $produk) {
+                            ?>
+                                <tr class="bg-white-200 text-sm">
+                                    <td class="px-6 py-3 text-left"><?= $produk['nama'] ?></td>
+                                    <td class="px-6 py-3 text-left"><?= $produk['id_produk'] ?></td>
+                                    <td class="px-6 py-3 text-left"><?= $produk['poin'] ?></td>
+                                    <td class="px-6 py-3 text-left"><?= $produk['detail'] ?></td>
+                                    <td>
+                                        <a href="editprodukswap.php?id_produk=<?= urlencode($produk['id_produk']) ?>">
+                                            <button class="bg-blue-500 text-black text-sm px-2 py-1 rounded-lg shadow">
+                                                Edit
+                                            </button>
+                                        </a>
+                                        <a href="deleteprodukswap.php?id_produk=<?= urlencode($produk['id_produk']) ?>"
+                                            onclick="return confirm('Yakin akan menghapus data?')">
+                                            <button class="bg-red-500 text-black py-1 px-2 rounded-lg shadow">Delete</button>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php
+                            }
+                            ?>
                         </tbody>
                     </table>
                 </div>
@@ -340,14 +344,15 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Poin</label>
-                        <input type="text" name="poin"placeholder="Add poin" class="w-full border rounded px-3 py-2">
+                        <input type="text" name="poin" placeholder="Add poin" class="w-full border rounded px-3 py-2">
                     </div>
                     <div class="col-span-2">
                         <label class="block text-sm font-medium mb-1">Image</label>
                         <!-- Input file for image upload -->
                         <input type="file" accept="image/*" class="w-full border rounded px-3 py-2" id="product-image" name="foto">
                         <p class="text-sm text-gray-500 mt-2">Select an image from your device</p>
-                        
+
+
                     </div>
                     <div class="col-span-2">
                         <label class="block text-sm font-medium mb-1">Details</label>
@@ -385,4 +390,5 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
     </script>
 
 </body>
+
 </html>

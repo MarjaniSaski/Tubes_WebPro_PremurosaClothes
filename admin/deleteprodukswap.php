@@ -1,7 +1,7 @@
 // TODO gambar belum kehapus 
 
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . '/PREMUROSA2/config.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 $id_produk = $_GET["id_produk"];
 
