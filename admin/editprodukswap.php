@@ -13,18 +13,14 @@ if (isset($_POST['btnEdit'])) {
     $poin = $_POST['poin'];
     $detail = $_POST['detail'];
     $foto = $_FILES['foto'];
+
     // Proses foto jika ada yang di-upload
     if (!empty($foto['name'])) {
-        $photoName = time() . '_' . $foto['name']; // Membuat nama file unik
-        // Pindahkan file foto ke folder 'images'
+        $photoName = time() . '_' . $foto['name'];
         move_uploaded_file($foto['tmp_name'], '../images/' . $photoName);
 
-        // Hapus foto lama jika ada
-        if (file_exists("../images/" . $row['foto'])) {
-            unlink("../images/" . $row['foto']);
-        }
+        unlink("../images/" . $row['foto']);
     } else {
-        // Jika tidak ada foto baru, gunakan foto lama
         $photoName = $row['foto'];
     }
 
