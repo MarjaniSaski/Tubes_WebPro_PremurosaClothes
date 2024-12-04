@@ -15,7 +15,13 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes')
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premurosa Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Add Bootstrap Icons CSS -->
+    <!-- Rubik font -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
@@ -43,30 +49,30 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes')
                     <li class="mb-5">
                         <a href="dashboard.php" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200 transition">
                             <i class="bi bi-grid-fill me-2"></i>
-                            <span class="fw-semibold">DASHBOARD</span>
+                            <span>DASHBOARD</span>
                         </a>
                     </li>
                     <li class="mb-4">
                         <a href="producthome.php" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200 transition">
-                            <i class="bi bi-box-seam me-2"></i>
+                            <i class="bi bi-box-seam"></i>
                             <span>PRODUCTS</span>
                         </a>
                     </li>
                     <li class="mb-4">
                         <a href="orderlist.php" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200 transition">
-                            <i class="bi bi-card-list me-2"></i>
+                            <i class="fa-solid fa-list-check"></i>
                             <span>ORDER LIST</span>
                         </a>
                     </li>
                     <li class="mb-4">
                         <a href="adminswap.php" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200 transition">
-                            <i class="bi bi-arrow-left-right me-2"></i>
+                            <i class="fa-solid fa-repeat"></i>
                             <span>SWAP</span>
                         </a>
                     </li>
                     <li class="mb-4">
                         <a href="#" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200 transition">
-                            <i class="bi bi-chat-dots me-2"></i>
+                            <i class="fa-regular fa-envelope"></i>
                             <span>MESSAGE</span>
                         </a>
                     </li>
