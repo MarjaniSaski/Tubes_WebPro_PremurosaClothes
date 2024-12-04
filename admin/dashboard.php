@@ -1,20 +1,7 @@
 <?php
 include "template/header_admin.php"
 ?>
-  <!-- Main Content -->
-  <div class="flex-1">
-                    <!-- Header -->
-                    <div class="bg-white p-4 flex justify-between items-center">
-                        <div>
-                            <h1 class="text-xl font-bold">Dashboard</h1>
-                            <p class="text-gray-500 text-sm">Waktu update terakhir: GMT+7 12:00</p>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <button class="bg-purple-200 p-2 rounded-full shadow-md">🔔</button>
-                            <button class="bg-purple-200 p-2 rounded-full shadow-md">✈</button>
-                        </div>
-                    </div>
-
+  
             <!-- Statistics -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4">
                 <!-- Total Penjualan -->
