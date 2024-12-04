@@ -40,7 +40,6 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes')
                 <div class="d-flex align-items-center gap-3">
                     <a href="profile.php" class="text-dark text-decoration-none d-flex align-items-center gap-1">
                         <span class="fw-bold text-sm">Hi, <?php echo $_SESSION['username']; ?></span>
-                        <a href="<?= HOST ?>/login.php" class="text-dark text-decoration-none fw-bold text-sm">Logout</a>
                     </a>
                     <a href="#" class="text-dark text-lg"><i class="bi bi-heart"></i></a>
                     <a href="#" class="text-dark text-lg"><i class="bi bi-search"></i></a>
