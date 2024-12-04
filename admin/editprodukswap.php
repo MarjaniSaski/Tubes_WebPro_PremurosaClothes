@@ -96,11 +96,7 @@ ob_end_flush();
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="productName">Product Name</label>
                 <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-<<<<<<< HEAD
-                    id="productName" type="text" name="nama" placeholder="Edit product name" value="<?= $row['nama'] ?>">
-=======
                     id="productName" type="text" name="nama" placeholder="Edit product name"  value="<?= $row['nama'] ?>">
->>>>>>> df4228b087f93d3a442ceeea956cbb9aa6a9edd9
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="productCode">Product Code</label>
