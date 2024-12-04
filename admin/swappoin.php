@@ -1,4 +1,5 @@
 <?php
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/template/header_admin.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 //buat 
 if (isset($_POST['btnsubmit'])) {
@@ -56,49 +57,8 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premurosa Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Add Rubik font -->
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <!-- Menambahkan Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
-    <!-- Add Bootstrap Icons CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
     <style>
-        /* Sidebar tetap di tempat */
-        .sidebar {
-            width: 16rem;
-            /* Tetapkan lebar sidebar */
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            z-index: 1000;
-        }
-
-
-        /* Header tetap di tempat */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 16rem;
-            /* Menyesuaikan dengan sidebar */
-            right: 0;
-            z-index: 1000;
-            padding: 1rem;
-            /* Beri padding untuk estetika */
-        }
-
+       
         /* Konten utama dengan margin untuk menghindari tumpang tindih */
         .main-content {
             margin-left: 16rem;
@@ -144,94 +104,6 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
     </style>
-
-</head>
-
-
-<body class="bg-gray-100 font-rubik">
-
-    <!-- Wrapper -->
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <div class="w-64 bg-white text-black flex flex-col sidebar p-6">
-            <div class="flex items-center">
-                <img src="/tubes/images/logopremurosa.png" alt="Premurosa Logo" class="w-30 h-30">
-            </div>
-            <div class="mt-6 space-y-4 text-sm">
-                <button
-                    class="w-full py-3 px-4 text-left text-black rounded-lg hover:bg-pink-200 font-medium flex items-center pl-10"
-                    onclick="window.location.href='home_admin.php'">
-                    <i class="bi bi-grid-fill me-2" style="margin-right: 8px;"></i>
-                    <span>DASHBOARD</span>
-                </button>
-                <button
-                    class="w-full py-3 px-4 text-left text-black rounded-lg hover:bg-pink-200 font-medium flex items-center pl-10"
-                    onclick="window.location.href='products.php'">
-                    <i class="bi bi-box-seam" style="margin-right: 8px;"></i>
-                    <span>PRODUCTS</span>
-                </button>
-                <button
-                    class="w-full py-3 px-4 text-left text-black rounded-lg hover:bg-pink-200 font-medium flex items-center pl-10"
-                    onclick="window.location.href='order_list.php'">
-                    <i class="fa-solid fa-list-check" style="margin-right: 8px;"></i>
-                    <span>ORDER LIST</span>
-                </button>
-                <button
-                    class="w-full py-3 px-4 text-left text-black rounded-lg hover:bg-pink-200 font-medium flex items-center pl-10"
-                    onclick="window.location.href='swap_poin.php'">
-                    <i class="fa-solid fa-repeat" style="margin-right: 8px;"></i>
-                    <span>SWAP</span>
-                </button>
-                <button
-                    class="w-full py-3 px-4 text-left text-black rounded-lg hover:bg-pink-200 font-medium flex items-center pl-10"
-                    onclick="window.location.href='message.php'">
-                    <i class="fa-regular fa-envelope" style="margin-right: 8px;"></i>
-                    <span>MESSAGE</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="flex-1 ml-64">
-            <!-- Header -->
-            <div class="bg-white p-4 flex justify-between items-center">
-                <div>
-                    <h1 class="text-xl font-bold">
-                        <a href="swap.html" class="text-black-600 hover:text-black-800">Swap</a> > Poin
-                    </h1>
-                </div>
-
-                <div class="flex items-center space-x-4">
-                    <!-- Notification Button with Link -->
-                    <a href="notifications.html" class="relative group">
-                        <button
-                            class="bg-purple-600 w-10 h-10 flex items-center justify-center rounded-full shadow-md text-white 
-                                hover:bg-purple-700 hover:scale-105 transition-transform duration-200">
-                            <i class="fa-regular fa-bell"></i>
-                        </button>
-                        <span
-                            class="absolute -buttom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs 
-                                px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                            Notification
-                        </span>
-                    </a>
-
-                    <!-- Logout Button with Link -->
-                    <a href="/tubes/logout.php" class="relative group">
-                        <button
-                            class="bg-purple-600 w-10 h-10 flex items-center justify-center rounded-full shadow-md text-white 
-                                hover:bg-purple-700 hover:scale-105 transition-transform duration-200">
-                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                        </button>
-                        <span
-                            class="absolute -buttom-10 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs 
-                                px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                            Logout
-                        </span>
-                    </a>
-                </div>
-            </div>
-
             <!-- Content -->
             <div class="p-6">
                 <!-- Buttons -->
@@ -287,6 +159,7 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
                         </tbody>
                     </table>
                 </div>
+                <br>
 
                 <!-- Tabel Produk -->
                 <div class="mt-4 table-container">
