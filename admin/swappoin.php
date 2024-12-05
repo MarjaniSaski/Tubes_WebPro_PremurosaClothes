@@ -1,4 +1,5 @@
 <?php
+ob_start();
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/template/header_admin.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 //buat 
@@ -55,6 +56,7 @@ $sqlStatement = "SELECT * FROM vouchers";
 $query = mysqli_query($conn, $sqlStatement);
 $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
+ob_end_flush();
 ?>
 
     <style>
@@ -184,11 +186,10 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
                                     <td class="px-6 py-3 text-left"><?= $produk['poin'] ?></td>
                                     <td class="px-6 py-3 text-left"><?= $produk['detail'] ?></td>
                                     <td>
-                                        <a href="editprodukswap.php?id_produk=<?= urlencode($produk['id_produk']) ?>">
-                                            <button class="bg-blue-500 text-black text-sm px-2 py-1 rounded-lg shadow">
-                                                Edit
-                                            </button>
+                                        <a href="editproduk.php?id_produk=<?= urlencode($produk['id_produk']) ?>">
+                                            <button class="bg-blue-500 text-black text-sm px-2 py-1 rounded-lg shadow">Edit</button>
                                         </a>
+
                                         <a href="deleteprodukswap.php?id_produk=<?= urlencode($produk['id_produk']) ?>"
                                             onclick="return confirm('Yakin akan menghapus data?')">
                                             <button class="bg-red-500 text-black py-1 px-2 rounded-lg shadow">Delete</button>
