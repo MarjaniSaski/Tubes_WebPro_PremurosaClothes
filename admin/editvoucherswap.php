@@ -1,6 +1,10 @@
 <?php
 ob_start();
+<<<<<<< HEAD
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/template/header_admin.php';
+=======
 include "template/header_admin.php";
+>>>>>>> 444e618c126e4a6a409c19d50e1b44a51871c0e2
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 // Check if a voucher_code is provided
@@ -46,6 +50,10 @@ if (isset($_POST['btnupdatevoucher'])) {
         echo "Failed to update voucher: " . mysqli_error($conn);
     }
 }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 444e618c126e4a6a409c19d50e1b44a51871c0e2
 ob_end_flush();
 ?>
 
