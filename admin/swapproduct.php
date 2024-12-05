@@ -104,10 +104,10 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                         </select>
                     </div>
                     <!-- ID order disembunyikan -->
-                    <input type="hidden" name="id_order" id="orderId">
-                    <input type="hidden" name="id" id="user_id">
+                    <input type="hidden" name="idz" id="orderId">
+                    <input type="hidden" name="user_id" id="userId">
                     <div class="mt-4 flex justify-between">
-                        <button type="submit" name="submit" class="bg-blue-500 text-white py-2 px-4 rounded">UPDATE</button>
+                        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">UPDATE</button>
                         <button type="button" onclick="closeDetails()" class="bg-red-500 text-white py-2 px-4 rounded">CANCEL</button>
                     </div>
                 </form>

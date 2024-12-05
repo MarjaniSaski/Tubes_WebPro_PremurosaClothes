@@ -1,14 +1,14 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
-if (isset($_POST['submit'])) {
-    $id_order = $_POST['id_order'];       // ID order yang akan diupdate
+$id_order = $_GET['id_order'];
+$id= $_GET['id'];
+if (isset($_POST['submit'])) {      
     $status = $_POST['status']; // Status baru
     $poin = $_POST['poin'];   // Poin baru
-    $id = $_POST['id']; // ID user yang terkait dengan order
 
     // Validasi input
-    if (!empty($id_order) && !empty($status) && !empty($poin) && !empty($id)) {
+    if (!empty($status) && !empty($poin) ) {
         // Mulai transaksi agar kedua query berjalan dengan aman
         mysqli_begin_transaction($conn);
 
@@ -31,7 +31,7 @@ if (isset($_POST['submit'])) {
             mysqli_commit($conn);
 
             echo "<script>alert('Update berhasil!'); window.location.href = 'swapproduct.php';</script>";
-            
+
         } catch (Exception $e) {
             // Rollback transaksi jika ada yang gagal
             mysqli_rollback($conn);
