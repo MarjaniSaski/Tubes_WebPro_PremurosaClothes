@@ -1,10 +1,9 @@
-// TODO gambar belum kehapus 
 
 <?php
+ob_start();
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 $voucher_code = $_GET["voucher_code"];
-
 
 // cari data produk
 
@@ -25,4 +24,5 @@ $row = mysqli_fetch_assoc($query);
     }
 
 mysqli_close($conn);
+ob_end_flush();
 ?>

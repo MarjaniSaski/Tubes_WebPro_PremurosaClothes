@@ -3,7 +3,7 @@
 ob_start();
 
 // Include file header dan config
-include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
+include "template/header_user.php";
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 //mendapatkan id user dari url 

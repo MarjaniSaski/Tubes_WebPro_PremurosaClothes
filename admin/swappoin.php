@@ -149,7 +149,7 @@ ob_end_flush();
                                                 Edit
                                             </button>
                                         </a>
-                                        <a href="deleteprodukswap.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>"
+                                        <a href="deletevoucher.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>"
                                             onclick="return confirm('Yakin akan menghapus data?')">
                                             <button class="bg-red-500 text-black py-1 px-2 rounded-lg shadow">Delete</button>
                                         </a>
