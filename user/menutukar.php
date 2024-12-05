@@ -1,7 +1,8 @@
 <?php
 include "template/header_user.php";
 include $_SERVER['DOCUMENT_ROOT'] . '/PREMUROSA2/config.php';
-$sqlStatement = "SELECT * FROM user";
+
+$sqlStatement = "SELECT * FROM produk";
 $query = mysqli_query($conn, $sqlStatement);
 $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 ?>
@@ -87,115 +88,21 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
       </h2>
       <div class="row g-4">
           <!-- Additional Product Cards (more products) -->
+        <?php
+            foreach ($data as $key => $produk) {
+        ?>
           <div class="col-6 col-md-3">
               <a href="katalog.php?img=8.png">
                   <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/8.png" alt="Product 1" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">760</h3>
+                      <img src="../images/<?= $produk["foto"] ?>" alt="Product 1" class="w-full rounded-lg mb-3">
+                      <h3 class="text-2xl font-bold"><?= $produk['poin'] ?></h3>
                       <p class="text-sm">Poin</p>
                   </div>
               </a>
           </div>
-          <div class="col-6 col-md-3">
-              <a href="katalog.php?img=9.png">
-                  <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/9.png" alt="Product 2" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">450</h3>
-                      <p class="text-sm">Poin</p>
-                  </div>
-              </a>
-          </div>
-          <div class="col-6 col-md-3">
-              <a href="katalog.php?img=10.png">
-                  <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/10.png" alt="Product 3" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">550</h3>
-                      <p class="text-sm">Poin</p>
-                  </div>
-              </a>
-          </div>
-          <div class="col-6 col-md-3">
-              <a href="katalog.php?img=11.png">
-                  <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/11.png" alt="Product 4" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">420</h3>
-                      <p class="text-sm">Poin</p>
-                  </div>
-              </a>
-          </div>
-          <div class="col-6 col-md-3">
-              <a href="katalog.php?img=12.png">
-                  <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/12.png" alt="Product 5" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">450</h3>
-                      <p class="text-sm">Poin</p>
-                  </div>
-              </a>
-          </div>
-          <div class="col-6 col-md-3">
-              <a href="katalog.php?img=14.png">
-                  <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/14.png" alt="Product 6" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">300</h3>
-                      <p class="text-sm">Poin</p>
-                  </div>
-              </a>
-          </div>
-          <div class="col-6 col-md-3">
-              <a href="katalog.php?img=15.png">
-                  <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/15.png" alt="Product 7" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">250</h3>
-                      <p class="text-sm">Poin</p>
-                  </div>
-              </a>
-          </div>
-          <div class="col-6 col-md-3">
-              <a href="katalog.php?img=16.png">
-                  <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/16.png" alt="Product 8" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">450</h3>
-                      <p class="text-sm">Poin</p>
-                  </div>
-              </a>
-          </div>
-          <div class="col-6 col-md-3">
-              <a href="katalog.php?img=18.png">
-                  <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/18.png" alt="Product 9" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">350</h3>
-                      <p class="text-sm">Poin</p>
-                  </div>
-              </a>
-          </div>
-          <div class="col-6 col-md-3">
-              <a href="katalog.php?img=22.png">
-                  <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/22.png" alt="Product 10" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">400</h3>
-                      <p class="text-sm">Poin</p>
-                  </div>
-              </a>
-          </div>
-          <div class="col-6 col-md-3">
-              <a href="katalog.php?img=6.png">
-                  <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/6.png" alt="Product 11" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">300</h3>
-                      <p class="text-sm">Poin</p>
-                  </div>
-              </a>
-          </div>
-          <div class="col-6 col-md-3">
-              <a href="katalog.php?img=7.png">
-                  <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1">
-                      <img src="fotouser/7.png" alt="Product 12" class="w-full rounded-lg mb-3">
-                      <h3 class="text-2xl font-bold">350</h3>
-                      <p class="text-sm">Poin</p>
-                  </div>
-              </a>
-          </div>
-      </div>
+        <?php
+            }
+        ?>
   </section>
 </main>
 </body>

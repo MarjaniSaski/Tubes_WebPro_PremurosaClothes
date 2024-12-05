@@ -1,5 +1,5 @@
 <?php
-include "template/header_admin.php";
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/template/header_admin.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 $sqlStatement = "SELECT * FROM orders";
