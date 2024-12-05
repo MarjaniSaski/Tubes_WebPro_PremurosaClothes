@@ -162,5 +162,5 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
     function closeDetails() {
         document.getElementById('detailsModal').classList.add('hidden');
-    }
+    }
 </script>

@@ -75,6 +75,10 @@ if (isset($_POST['btntukar'])) {
         echo "Gagal menyiapkan statement: " . $conn->error;
     }
 }
+<<<<<<< HEAD
+=======
+}
+>>>>>>> 76228d63c846fb7a662e333b5b4c00f4e733e035
 ?>
 
 <style>
@@ -209,6 +213,7 @@ if (isset($_POST['btntukar'])) {
         </div>
     </div>
 </body>
+<<<<<<< HEAD
 
 <script>
     // Preview image when file is selected
@@ -232,3 +237,6 @@ if (isset($_POST['btntukar'])) {
 </script>
 
 </html>
+=======
+</html>
+>>>>>>> 76228d63c846fb7a662e333b5b4c00f4e733e035
