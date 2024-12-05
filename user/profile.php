@@ -1,42 +1,24 @@
 <?php
+// Memulai output buffering untuk menghindari pengiriman output sebelum header
 ob_start();
 
-<<<<<<< HEAD
-include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
-=======
 // Include file header dan config
 include "template/header_user.php";
->>>>>>> 444e618c126e4a6a409c19d50e1b44a51871c0e2
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
-// Validasi ID yang ada di URL
-if (!isset($_GET['id']) || empty($_GET['id']) || !is_numeric($_GET['id'])) {
-    echo "ID tidak valid atau tidak ditemukan!";  // Debugging message
-    exit;
-} else {
-    echo "ID Ditemukan: " . $_GET['id'];  // Menampilkan ID yang ditemukan
+//mendapatkan id user dari url 
+$id = $_GET['id'];
+$sqlStatement = "SELECT * FROM user WHERE id='$id'";
+$query = mysqli_query($conn, $sqlStatement);
+
+// Cek apakah query berhasil
+if (!$query) {
+    die("Query gagal: " . mysqli_error($conn));
 }
+// Ambil data user 
+$row = mysqli_fetch_assoc($query);
 
-$id = $_GET['id']; 
-
-// Query untuk mengambil data user berdasarkan ID
-$sqlStatement = "SELECT * FROM user WHERE id = ?";
-$stmt = $conn->prepare($sqlStatement);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-// Pastikan data ditemukan
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-} else {
-    echo "Profil tidak ditemukan!";
-    exit;
-}
-
-$stmt->close();
-
-// Proses Edit Profil
+// Proses edit profile user 
 if (isset($_POST['btnEditProfile'])) {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
@@ -52,50 +34,48 @@ if (isset($_POST['btnEditProfile'])) {
         $photoName = time() . '_' . $foto['name'];
         move_uploaded_file($foto['tmp_name'], '../images/' . $photoName);
 
-        // Hapus foto lama jika ada
-        if ($row['foto'] && file_exists("../images/" . $row['foto'])) {
-            unlink("../images/" . $row['foto']);
-        }
+        // Hapus foto lama
+        unlink("../images/" . $row['foto']);
     } else {
-        $photoName = $row['foto']; // Gunakan foto lama jika tidak ada foto baru
+        $photoName = $row['foto'];
     }
-
     // Query untuk update data user
     $sqlStatement = "UPDATE user SET 
-                        first_name = ?, 
-                        last_name = ?, 
-                        foto = ?, 
-                        username = ?, 
-                        gender = ?, 
-                        email = ?, 
-                        tgl_lahir = ?, 
-                        phone = ? 
-                    WHERE id = ?";
-    $stmt = $conn->prepare($sqlStatement);
-    $stmt->bind_param("ssssssssi", $first_name, $last_name, $photoName, $username, $gender, $email, $tgl_lahir, $phone, $id);
-    $query = $stmt->execute();
-
+                        first_name='$firstname', 
+                        last_name='$last_name', 
+                        foto='$photoName', 
+                        username='$username',
+                        gender='$gender', 
+                        email='$email', 
+                        tgl_lahir='$tgl_lahir',
+                        phone='$phone'
+                    WHERE id='$id'";
+    // Eksekusi query
+    $query = mysqli_query($conn, $sqlStatement);
+    // Cek hasil query
     if ($query) {
         $successMsg = urlencode("Pengubahan data Profile User berhasil!");
-        header("Location: profile.php?id=$id&successMsg=$successMsg");
-        exit;
+        header("Location: profile.php?successMsg=$successMsg");
+        exit; // Hentikan eksekusi setelah redirect
     } else {
         $errMsg = "Pengubahan data Profile User gagal: " . mysqli_error($conn);
         echo $errMsg;
     }
-
-    $stmt->close();
 }
 
+// Menutup output buffering dan mengirimkan output
 ob_end_flush();
 ?>
 
+<!-- Profile Section -->
 <div class="container mt-5 p-4 bg-white rounded-lg shadow-md max-w-md mx-auto">
     <h2 class="text-center mb-4 font-bold text-xl">My Profile</h2>
     <div class="text-center mb-4">
         <div class="relative w-32 h-32 mx-auto">
+            <!-- Foto Profil yang ada sekarang -->
             <img id="profilePicture" class="rounded-full w-full h-full object-cover border-4 border-pink-200" src="<?php echo '../images/' . $row['foto']; ?>" alt="Profile Picture" />
             <p id="noPhotoText" class="text-muted italic <?php echo ($row['foto']) ? 'hidden' : ''; ?>">Foto profil belum ditambahkan</p>
+            <!-- Input untuk upload foto -->
             <input id="profilePictureInput" type="file" accept="image/*" name="foto" class="absolute bottom-0 right-0 opacity-0 cursor-pointer w-8 h-8 hidden">
         </div>
     </div>
@@ -147,6 +127,7 @@ ob_end_flush();
         const noPhotoText = document.getElementById('noPhotoText');
         const editButton = document.getElementById('btnEditProfile');
 
+        // Enable or disable form fields
         function toggleInputs(disabled) {
             document.querySelectorAll('#profileForm input, #profileForm select').forEach(input => {
                 input.disabled = disabled;
@@ -154,23 +135,28 @@ ob_end_flush();
             profilePictureInput.classList.toggle('hidden', disabled);
         }
 
+        // Edit button functionality
         editButton.addEventListener('click', function() {
             const isEditing = editButton.textContent === 'Save';
             if (isEditing) {
+                // Disable inputs after saving
                 toggleInputs(true);
                 editButton.textContent = 'Edit';
             } else {
+                // Enable inputs for editing
                 toggleInputs(false);
                 editButton.textContent = 'Save';
             }
         });
 
+        // Allow profile picture edit
         profilePicture.addEventListener('click', () => {
             if (!profilePictureInput.classList.contains('hidden')) {
                 profilePictureInput.click();
             }
         });
 
+        // Handle file selection for profile picture
         profilePictureInput.addEventListener('change', function() {
             const file = profilePictureInput.files[0];
             if (file) {
@@ -185,6 +171,5 @@ ob_end_flush();
         });
     });
 </script>
-
 </body>
-</html>
+<?

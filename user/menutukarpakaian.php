@@ -66,7 +66,7 @@ if ($stmt) {
 } else {
     echo "Gagal menyiapkan statement: " . $conn->error;
 }
-
+}
 ?>
 
 <style>
