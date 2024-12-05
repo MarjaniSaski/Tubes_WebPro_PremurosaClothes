@@ -1,6 +1,7 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
+
 // Lakukan proses penukaran
 if (isset($_POST['btntukar'])) {
     $foto = $_FILES['foto'];
@@ -13,6 +14,12 @@ if (isset($_POST['btntukar'])) {
     $tanggal_penjemputan = $_POST['tanggal_penjemputan'];
     $berat_kg = $_POST['berat_kg'];
 
+    // Validasi jika jenis_barang kosong
+    if (empty($jenis_barang)) {
+        echo "Jenis barang harus dipilih!";
+        exit;
+    }
+    
     // Upload foto if provided
     if (!empty($foto['name'])) {
         $photoName = time() . '_' . basename($foto['name']);
@@ -24,49 +31,50 @@ if (isset($_POST['btntukar'])) {
     } else {
         $photoName = "";
     }
-// Insert order data
-$sqlStatement = "INSERT INTO orders (foto, jenis_barang, jenis_bahan, details, nama_lengkap, alamat_lengkap, alamat, tanggal_penjemputan, berat_kg) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($sqlStatement);
-if ($stmt) {
-    $stmt->bind_param("ssssssssi", $photoName, $jenis_barang, $jenis_bahan, $details, $nama_lengkap, $alamat_lengkap, $alamat, $tanggal_penjemputan, $berat_kg);
-    if ($stmt->execute()) {
-        // Update poin setelah penukaran
-        $sqlUpdatePoin = "UPDATE user SET poin = poin - 10 WHERE id = ?";
-        $stmtUpdate = $conn->prepare($sqlUpdatePoin);
-        if ($stmtUpdate) {
-            $stmtUpdate->bind_param("i", $id);
-            if ($stmtUpdate->execute()) {
-                // Update jumlah penukaran
-                $sqlUpdatePenukaran = "UPDATE user SET jumlah_penukaran = jumlah_penukaran + 1 WHERE id = ?";
-                $stmtUpdatePenukaran = $conn->prepare($sqlUpdatePenukaran);
-                if ($stmtUpdatePenukaran) {
-                    $stmtUpdatePenukaran->bind_param("i", $id);
-                    if ($stmtUpdatePenukaran->execute()) {
-                        echo "Poin berhasil diperbarui dan jumlah penukaran terupdate!";
-                        header("Location: menuswap.php"); // Redirect setelah berhasil
-                        exit;
+
+    // Insert order data
+    $sqlStatement = "INSERT INTO orders (foto, jenis_barang, jenis_bahan, details, nama_lengkap, alamat_lengkap, alamat, tanggal_penjemputan, berat_kg) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sqlStatement);
+    if ($stmt) {
+        $stmt->bind_param("ssssssssi", $photoName, $jenis_barang, $jenis_bahan, $details, $nama_lengkap, $alamat_lengkap, $alamat, $tanggal_penjemputan, $berat_kg);
+        if ($stmt->execute()) {
+            // Update poin setelah penukaran
+            $sqlUpdatePoin = "UPDATE user SET poin = poin - 10 WHERE id = ?";
+            $stmtUpdate = $conn->prepare($sqlUpdatePoin);
+            if ($stmtUpdate) {
+                $stmtUpdate->bind_param("i", $id);
+                if ($stmtUpdate->execute()) {
+                    // Update jumlah penukaran
+                    $sqlUpdatePenukaran = "UPDATE user SET jumlah_penukaran = jumlah_penukaran + 1 WHERE id = ?";
+                    $stmtUpdatePenukaran = $conn->prepare($sqlUpdatePenukaran);
+                    if ($stmtUpdatePenukaran) {
+                        $stmtUpdatePenukaran->bind_param("i", $id);
+                        if ($stmtUpdatePenukaran->execute()) {
+                            echo "Poin berhasil diperbarui dan jumlah penukaran terupdate!";
+                            header("Location: menuswap.php"); // Redirect setelah berhasil
+                            exit;
+                        } else {
+                            echo "Gagal memperbarui jumlah penukaran: " . $stmtUpdatePenukaran->error;
+                        }
                     } else {
-                        echo "Gagal memperbarui jumlah penukaran: " . $stmtUpdatePenukaran->error;
+                        echo "Gagal menyiapkan query update jumlah penukaran: " . $conn->error;
                     }
                 } else {
-                    echo "Gagal menyiapkan query update jumlah penukaran: " . $conn->error;
+                    echo "Gagal memperbarui poin: " . $stmtUpdate->error;
                 }
             } else {
-                echo "Gagal memperbarui poin: " . $stmtUpdate->error;
+                echo "Gagal menyiapkan query update poin: " . $conn->error;
             }
+            $stmtUpdate->close();
         } else {
-            echo "Gagal menyiapkan query update poin: " . $conn->error;
+            echo "Gagal menambahkan data: " . $stmt->error;
         }
-        $stmtUpdate->close();
+        $stmt->close();
     } else {
-        echo "Gagal menambahkan data: " . $stmt->error;
+        echo "Gagal menyiapkan statement: " . $conn->error;
     }
-    $stmt->close();
-} else {
-    echo "Gagal menyiapkan statement: " . $conn->error;
 }
-
 ?>
 
 <style>
@@ -172,7 +180,6 @@ if ($stmt) {
                             </div>
                         </div>
                     </div>
-
                     <div class="mt-8">
                         <h2 class="text-l font-bold">Syarat dan Ketentuan Penukaran Pakaian</h2>
                         <p class="mt-2 text-m">
@@ -201,37 +208,27 @@ if ($stmt) {
             </form>
         </div>
     </div>
-
-    <script>
-        document.getElementById('fileInput').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            const preview = document.getElementById('preview');
-            preview.innerHTML = ''; // Bersihkan preview sebelumnya
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.maxWidth = '200px';
-                    img.style.maxHeight = '200px';
-                    img.style.border = '2px solid #ddd';
-                    img.style.borderRadius = '5px';
-                    img.style.objectFit = 'contain';
-                    preview.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        document.querySelectorAll('.weight-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                document.querySelectorAll('.weight-btn').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                this.style.backgroundColor = '#fa7fcf';
-                this.style.color = '#fff';
-                document.getElementById('selectedWeight').value = this.dataset.weight;
-            });
-        });
-    </script>
 </body>
+
+<script>
+    // Preview image when file is selected
+    document.getElementById('fileInput').addEventListener('change', function (e) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            preview.innerHTML = '<img src="' + reader.result + '" alt="Preview" style="max-width: 100%; max-height: 300px; height: auto; margin-top: 10px; border: 2px solid #ddd; border-radius: 5px;">';
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    });
+
+    // Button weight selection
+    const weightBtns = document.querySelectorAll('.weight-btn');
+    weightBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.getElementById('selectedWeight').value = btn.dataset.weight;
+            weightBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+</script>
+
 </html>

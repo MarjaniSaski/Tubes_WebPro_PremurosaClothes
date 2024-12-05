@@ -1,17 +1,11 @@
 <?php
 ob_start();
-<<<<<<< HEAD
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/template/header_admin.php';
-=======
-include "template/header_admin.php";
->>>>>>> 444e618c126e4a6a409c19d50e1b44a51871c0e2
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
-// Check if a voucher_code is provided
 if (isset($_GET['voucher_code'])) {
     $voucher_code = $_GET['voucher_code'];
 
-    // Fetch existing voucher data
     $sqlStatement = "SELECT * FROM vouchers WHERE voucher_code = '$voucher_code'";
     $query = mysqli_query($conn, $sqlStatement);
     $voucher = mysqli_fetch_assoc($query);
@@ -23,7 +17,6 @@ if (isset($_GET['voucher_code'])) {
     die("Voucher code not provided!");
 }
 
-// Handle form submission for updating the voucher
 if (isset($_POST['btnupdatevoucher'])) {
     $voucher_name = $_POST['voucher_name'];
     $discount = $_POST['discount'];
@@ -50,10 +43,6 @@ if (isset($_POST['btnupdatevoucher'])) {
         echo "Failed to update voucher: " . mysqli_error($conn);
     }
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 444e618c126e4a6a409c19d50e1b44a51871c0e2
 ob_end_flush();
 ?>
 
