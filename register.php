@@ -24,8 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sql->bind_param("ssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $password, $role);
 
     if ($sql->execute()) {
+        $id = $conn->insert_id;
         // Jika registrasi berhasil, kirimkan respons sukses dalam JSON
-        echo json_encode(['status' => 'success', 'message' => 'Pendaftaran akun berhasil!']);
+        echo json_encode(['status' => 'success', 'message' => 'Pendaftaran akun berhasil!', 'id' => $id]);
     } else {
         // Jika gagal, kirimkan respons error
         echo json_encode(['status' => 'error', 'message' => 'Pendaftaran akun gagal.']);

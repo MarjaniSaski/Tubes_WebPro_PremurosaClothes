@@ -1,4 +1,5 @@
 <?php
+ob_start();
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/template/header_admin.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
@@ -45,6 +46,8 @@ if (isset($_POST['btnupdatevoucher'])) {
         echo "Failed to update voucher: " . mysqli_error($conn);
     }
 }
+
+ob_end_flush();
 ?>
 
 <!DOCTYPE html>
