@@ -1,7 +1,8 @@
 <?php
-include "template/header_user.php";
-include $_SERVER['DOCUMENT_ROOT'] . '/PREMUROSA2/config.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 ?>
+
 <style>
         .btn-pink {
             background-color: #ff69b4;
@@ -117,11 +118,11 @@ include $_SERVER['DOCUMENT_ROOT'] . '/PREMUROSA2/config.php';
 
 
       <div class="mt-8 text-left">
-        <h2 class="text-lg font-bold ml-3">Syarat dan Ketentuan Penukaran Pakaian</h2>
-        <p class="ml-3">
+        <h2 class="text-lg font-bold ml-10">Syarat dan Ketentuan Penukaran Pakaian</h2>
+        <p class="ml-10">
             Pastikan Anda Membaca dan Memahami Seluruh Ketentuan Berikut Sebelum Melakukan Penukaran Poin:
         </p>
-        <ol class="list-decimal ml-10">
+        <ol class="list-decimal ml-20">
             <li>Pastikan produk yang ditukarkan dalam kondisi sudah dicuci.</li>
             <li>Pastikan produk yang ditukarkan tidak bernjamur dan masih layak pakai.</li>
             <li>Pakaian yang kotor atau rusak tidak dapat ditukar.</li>
@@ -131,7 +132,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/PREMUROSA2/config.php';
             <li>Admin berhak membatalkan penukaran pakaian jika ditemukan indikasi kecurangan atau pelanggaran.</li>
             <li>Admin tidak bertanggung jawab atas kerugian yang timbul akibat kesalahan dalam proses penukaran pakaian.</li>
         </ol>
-        <p class="mt-4">
+        <p class="ml-10">
             Dengan melakukan penukaran ini, Anda dianggap telah menyetujui semua syarat dan ketentuan yang berlaku.
         </p>
     </div>
