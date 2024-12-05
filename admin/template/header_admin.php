@@ -13,7 +13,7 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premurosa Dashboard</title>
+    <title>Premurosa Clothes</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Rubik font -->
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
