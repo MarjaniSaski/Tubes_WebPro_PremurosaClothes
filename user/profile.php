@@ -1,7 +1,12 @@
 <?php
 ob_start();
 
+<<<<<<< HEAD
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
+=======
+// Include file header dan config
+include "template/header_user.php";
+>>>>>>> 444e618c126e4a6a409c19d50e1b44a51871c0e2
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 // Validasi ID yang ada di URL

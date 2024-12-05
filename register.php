@@ -44,25 +44,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premurosa Registrasi</title>
-    <!-- Bootstrap -->
+    <!-- Rubik font -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .bg-pink {
-            background-color: #FFABE1; /* Light pink color */
+            background-color: #FFABE1;
         }
 
         .btn-pink {
-            background-color: #FFABE1; /* Button pink */
+            background-color: #FFABE1;
             color: #fff;
             border: none;
         }
 
         .btn-pink:hover {
-            background-color: #e099c2; /* Darker pink */
+            background-color: #e099c2;
         }
     </style>
 </head>
@@ -106,14 +108,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="mb-3">
                     <input type="text" name="phone" class="form-control" placeholder="No Telepon" required>
                 </div>
-                <div class="mb-3">
-                    <input type="password" name="password" class="form-control" placeholder="Kata Sandi" required>
+                <div class="mb-3" style="position: relative;">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Kata Sandi" style="padding-right: 40px;" required>
+                    <i id="togglePassword" class="fa-regular fa-eye" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer; color: #6c757d;"></i>
                 </div>
 
                 <button type="submit" class="btn btn-pink w-100">Daftar</button>
             </form>
         </div>
     </div>
+
+    <script>
+        document.getElementById("togglePassword").addEventListener("click", function () {
+            const passwordInput = document.getElementById("password");
+            const toggleIcon = document.getElementById("togglePassword");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        });
+    </script>
 
     <script>
         document.getElementById('registerForm').addEventListener('submit', function(event) {

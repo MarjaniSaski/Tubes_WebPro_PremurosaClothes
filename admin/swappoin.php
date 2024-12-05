@@ -60,22 +60,15 @@ ob_end_flush();
 ?>
 
     <style>
-       
-        /* Konten utama dengan margin untuk menghindari tumpang tindih */
-        .main-content {
+            .main-content {
             margin-left: 16rem;
-            /* Sama dengan lebar sidebar */
             margin-top: 4rem;
-            /* Untuk menghindari tumpang tindih dengan header */
         }
-
 
         .table-container {
             margin-top: 0;
-            /* Hapus margin atas */
         }
 
-        /* Styling pop-up */
         .popup-container {
             position: fixed;
             top: 0;
@@ -106,6 +99,7 @@ ob_end_flush();
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
     </style>
+    
             <!-- Content -->
             <div class="p-6">
                 <!-- Buttons -->
@@ -285,7 +279,6 @@ ob_end_flush();
                     </div>
                 </div>
                 <div class="flex justify-end mt-6 space-x-4">
-                    <!-- Samakan ukuran tombol Cancel dan Save -->
                     <button type="button" onclick="hidePopupAddProduct()" class="bg-gray-300 px-6 py-2 rounded hover:bg-gray-400 text-sm">Cancel</button>
                     <button type="submit" name="btnsubmit" class="bg-purple-500 text-white px-6 py-2 rounded hover:bg-purple-600 text-sm">Save</button>
                 </div>

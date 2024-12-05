@@ -1,23 +1,30 @@
 <?php
-include "template/header_user.php"
+include "template/header_user.php";
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
+
+$sqlStatement = "SELECT * FROM produk";
+$query = mysqli_query($conn, $sqlStatement);
+$data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 ?>
+
 <div class="container mt-5">
         <div class="row">
+        <?php foreach ($data as $produk); ?>
             <!-- Image Column -->
             <div class="col-md-6">
                 <div class="border border-pink-200 p-3 rounded-lg">
-                    <img src="fotouser/Pink floral.png" alt="Blouse Floral Pink Boho" class="img-fluid rounded-lg">
+                    <img src="../images/<?= $produk["foto"] ?>" alt="Foto Produk" class="img-fluid rounded-lg">
                 </div>
             </div>
 
             <!-- Product Info Column -->
             <div class="col-md-6">
-                <h2 class="text-black font-bold">BLOUSE FLORAL PINK BOHO</h2>
-                <p class="text-lg font-semibold">400 Poin</p>
+                <h2 class="text-black text-lg font-bold"><?= $produk['nama']; ?></h2>
+                <p class="text-lg font-bold"><?= $produk['poin']; ?> Poin</p>
                 
                 <div class="mt-3">
-                    <h5 class="font-semibold">Ukuran dan Warna:</h5>
-                    <p class="text-gray-600">Sesuai ketersediaan barang!</p>
+                    <h5 class="font-bold">Kode Produk:</h5>
+                    <p class="text-black font-semibold"><?= $produk['id_produk']; ?></p>
                 </div>
 
                 <div class="mt-4">

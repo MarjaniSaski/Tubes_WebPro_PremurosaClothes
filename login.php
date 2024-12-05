@@ -46,15 +46,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premurosa Login</title>
-    <!-- Bootstrap -->
+    <!-- Rubik font -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="flex min-h-screen bg-gray-100">
+<body class="flex min-h-screen bg-gray-100 font-rubik">
 
     <!-- Left Section -->
     <div class="flex-1 bg-pink-300 flex items-center justify-center text-center">
@@ -73,8 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" id="username" name="username" class="form-control border border-gray-300 rounded-lg p-3 w-full" placeholder="Username" required>
                 </div>
                 <!-- Password -->
-                <div>
-                    <input type="password" id="password" name="password" class="form-control border border-gray-300 rounded-lg p-3 w-full" placeholder="Kata Sandi" required>
+                <div style="position: relative; width: 100%;">
+                    <input type="password" id="password" name="password" style="width: 100%; padding: 12px 40px 12px 12px; font-size: 16px; border: 1px solid #d1d5db; border-radius: 8px;" placeholder="Kata Sandi" required>
+                    <i id="togglePassword" class="fa-regular fa-eye" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer; color: #6b7280;"></i>
                 </div>
 
                 <!-- Role Selection -->
@@ -101,6 +104,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById("togglePassword").addEventListener("click", function () {
+            const passwordInput = document.getElementById("password");
+            const toggleIcon = document.getElementById("togglePassword");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash"); 
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            }
+        });
+
+    </script>
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(event) {

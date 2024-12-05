@@ -1,8 +1,18 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 444e618c126e4a6a409c19d50e1b44a51871c0e2
 <?php
+ob_start();
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 $voucher_code = $_GET["voucher_code"];
 
+<<<<<<< HEAD
+=======
+// cari data produk
+
+>>>>>>> 444e618c126e4a6a409c19d50e1b44a51871c0e2
 $sqlStatement = "SELECT * FROM vouchers WHERE voucher_code='$voucher_code'";
 $query = mysqli_query($conn, $sqlStatement);
 $row = mysqli_fetch_assoc($query);
@@ -25,4 +35,5 @@ if ($row) {
 }
 
 mysqli_close($conn);
+ob_end_flush();
 ?>
