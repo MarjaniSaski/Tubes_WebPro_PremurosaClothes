@@ -2,8 +2,7 @@
 // Memulai output buffering untuk menghindari pengiriman output sebelum header
 ob_start();
 
-// Include file header dan config
-include "template/header_user.php";
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 //mendapatkan id user dari url 

@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form id="loginForm" class="space-y-4">
                 <!-- Username -->
                 <div>
-                    <input type="text" id="username" name="username" class="form-control border border-gray-300 rounded-lg p-3 w-full" placeholder="Username" required>
+                    <input type="text" id="username" name="username" class="form-control rounded-lg p-3 w-full" placeholder="Username" required>
                 </div>
                 <!-- Password -->
                 <div style="position: relative; width: 100%;">

@@ -112,26 +112,21 @@ include "template/header_user.php"
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Fungsi untuk memeriksa data dan pop-up
     document.getElementById('check-btn').addEventListener('click', function () {
         const name = document.getElementById('name').value;
 
         // Mengecek apakah nama sudah terisi
         if (name) {
-            // Menampilkan pop-up konfirmasi dengan pesan custom
             const popupMessage = `Hi, ${name}! Kami akan mengatur pengiriman Anda!`;
             document.getElementById('popupMessage').textContent = popupMessage;
-            
-            // Show the pop-up
+      
             document.getElementById('popupOverlay').style.display = 'flex';
         } else {
             alert("Silakan lengkapi semua data pengiriman terlebih dahulu.");
         }
     });
 
-    // Close the popup when OK button is clicked
     document.getElementById('popupOkButton').addEventListener('click', function() {
-        // Hide the pop-up after clicking OK
         document.getElementById('popupOverlay').style.display = 'none';
     });
 
@@ -154,12 +149,10 @@ include "template/header_user.php"
         `;
     });
 
-    // Close the popup and redirect when OK button is clicked
 document.getElementById('popupOkButton').addEventListener('click', function() {
     // Hide the pop-up after clicking OK
     document.getElementById('popupOverlay').style.display = 'none';
-    
-    // Redirect to home2.html
+ 
     window.location.href = 'home2.php';
 });
 

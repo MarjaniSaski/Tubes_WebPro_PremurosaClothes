@@ -2,7 +2,6 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/template/header_admin.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
-// Mengambil data pesanan dari database
 $sqlStatement = "SELECT * FROM orders";
 $query = mysqli_query($conn, $sqlStatement);
 $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
@@ -10,11 +9,10 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
 <style>
     #myModal {
-        display: none; 
+        display: none;
     }
 </style>
 
-<!-- Main Content -->
 <div class="flex-1 p-10">
     <div class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-2xl font-bold mb-4">Swap > Product</h2>
@@ -31,6 +29,7 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                     <th class="py-2 px-4 border-b">Jenis Bahan</th>
                     <th class="py-2 px-4 border-b">Details</th>
                     <th class="py-2 px-4 border-b">Status</th>
+                    <th class="py-2 px-4 border-b">Poin</th>
                     <th class="py-2 px-4 border-b">Action</th>
                 </tr>
             </thead>
@@ -52,6 +51,7 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                             </button>
                         </td>
                         <td class="py-2 px-4 border-b"><span class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs"><?= ucfirst($swap['status']) ?></span></td>
+                        <td class="py-2 px-4 border-b"><?= $swap['poin'] ?></td>
                         <td class="border px-4 py-2">
                             <button onclick="showData('<?= $swap['id_order'] ?>')" class="text-blue-500 hover:text-blue-700 focus:outline-none">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -67,7 +67,6 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
             </tbody>
         </table>
 
-        <!-- Modal for Image -->
         <div id="myModal" class="modal fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
             <div class="modal-content bg-white p-6 rounded-lg shadow-lg relative max-w-lg w-full">
                 <span class="close absolute top-2 right-2 text-2xl cursor-pointer">&times;</span>
@@ -75,7 +74,6 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
             </div>
         </div>
 
-        <!-- Modal for Details -->
         <div id="detailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
             <div class="bg-white p-6 rounded shadow-lg w-96" id="detailsModal" data-id="">
                 <div class="flex justify-between items-center">
@@ -86,13 +84,11 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                         </svg>
                     </button>
                 </div>
-                <form action="update_status.php" method="POST">
-                    <div id="detailsContent" class="mt-4">
-                        <!-- Content will be injected here -->
-                    </div>
+                <form action="update_status.php" method="POST" id="updateForm">
+                    <div id="detailsContent" class="mt-4"></div>
                     <div class="mt-4">
-                        <label for="poinInput" class="block text-gray-700">Tambah Poin:</label>
-                        <input type="number" name="poin" id="poinInput" class="border rounded py-2 px-3 mt-1 w-full" placeholder="Masukkan jumlah poin" required>
+                        <label for="poin" class="block text-gray-700">Tambah Poin:</label>
+                        <input type="number" name="poin" id="poin" class="border rounded py-2 px-3 mt-1 w-full" placeholder="Masukkan jumlah poin" required>
                     </div>
                     <div class="mt-4">
                         <label for="statusSelect" class="block text-gray-700">Status:</label>
@@ -103,12 +99,10 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                             <option value="cancelled">Cancelled</option>
                         </select>
                     </div>
-                    <!-- ID order disembunyikan -->
-                    <input type="hidden" name="idz" id="orderId">
-                    <input type="hidden" name="user_id" id="userId">
+                    <input type="hidden" name="id_order" id="orderId">
                     <div class="mt-4 flex justify-between">
-                        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">UPDATE</button>
-                        <button type="button" onclick="closeDetails()" class="bg-red-500 text-white py-2 px-4 rounded">CANCEL</button>
+                        <button type="submit" name="submit" class="bg-purple-500 text-white py-2 px-4 rounded">UPDATE</button>
+                        <button type="button" onclick="closeDetails()" class="bg-gray-500 text-white py-2 px-4 rounded">CANCEL</button>
                     </div>
                 </form>
             </div>
@@ -117,7 +111,6 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 </div>
 
 <script>
-    // Show image in modal
     function showDetails(imageSrc) {
         var modal = document.getElementById("myModal");
         var modalImg = document.getElementById("modalImage");
@@ -154,8 +147,9 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                         <p><strong>Jenis Bahan:</strong> ${data.jenis_bahan}</p>
                         <p><strong>Details:</strong> ${data.details}</p>
                         <p><strong>Status:</strong> ${data.status}</p>
+                        <p><strong>Poin:</strong> ${data.poin}</p>
                     `;
-                    // Pastikan ID diteruskan di modal
+                    document.getElementById('orderId').value = data.id_order;
                     document.getElementById('detailsModal').setAttribute('data-id', data.id_order);
                     document.getElementById('detailsModal').classList.remove('hidden');
                 } else {
@@ -165,7 +159,8 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
         };
         xhr.send();
     }
+
     function closeDetails() {
         document.getElementById('detailsModal').classList.add('hidden');
-    }
+    }
 </script>
