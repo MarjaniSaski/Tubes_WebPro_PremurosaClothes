@@ -2,23 +2,6 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
-<<<<<<< HEAD
-
-$sql = "SELECT CONCAT(first_name, ' ', last_name) AS nama_lengkap FROM user WHERE id = '3'";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    // Ambil data nama lengkap
-    $row = $result->fetch_assoc();
-    $nama_lengkap = $row['nama_lengkap'];
-} else {
-    $nama_lengkap = "";
-}
-
-
-// Lakukan proses penukaran
-=======
->>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
 if (isset($_POST['btntukar'])) {
     $foto = $_FILES['foto'];
     $jenis_barang = $_POST['jenis_barang'];
@@ -30,16 +13,6 @@ if (isset($_POST['btntukar'])) {
     $tanggal_penjemputan = $_POST['tanggal_penjemputan'];
     $berat_kg = $_POST['berat_kg'];
 
-<<<<<<< HEAD
-    // Validasi jika jenis_barang kosong
-    if (empty($jenis_barang)) {
-        echo "Jenis barang harus dipilih!";
-        exit;
-    }
-    
-    // Upload foto if provided
-=======
->>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
     if (!empty($foto['name'])) {
         $photoName = time() . '_' . basename($foto['name']);
         $uploadPath = $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/images/' . $photoName;
@@ -51,49 +24,14 @@ if (isset($_POST['btntukar'])) {
         $photoName = "";
     }
 
-<<<<<<< HEAD
-    // Insert order data
-=======
->>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
     $sqlStatement = "INSERT INTO orders (foto, jenis_barang, jenis_bahan, details, nama_lengkap, alamat_lengkap, alamat, tanggal_penjemputan, berat_kg) 
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sqlStatement);
     if ($stmt) {
         $stmt->bind_param("ssssssssi", $photoName, $jenis_barang, $jenis_bahan, $details, $nama_lengkap, $alamat_lengkap, $alamat, $tanggal_penjemputan, $berat_kg);
         if ($stmt->execute()) {
-<<<<<<< HEAD
-            // Update poin setelah penukaran
-            $sqlUpdatePoin = "UPDATE user SET poin = poin - 10 WHERE id = ?";
-            $stmtUpdate = $conn->prepare($sqlUpdatePoin);
-            if ($stmtUpdate) {
-                $stmtUpdate->bind_param("i", $id);
-                if ($stmtUpdate->execute()) {
-                    // Update jumlah penukaran
-                    $sqlUpdatePenukaran = "UPDATE user SET jumlah_penukaran = jumlah_penukaran + 1 WHERE id = ?";
-                    $stmtUpdatePenukaran = $conn->prepare($sqlUpdatePenukaran);
-                    if ($stmtUpdatePenukaran) {
-                        $stmtUpdatePenukaran->bind_param("i", $id);
-                        if ($stmtUpdatePenukaran->execute()) {
-                            echo "Poin berhasil diperbarui dan jumlah penukaran terupdate!";
-                            header("Location: menuswap.php"); // Redirect setelah berhasil
-                            exit;
-                        } else {
-                            echo "Gagal memperbarui jumlah penukaran: " . $stmtUpdatePenukaran->error;
-                        }
-                    } else {
-                        echo "Gagal menyiapkan query update jumlah penukaran: " . $conn->error;
-                    }
-                } else {
-                    echo "Gagal memperbarui poin: " . $stmtUpdate->error;
-                }
-            } else {
-                echo "Gagal menyiapkan query update poin: " . $conn->error;
-            }
-            $stmtUpdate->close();
-=======
             header("Location: menuswap.php");
             exit;
->>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
         } else {
             echo "Gagal menambahkan data: " . $stmt->error;
         }
@@ -101,13 +39,8 @@ if (isset($_POST['btntukar'])) {
     } else {
         echo "Gagal mempersiapkan statement: " . $conn->error;
     }
+}
 
-<<<<<<< HEAD
-
-    $conn->close();
-        echo "Gagal menyiapkan statement: " . $conn->error;
-    }
-=======
 if (!isset($_SESSION['user_id'])) {
     echo "Pengguna tidak terautentikasi.";
     exit;
@@ -128,7 +61,6 @@ if ($result->num_rows > 0) {
 }
 
 $conn->close();
->>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
 ?>
 
 <style>
@@ -207,11 +139,7 @@ $conn->close();
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="namaLengkap" class="form-label">Nama Lengkap</label>
-<<<<<<< HEAD
-                                <input type="text" id="namaLengkap" name="nama_lengkap" class="form-control" placeholder="Nama Lengkap" value="<?php echo htmlspecialchars($nama_lengkap); ?>" readonly>
-=======
                                 <input type="text" id="namaLengkap" name="nama_lengkap" class="form-control" placeholder="Nama Lengkap" value="<?php echo htmlspecialchars($nama_lengkap); ?>" required>
->>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
                             </div>
                             <div class="mb-3">
                                 <label for="alamatLengkap" class="form-label">Alamat Lengkap</label>
@@ -267,8 +195,6 @@ $conn->close();
         </div>
     </div>
 </body>
-<<<<<<< HEAD
-=======
 </html>
 <script>
     // Preview image when file is selected
@@ -291,5 +217,4 @@ $conn->close();
     });
 </script>
 
->>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
 </html>
