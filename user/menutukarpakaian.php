@@ -1,292 +1,228 @@
 <?php
-include "template/header_user.php";
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
-$sqlStatement = "SELECT * FROM produk";
-$query = mysqli_query($conn, $sqlStatement);
-$data = mysqli_fetch_all($query, MYSQLI_ASSOC);
+// Ambil data nama lengkap
+$sql = "SELECT CONCAT(first_name, ' ', last_name) AS nama_lengkap FROM user WHERE id = '10'";
+$result = $conn->query($sql);
 
-$sqlStatement = "SELECT * FROM vouchers";
-$query = mysqli_query($conn, $sqlStatement);
-$datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $nama_lengkap = $row['nama_lengkap'];
+} else {
+    $nama_lengkap = "";
+}
+
+
+// Lakukan proses penukaran
+if (isset($_POST['btntukar'])) {
+    $foto = $_FILES['foto'];
+    $jenis_barang = $_POST['jenis_barang'];
+    $jenis_bahan = $_POST['jenis_bahan'];
+    $details = $_POST['details'];
+    $nama_lengkap = $_POST['nama_lengkap'];
+    $alamat_lengkap = $_POST['alamat_lengkap'];
+    $alamat = $_POST['alamat'];
+    $tanggal_penjemputan = $_POST['tanggal_penjemputan'];
+    $berat_kg = $_POST['berat_kg'];
+
+    // Validasi jika jenis_barang kosong
+    if (empty($jenis_barang)) {
+        echo "Jenis barang harus dipilih!";
+        exit;
+    }
+    
+    // Upload foto if provided
+    if (!empty($foto['name'])) {
+        $photoName = time() . '_' . basename($foto['name']);
+        $uploadPath = $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/images/' . $photoName;
+        if (!move_uploaded_file($foto['tmp_name'], $uploadPath)) {
+            echo "Gagal mengupload foto.";
+            exit;
+        }
+    } else {
+        $photoName = "";
+    }
+
+    // Insert order data
+    $sqlStatement = "INSERT INTO orders (foto, jenis_barang, jenis_bahan, details, nama_lengkap, alamat_lengkap, alamat, tanggal_penjemputan, berat_kg) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sqlStatement);
+    if ($stmt) {
+        $stmt->bind_param("ssssssssi", $photoName, $jenis_barang, $jenis_bahan, $details, $nama_lengkap, $alamat_lengkap, $alamat, $tanggal_penjemputan, $berat_kg);
+        if ($stmt->execute()) {
+            // Update poin setelah penukaran
+            $sqlUpdatePoin = "UPDATE user SET poin = poin - 10 WHERE id = ?";
+            $stmtUpdate = $conn->prepare($sqlUpdatePoin);
+            if ($stmtUpdate) {
+                $stmtUpdate->bind_param("i", $id);
+                if ($stmtUpdate->execute()) {
+                    // Update jumlah penukaran
+                    $sqlUpdatePenukaran = "UPDATE user SET jumlah_penukaran = jumlah_penukaran + 1 WHERE id = ?";
+                    $stmtUpdatePenukaran = $conn->prepare($sqlUpdatePenukaran);
+                    if ($stmtUpdatePenukaran) {
+                        $stmtUpdatePenukaran->bind_param("i", $id);
+                        if ($stmtUpdatePenukaran->execute()) {
+                            echo "Poin berhasil diperbarui dan jumlah penukaran terupdate!";
+                            header("Location: menuswap.php"); // Redirect setelah berhasil
+                            exit;
+                        } else {
+                            echo "Gagal memperbarui jumlah penukaran: " . $stmtUpdatePenukaran->error;
+                        }
+                    } else {
+                        echo "Gagal menyiapkan query update jumlah penukaran: " . $conn->error;
+                    }
+                } else {
+                    echo "Gagal memperbarui poin: " . $stmtUpdate->error;
+                }
+            } else {
+                echo "Gagal menyiapkan query update poin: " . $conn->error;
+            }
+            $stmtUpdate->close();
+        } else {
+            echo "Gagal menambahkan data: " . $stmt->error;
+        }
+        $stmt->close();
+    } else {
+        echo "Gagal mempersiapkan statement: " . $conn->error;
+    }
+
+
+    $conn->close();
+        echo "Gagal menyiapkan statement: " . $conn->error;
+    }
 ?>
 
 <style>
-  .custom-voucher-card {
-    border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #655D8A;
-    border-radius: 10px;
-    padding: 0;
-  }
+    .btn-white {
+        background-color: white;
+        border-color: rgb(186, 186, 186);
+        color: black;
+        transition: transform 0.2s, background-color 0.2s;
+    }
 
-  .custom-voucher-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-  }
+    .btn-white:hover {
+        background-color: #fa7fcf;
+        border-color: #FFABE1;
+        transform: scale(1.1);
+    }
 
-  /* Pop-up Styles */
-  #voucherPopup,
-  #productPopup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-  }
+    .btn-white.active {
+        background-color: #fa7fcf;
+        color: white;
+    }
 
-  #voucherPopup.show,
-  #productPopup.show {
-    display: flex;
-  }
-
-  .popup-content {
-    position: relative;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    max-width: 600px;
-    width: 100%;
-  }
-
-  .popup-content h2 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-  }
-
-  .popup-content p {
-    margin-bottom: 10px;
-  }
-
-  .popup-content button {
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 1rem;
-  }
-
-  .popup-content .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
+    #preview img {
+        max-width: 100%;
+        height: auto;
+        margin-top: 10px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+    }
 </style>
 
-<!-- Divider -->
-<div class="pink-divider"></div>
+<body class="bg-gray-50">
+    <div class="container my-5">
+        <div class="bg-white p-4 rounded shadow mx-4 my-5">
+            <form id="exchangeForm" method="POST" enctype="multipart/form-data">
+                <main class="container my-5">
+                    <div class="row align-items-start">
+                        <div class="col-md-6">
+                            <div class="border rounded shadow-sm p-4 bg-light d-flex flex-column align-items-center">
+                                <h2 class="text-center text-pink-500 fw-bold mb-3">Upload here!</h2>
+                                <div class="d-flex justify-content-center">
+                                    <label for="fileInput" class="cursor-pointer text-pink-600 font-semibold">
+                                        Choose File
+                                    </label>
+                                    <input type="file" id="fileInput" class="d-none" accept="image/*" name="foto" required>
+                                </div>
+                                <div id="preview" class="mt-4 text-center"></div>
+                            </div>
+                        </div>
 
-<div class="container-fluid bg-white shadow-sm py-3">
-  <div class="d-flex justify-content-between align-items-center px-4">
-    <!-- Back Button -->
-    <div>
-      <button onclick="window.location.href='menuswap.php';" class="btn bg-pink-500 text-white rounded-lg px-4 py-2 shadow-sm hover:bg-pink-600">
-        Back
-      </button>
-    </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="jenisBarang" class="form-label">Jenis Barang</label>
+                                <select class="form-select" id="jenisBarang" name="jenis_barang" required>
+                                    <option value="" selected disabled>Pilih jenis barang...</option>
+                                    <option value="top">Top</option>
+                                    <option value="bottom">Bottom</option>
+                                    <option value="dress">Dress</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="jenisBahan" class="form-label">Jenis Bahan</label>
+                                <input type="text" class="form-control" id="jenisBahan" name="jenis_bahan" placeholder="Masukkan jenis bahan" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="details" class="form-label">Details</label>
+                                <textarea class="form-control" id="details" rows="3" name="details" placeholder="Masukkan detail pakaian yang ingin ditukarkan." required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-12">
+                            <h2 class="fw-bold">Atur Penjemputan</h2>
+                            <br>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="namaLengkap" class="form-label">Nama Lengkap</label>
+                                <input type="text" id="namaLengkap" name="nama_lengkap" class="form-control" placeholder="Nama Lengkap" value="<?php echo htmlspecialchars($nama_lengkap); ?>" require>
+                            </div>
+                            <div class="mb-3">
+                                <label for="alamatLengkap" class="form-label">Alamat Lengkap</label>
+                                <input type="text" id="alamatLengkap" name="alamat_lengkap" class="form-control" placeholder="Alamat Lengkap" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="provinsi" class="form-label">Provinsi, Kab/Kota, Kecamatan, Kode Pos</label>
+                                <input type="text" id="provinsi" class="form-control" name="alamat" placeholder="Provinsi, Kab/Kota, Kecamatan, Kode Pos" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="tanggalPenjemputan" class="form-label">Tambahkan Tanggal Penjemputan</label>
+                                <input type="date" id="tanggalPenjemputan" name="tanggal_penjemputan" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="beratBarang" class="form-label">Pilih Berat</label>
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-white weight-btn" data-weight="1">1 Kg</button>
+                                    <button type="button" class="btn btn-white weight-btn" data-weight="3">3 Kg</button>
+                                    <button type="button" class="btn btn-white weight-btn" data-weight="5">5 Kg</button>
+                                </div>
+                                <input type="hidden" id="selectedWeight" name="berat_kg" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h2 class="text-l font-bold">Syarat dan Ketentuan Penukaran Pakaian</h2>
+                        <p class="mt-2 text-m">
+                            Pastikan Anda Membaca dan Memahami Seluruh Ketentuan Berikut Sebelum Melakukan Penukaran Poin:
+                        </p>
+                        <ol class="list-decimal text-m list-inside mt-2">
+                            <li>Pastikan produk yang ditukarkan dalam kondisi sudah dicuci.</li>
+                            <li>Pastikan produk yang ditukarkan tidak bernjamur dan masih layak pakai.</li>
+                            <li>Pakaian yang kotor atau rusak tidak dapat ditukar.</li>
+                            <li>Bawalah pakaian yang ingin ditukar dan bukti persetujuan ke toko.</li>
+                            <li>Staf Premurosa akan memeriksa kondisi pakaian dan menyetujui atau menolak penukaran.</li>
+                            <li>Jika penukaran disetujui, Anda dapat memiliki poin yang sudah ditetapkan.</li>
+                            <li>Admin berhak membatalkan penukaran pakaian jika ditemukan indikasi kecurangan atau pelanggaran.</li>
+                            <li>Admin tidak bertanggung jawab atas kerugian yang timbul akibat kesalahan dalam proses penukaran pakaian.</li>
+                        </ol>
+                        <p class="text-m">
+                            Dengan melakukan penukaran ini, Anda dianggap telah menyetujui semua syarat dan ketentuan yang berlaku.
+                        </p>
+                    </div>
 
-    <!-- Points Section -->
-    <div>
-      <div class="d-flex align-items-center border border-indigo-500 rounded-lg px-4 py-2 text-indigo-500 text-lg font-semibold">
-        <i class="bi bi-gem me-2" style="font-size: 20px;"></i>
-        350
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Main Content -->
-<main class="container py-5">
-  <!-- Voucher Section -->
-  <section class="mb-5">
-    <h2 class="text-lg font-bold text-purple-700 mb-4">
-      <i class="bi bi-ticket-detailed"></i> Voucher
-    </h2>
-    <div class="flex gap-3 overflow-x-auto">
-      <?php foreach ($datavoucher as $key => $voucher) { ?>
-        <!-- Voucher Card as Button -->
-        <button class="bg-gradient-to-r from-purple-400 to-purple-200 text-indigo-800 rounded-lg p-4 w-48 text-center shadow-lg transform hover:translate-x-[-10px]"
-          onclick="showVoucherInfo(<?php echo $voucher['voucher_code']; ?>)">
-          <h3 class="text-xl font-bold"><?= $voucher['voucher_name'] ?></h3>
-          <p class="text-sm">Min. Blj Rp <?= $voucher['max_amount'] ?></p>
-          <p class="text-sm">S/D: <?= $voucher['max_period'] ?></p>
-        </button>
-      <?php } ?>
-    </div>
-  </section>
-
-  <!-- Product Section -->
-  <section>
-    <h2 class="text-lg font-bold text-purple-700 mb-4">
-      <i class="bi bi-bag-fill"></i> Product
-    </h2>
-    <div class="row g-4">
-      <?php foreach ($data as $key => $produk) { ?>
-        <div class="col-6 col-md-3">
-          <button class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1"
-            onclick="showProductInfo(<?php echo $produk['id_produk']; ?>)">
-            <img src="../images/<?= $produk["foto"] ?>" alt="Product" class="w-full rounded-lg mb-3">
-            <h3 class="text-2xl font-bold"><?= $produk['poin'] ?></h3>
-            <p class="text-sm">Poin</p>
-          </button>
+                    <div class="d-flex justify-content-end m-5">
+                        <button type="button" class="btn bg-gray-400 text-white font-semibold hover:bg-gray-600 border-0 me-3" onclick="window.location.href='menuswap.html';">Back</button>
+                        <button type="submit" name="btntukar" class="btn bg-pink-400 hover:bg-pink-600 text-white">Atur Penjemputan</button>
+                    </div>
+                </main>
+            </form>
         </div>
-      <?php } ?>
     </div>
-  </section>
-
-  <!-- Voucher Info Pop-up -->
-  <div id="voucherPopup" class="flex hidden">
-    <div class="popup-content relative mx-auto my-20 p-8 bg-white rounded-lg max-w-lg w-full">
-      <span id="closeVoucherBtn" class="close-btn text-2xl font-bold text-gray-700 cursor-pointer">&times;</span>
-      <h2 class="text-xl font-semibold text-gray-800" id="voucherName">Voucher Information</h2>
-      <p class="text-gray-600 mt-4"><strong>Name:</strong> <span id="voucherInfoName"></span></p>
-      <p class="text-gray-600"><strong>Points:</strong> <span id="voucherPoints"></span> points</p>
-      <p class="text-gray-600"><strong>Usage Period:</strong> <span id="voucherUsagePeriod"></span></p>
-      <p class="text-gray-600"><strong>Max Period:</strong> <span id="voucherMaxPeriod"></span></p>
-      <p class="text-gray-600"><strong>Max Amount:</strong> <span id="voucherMaxAmount"></span></p>
-
-      <div class="mt-6 flex justify-between">
-        <button id="claimVoucherBtn" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-400 w-28">
-          Claim
-        </button>
-        <button id="cancelVoucherBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 w-28">
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Product Info Pop-up -->
-  <div id="productPopup" class="flex hidden">
-    <div class="popup-content relative mx-auto my-20 p-8 bg-gradient-to-r from-pink-400 to-purple-700 rounded-lg max-w-lg w-full">
-      <span id="closeProductBtn" class="close-btn text-2xl font-bold text-white cursor-pointer">&times;</span>
-      <h2 class="text-xl font-semibold text-white" id="productName">Product Information</h2>
-      <div class="mt-4">
-        <img id="productImage" src="" alt="Product Image" class="w-full rounded-lg mb-4">
-        <p class="text-white"><strong>Points:</strong> <span id="productPoints"></span> Poin</p>
-        <p class="text-white"><strong>Details:</strong> <span id="productDetails"></span></p>
-      </div>
-      <div class="mt-6 flex justify-between">
-        <button id="claimProductBtn" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600 w-28">
-          Claim
-        </button>
-        <button id="cancelProductBtn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 w-28">
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-
-</main>
-
-<script>
-  // Voucher Pop-up logic
-  const voucherPopup = document.getElementById('voucherPopup');
-  const closeVoucherBtn = document.getElementById('closeVoucherBtn');
-  const cancelVoucherBtn = document.getElementById('cancelVoucherBtn');
-  const claimVoucherBtn = document.getElementById('claimVoucherBtn');
-
-  // Function to show voucher info
-  function showVoucherInfo(voucherCode) {
-    fetch(info_voucher.php?voucher_code=${voucherCode})
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          alert(data.error);
-        } else {
-          document.getElementById('voucherInfoName').innerText = data.voucher_name;
-          document.getElementById('voucherPoints').innerText = data.points;
-          document.getElementById('voucherUsagePeriod').innerText = data.usage_period;
-          document.getElementById('voucherMaxPeriod').innerText = data.max_period;
-          document.getElementById('voucherMaxAmount').innerText = data.max_amount;
-
-          // Show pop-up
-          voucherPopup.classList.add('show');
-        }
-      })
-      .catch(error => console.error('Error fetching voucher data:', error));
-  }
-
-  // Close voucher pop-up
-  closeVoucherBtn.onclick = function() {
-    voucherPopup.classList.remove('show');
-  }
-
-  cancelVoucherBtn.onclick = function() {
-    voucherPopup.classList.remove('show');
-  }
-
-  // Claim voucher
-  claimVoucherBtn.onclick = function() {
-    alert('Voucher claimed successfully!');
-    voucherPopup.classList.remove('show');
-  }
-
-  // Product Pop-up logic
-  const productPopup = document.getElementById('productPopup');
-  const closeProductBtn = document.getElementById('closeProductBtn');
-  const cancelProductBtn = document.getElementById('cancelProductBtn');
-  const claimProductBtn = document.getElementById('claimProductBtn');
-
-  // Function to show product info
-  function showProductInfo(productId) {
-    console.log("Product ID: " + productId); // Debugging ID produk
-
-    if (!productId) {
-      alert('Product ID is missing or invalid.');
-      return;
-    }
-
-    fetch(info_product.php?id_produk=${productId})
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          alert(data.error);
-        } else {
-          document.getElementById('productName').innerText = data.product_name;
-          document.getElementById('productPoints').innerText = data.points;
-          document.getElementById('productDetails').innerText = data.details;
-          document.getElementById('productImage').src = ../images/${data.image};
-
-          // Show pop-up
-          productPopup.classList.add('show');
-        }
-      })
-      .catch(error => console.error('Error fetching product data:', error));
-  }
-
-  // Close product pop-up
-  closeProductBtn.onclick = function() {
-    productPopup.classList.remove('show');
-  }
-
-  cancelProductBtn.onclick = function() {
-    productPopup.classList.remove('show');
-  }
-
-  // Claim product
-  claimProductBtn.onclick = function() {
-    alert('Product claimed successfully!');
-    productPopup.classList.remove('show');
-  }
-
-  // Close pop-up if clicked outside
-  window.onclick = function(event) {
-    if (event.target === voucherPopup) {
-      voucherPopup.classList.remove('show');
-    }
-    if (event.target === productPopup) {
-      productPopup.classList.remove('show');
-    }
-  }
-</script>
-
 </body>
-
 </html>

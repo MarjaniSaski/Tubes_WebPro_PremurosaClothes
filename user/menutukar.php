@@ -12,69 +12,71 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 ?>
 
 <style>
-    .custom-voucher-card {
-        border: none;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        background-color: #655D8A;
-        border-radius: 10px;
-        padding: 0;
-    }
+  .custom-voucher-card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #655D8A;
+    border-radius: 10px;
+    padding: 0;
+  }
 
-    .custom-voucher-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-    }
+  .custom-voucher-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  }
 
-    /* Pop-up Styles */
-    #voucherPopup, #productPopup {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
-        align-items: center;
-        justify-content: center;
-    }
+  /* Pop-up Styles */
+  #voucherPopup,
+  #productPopup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
 
-    #voucherPopup.show, #productPopup.show {
-        display: flex;
-    }
+  #voucherPopup.show,
+  #productPopup.show {
+    display: flex;
+  }
 
-    .popup-content {
-        position: relative;
-        padding: 20px;
-        background-color: white;
-        border-radius: 10px;
-        max-width: 600px;
-        width: 100%;
-    }
+  .popup-content {
+    position: relative;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+  }
 
-    .popup-content h2 {
-        font-size: 1.5rem;
-        margin-bottom: 10px;
-    }
+  .popup-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
 
-    .popup-content p {
-        margin-bottom: 10px;
-    }
+  .popup-content p {
+    margin-bottom: 10px;
+  }
 
-    .popup-content button {
-        padding: 10px 20px;
-        border-radius: 5px;
-        font-size: 1rem;
-    }
+  .popup-content button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
 
-    .popup-content .close-btn {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 1.5rem;
-        cursor: pointer;
-    }
+  .popup-content .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
 </style>
 
 <!-- Divider -->
@@ -92,7 +94,7 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
     <!-- Points Section -->
     <div>
       <div class="d-flex align-items-center border border-indigo-500 rounded-lg px-4 py-2 text-indigo-500 text-lg font-semibold">
-        <i class="bi bi-gem me-2" style="font-size: 20px;"></i> 
+        <i class="bi bi-gem me-2" style="font-size: 20px;"></i>
         350
       </div>
     </div>
@@ -110,7 +112,7 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
       <?php foreach ($datavoucher as $key => $voucher) { ?>
         <!-- Voucher Card as Button -->
         <button class="bg-gradient-to-r from-purple-400 to-purple-200 text-indigo-800 rounded-lg p-4 w-48 text-center shadow-lg transform hover:translate-x-[-10px]"
-                onclick="showVoucherInfo(<?php echo $voucher['voucher_code']; ?>)">
+          onclick="showVoucherInfo(<?php echo $voucher['voucher_code']; ?>)">
           <h3 class="text-xl font-bold"><?= $voucher['voucher_name'] ?></h3>
           <p class="text-sm">Min. Blj Rp <?= $voucher['max_amount'] ?></p>
           <p class="text-sm">S/D: <?= $voucher['max_period'] ?></p>
@@ -127,12 +129,12 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
     <div class="row g-4">
       <?php foreach ($data as $key => $produk) { ?>
         <div class="col-6 col-md-3">
-          <div class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1"
-               onclick="showProductInfo(<?php echo $produk['id_produk']; ?>)">
-            <img src="../images/<?= $produk["foto"] ?>" alt="Product 1" class="w-full rounded-lg mb-3">
+          <button class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1"
+            onclick="showProductInfo(<?php echo $produk['id_produk']; ?>)">
+            <img src="../images/<?= $produk["foto"] ?>" alt="Product" class="w-full rounded-lg mb-3">
             <h3 class="text-2xl font-bold"><?= $produk['poin'] ?></h3>
             <p class="text-sm">Poin</p>
-          </div>
+          </button>
         </div>
       <?php } ?>
     </div>
@@ -234,7 +236,14 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
   // Function to show product info
   function showProductInfo(productId) {
-    fetch(`info_product.php?product_id=${productId}`)
+    console.log("Product ID: " + productId); // Debugging ID produk
+
+    if (!productId) {
+      alert('Product ID is missing or invalid.');
+      return;
+    }
+
+    fetch(`info_product.php?id_produk=${productId}`)
       .then(response => response.json())
       .then(data => {
         if (data.error) {
@@ -279,4 +288,5 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 </script>
 
 </body>
+
 </html>
