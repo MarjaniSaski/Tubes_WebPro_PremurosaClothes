@@ -2,6 +2,7 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
+<<<<<<< HEAD
 
 $sql = "SELECT CONCAT(first_name, ' ', last_name) AS nama_lengkap FROM user WHERE id = '3'";
 $result = $conn->query($sql);
@@ -16,6 +17,8 @@ if ($result->num_rows > 0) {
 
 
 // Lakukan proses penukaran
+=======
+>>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
 if (isset($_POST['btntukar'])) {
     $foto = $_FILES['foto'];
     $jenis_barang = $_POST['jenis_barang'];
@@ -27,6 +30,7 @@ if (isset($_POST['btntukar'])) {
     $tanggal_penjemputan = $_POST['tanggal_penjemputan'];
     $berat_kg = $_POST['berat_kg'];
 
+<<<<<<< HEAD
     // Validasi jika jenis_barang kosong
     if (empty($jenis_barang)) {
         echo "Jenis barang harus dipilih!";
@@ -34,6 +38,8 @@ if (isset($_POST['btntukar'])) {
     }
     
     // Upload foto if provided
+=======
+>>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
     if (!empty($foto['name'])) {
         $photoName = time() . '_' . basename($foto['name']);
         $uploadPath = $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/images/' . $photoName;
@@ -45,13 +51,17 @@ if (isset($_POST['btntukar'])) {
         $photoName = "";
     }
 
+<<<<<<< HEAD
     // Insert order data
+=======
+>>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
     $sqlStatement = "INSERT INTO orders (foto, jenis_barang, jenis_bahan, details, nama_lengkap, alamat_lengkap, alamat, tanggal_penjemputan, berat_kg) 
                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sqlStatement);
     if ($stmt) {
         $stmt->bind_param("ssssssssi", $photoName, $jenis_barang, $jenis_bahan, $details, $nama_lengkap, $alamat_lengkap, $alamat, $tanggal_penjemputan, $berat_kg);
         if ($stmt->execute()) {
+<<<<<<< HEAD
             // Update poin setelah penukaran
             $sqlUpdatePoin = "UPDATE user SET poin = poin - 10 WHERE id = ?";
             $stmtUpdate = $conn->prepare($sqlUpdatePoin);
@@ -80,6 +90,10 @@ if (isset($_POST['btntukar'])) {
                 echo "Gagal menyiapkan query update poin: " . $conn->error;
             }
             $stmtUpdate->close();
+=======
+            header("Location: menuswap.php");
+            exit;
+>>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
         } else {
             echo "Gagal menambahkan data: " . $stmt->error;
         }
@@ -88,10 +102,33 @@ if (isset($_POST['btntukar'])) {
         echo "Gagal mempersiapkan statement: " . $conn->error;
     }
 
+<<<<<<< HEAD
 
     $conn->close();
         echo "Gagal menyiapkan statement: " . $conn->error;
     }
+=======
+if (!isset($_SESSION['user_id'])) {
+    echo "Pengguna tidak terautentikasi.";
+    exit;
+}
+
+$userId = $_SESSION['user_id']; // Pastikan Anda telah menetapkan session user
+$sql = "SELECT CONCAT(first_name, ' ', last_name) AS nama_lengkap FROM user WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $nama_lengkap = $row['nama_lengkap'];
+} else {
+    $nama_lengkap = "";
+}
+
+$conn->close();
+>>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
 ?>
 
 <style>
@@ -170,7 +207,11 @@ if (isset($_POST['btntukar'])) {
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="namaLengkap" class="form-label">Nama Lengkap</label>
+<<<<<<< HEAD
                                 <input type="text" id="namaLengkap" name="nama_lengkap" class="form-control" placeholder="Nama Lengkap" value="<?php echo htmlspecialchars($nama_lengkap); ?>" readonly>
+=======
+                                <input type="text" id="namaLengkap" name="nama_lengkap" class="form-control" placeholder="Nama Lengkap" value="<?php echo htmlspecialchars($nama_lengkap); ?>" required>
+>>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
                             </div>
                             <div class="mb-3">
                                 <label for="alamatLengkap" class="form-label">Alamat Lengkap</label>
@@ -226,4 +267,29 @@ if (isset($_POST['btntukar'])) {
         </div>
     </div>
 </body>
+<<<<<<< HEAD
+=======
+</html>
+<script>
+    // Preview image when file is selected
+    document.getElementById('fileInput').addEventListener('change', function (e) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            preview.innerHTML = '<img src="' + reader.result + '" alt="Preview" style="max-width: 100%; max-height: 300px; height: auto; margin-top: 10px; border: 2px solid #ddd; border-radius: 5px;">';
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    });
+
+    // Button weight selection
+    const weightBtns = document.querySelectorAll('.weight-btn');
+    weightBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.getElementById('selectedWeight').value = btn.dataset.weight;
+            weightBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+</script>
+
+>>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
 </html>

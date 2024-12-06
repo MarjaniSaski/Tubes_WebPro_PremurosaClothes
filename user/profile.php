@@ -2,7 +2,11 @@
 // Memulai output buffering untuk menghindari pengiriman output sebelum header
 ob_start();
 
+<<<<<<< HEAD
 include "template/header_user.php";
+=======
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
+>>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 // Pastikan pengguna sudah login
