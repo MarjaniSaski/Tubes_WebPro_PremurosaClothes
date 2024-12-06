@@ -1,5 +1,12 @@
 <?php
+<<<<<<< HEAD
 include "template/header_user.php";
+=======
+// Memulai output buffering untuk menghindari pengiriman output sebelum header
+ob_start();
+
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
+>>>>>>> b46aa38c2ccc725d88e3aa6e263b941b06f3d305
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 // Pastikan pengguna sudah login

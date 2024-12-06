@@ -1,13 +1,11 @@
 <?php
 ob_start();
-include "template/header_admin.php";
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/template/header_admin.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
-// Check if a voucher_code is provided
 if (isset($_GET['voucher_code'])) {
     $voucher_code = $_GET['voucher_code'];
 
-    // Fetch existing voucher data
     $sqlStatement = "SELECT * FROM vouchers WHERE voucher_code = '$voucher_code'";
     $query = mysqli_query($conn, $sqlStatement);
     $voucher = mysqli_fetch_assoc($query);
@@ -19,7 +17,6 @@ if (isset($_GET['voucher_code'])) {
     die("Voucher code not provided!");
 }
 
-// Handle form submission for updating the voucher
 if (isset($_POST['btnupdatevoucher'])) {
     $voucher_name = $_POST['voucher_name'];
     $discount = $_POST['discount'];
