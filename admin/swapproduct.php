@@ -5,8 +5,8 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 $sqlStatement = "SELECT * FROM orders";
 $query = mysqli_query($conn, $sqlStatement);
 $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
-
 ?>
+
 <!-- Main Content -->
 <div class="flex-1 p-10">
     <div class="bg-white p-6 rounded-lg shadow-md">

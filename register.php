@@ -1,6 +1,8 @@
 <?php
 require 'config.php';
 
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
@@ -24,12 +26,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sql->bind_param("ssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $password, $role);
 
     if ($sql->execute()) {
-        // Jika registrasi berhasil, kirimkan respons sukses dalam JSON
+        // Mendapatkan ID pengguna yang baru
+        $user_id = $conn->insert_id;
+    
+        // Menyimpan ID pengguna dalam sesi
+        session_start(); // Pastikan session dimulai
+        $_SESSION['user_id'] = $user_id;
+    
         echo json_encode(['status' => 'success', 'message' => 'Pendaftaran akun berhasil!']);
     } else {
-        // Jika gagal, kirimkan respons error
         echo json_encode(['status' => 'error', 'message' => 'Pendaftaran akun gagal.']);
-    }
+    }    
 
     $sql->close();
     $conn->close();
@@ -43,11 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premurosa Registrasi</title>
-    <!-- Rubik font -->
+    <!-- Stylesheets -->
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -55,25 +60,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .bg-pink {
             background-color: #FFABE1;
         }
-
         .btn-pink {
             background-color: #FFABE1;
             color: #fff;
             border: none;
         }
-
         .btn-pink:hover {
             background-color: #e099c2;
         }
     </style>
 </head>
 <body class="flex min-h-screen bg-gray-100">
-    <!-- Left Section -->
     <div class="flex-1 bg-pink-300 flex items-center justify-center text-center">
         <img src="foto/logoPremurosa.png" alt="Premurosa Logo" class="max-w-xs md:max-w-lg">
     </div>
-
-    <!-- Right Section -->
     <div class="flex-1 flex items-center justify-center bg-white p-6">
         <div class="w-full max-w-md">
             <h3 class="text-center text-2xl font-semibold mb-2">Daftar Akun Baru!</h3><br>
@@ -132,15 +132,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 toggleIcon.classList.add("fa-eye");
             }
         });
-    </script>
 
-    <script>
         document.getElementById('registerForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Mencegah reload form
-
             const formData = new FormData(this);
-
-            // Kirim data ke server
             fetch('register.php', {
                 method: 'POST',
                 body: formData
@@ -148,18 +143,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    // Tampilkan SweetAlert jika berhasil
                     Swal.fire({
                         title: 'Berhasil!',
                         text: data.message,
                         icon: 'success',
                         confirmButtonText: 'OK'
                     }).then(() => {
-                        // Redirect ke halaman login
-                        window.location.href = 'login.php';
+                        window.location.href = 'login.php'; // Redirect ke halaman login setelah sukses
                     });
                 } else {
-                    // Tampilkan SweetAlert jika gagal
                     Swal.fire({
                         title: 'Gagal!',
                         text: data.message,
@@ -169,7 +161,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
                 Swal.fire({
                     title: 'Kesalahan Server!',
                     text: 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.',
