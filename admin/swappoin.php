@@ -117,7 +117,6 @@ ob_end_flush();
                     <h2 class="text-xl font-bold mb-4">Voucher List</h2>
                     <table class="min-w-full table-auto bg-white shadow-md rounded-lg">
                         <thead>
-
                             <tr class="bg-white-100 text-sm">
                                 <th class="px-6 py-3 text-left">Voucher Name</th>
                                 <th class="px-6 py-3 text-left">Voucher Code</th>
