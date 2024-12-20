@@ -1,6 +1,8 @@
 <?php
 require 'config.php';
 
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
@@ -24,8 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sql->bind_param("ssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $password, $role);
 
     if ($sql->execute()) {
-<<<<<<< HEAD
-=======
         // Mendapatkan ID pengguna yang baru
         $user_id = $conn->insert_id;
     
@@ -34,10 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['user_id'] = $user_id;
     
         echo json_encode(['status' => 'success', 'message' => 'Pendaftaran akun berhasil!']);
->>>>>>> 62dd560a97427ee00f6f01dfe23de2e8ae974f33
-        $id = $conn->insert_id;
-        // Jika registrasi berhasil, kirimkan respons sukses dalam JSON
-        echo json_encode(['status' => 'success', 'message' => 'Pendaftaran akun berhasil!', 'id' => $id]);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Pendaftaran akun gagal.']);
     }    
