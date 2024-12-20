@@ -1,31 +1,40 @@
 <?php
-require 'config.php';
+// Memulai output buffering untuk menghindari pengiriman output sebelum header
+ob_start();
 
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $gender = $_POST['gender'];
+    // Ambil data dari form
+    $full_name = $_POST['name'];
     $username = $_POST['username'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash password
-    $role = $_POST['role']; // Role bisa 'admin' atau 'buyer'
+    $gender = $_POST['gender'];
+    $birth_date = $_POST['birthDate'];
 
-    // Koneksi ke database
-    $conn = new mysqli('localhost', 'root', '', 'premurosa');
-    if ($conn->connect_error) {
-        die("Koneksi gagal: " . $conn->connect_error);
+    // Cek apakah ada foto yang diupload
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
+        $profile_picture = $_FILES['profile_picture'];
+        $profile_picture_name = time() . '_' . $profile_picture['name'];
+        $profile_picture_path = $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/uploads/' . $profile_picture_name;
+        move_uploaded_file($profile_picture['tmp_name'], $profile_picture_path);
+    } else {
+        // Jika tidak ada foto, gunakan foto yang lama
+        $profile_picture_name = $_POST['existing_profile_picture'];
     }
 
-    // Menyisipkan data ke tabel user dengan prepared statement untuk menghindari SQL Injection
-    $sql = $conn->prepare("INSERT INTO `user` (first_name, last_name, gender, username, email, phone, password, role) 
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    // Query untuk update data pengguna
+    $sql = "UPDATE user SET first_name = ?, last_name = ?, username = ?, email = ?, phone = ?, gender = ?, birth_date = ?, profile_picture = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssssssi", $first_name, $last_name, $username, $email, $phone, $gender, $birth_date, $profile_picture_name, $user_id);
 
-    $sql->bind_param("ssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $password, $role);
+    // Pisahkan nama depan dan belakang
+    $name_parts = explode(" ", $full_name, 2);
+    $first_name = $name_parts[0];
+    $last_name = $name_parts[1] ?? '';
 
-    if ($sql->execute()) {
+    if ($stmt->execute()) {
         // Mendapatkan ID pengguna yang baru
         $user_id = $conn->insert_id;
     
@@ -35,140 +44,123 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
         echo json_encode(['status' => 'success', 'message' => 'Pendaftaran akun berhasil!']);
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Pendaftaran akun gagal.']);
-    }    
-
-    $sql->close();
-    $conn->close();
-    exit;
+        echo "<script>alert('Terjadi kesalahan saat memperbarui profil.');</script>";
+    }
+    $stmt->close();
 }
+
+// Query untuk mendapatkan data pengguna
+$sql = "SELECT * FROM user WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($user = $result->fetch_assoc()) {
+    $full_name = $user['first_name'] . ' ' . $user['last_name'];
+    $username = $user['username'];
+    $email = $user['email'];
+    $phone = $user['phone'];
+    $gender = $user['gender'];
+    $birth_date = $user['birth_date'] ?? '';
+    $profile_picture = $user['profile_picture'] ?? '';
+} else {
+    die("Data pengguna tidak ditemukan!");
+}
+
+
+$stmt->close();
+$conn->close();
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premurosa Registrasi</title>
-    <!-- Stylesheets -->
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        .bg-pink {
-            background-color: #FFABE1;
-        }
-        .btn-pink {
-            background-color: #FFABE1;
-            color: #fff;
-            border: none;
-        }
-        .btn-pink:hover {
-            background-color: #e099c2;
-        }
-    </style>
-</head>
-<body class="flex min-h-screen bg-gray-100">
-    <div class="flex-1 bg-pink-300 flex items-center justify-center text-center">
-        <img src="foto/logoPremurosa.png" alt="Premurosa Logo" class="max-w-xs md:max-w-lg">
-    </div>
-    <div class="flex-1 flex items-center justify-center bg-white p-6">
-        <div class="w-full max-w-md">
-            <h3 class="text-center text-2xl font-semibold mb-2">Daftar Akun Baru!</h3><br>
-            <form id="registerForm" class="space-y-4">
-                <!-- Role Selection -->
-                <div class="mb-4">
-                    <label class="mr-3">
-                        <input type="radio" id="role_admin" name="role" value="admin" required> Admin
-                    </label>
-                    <label>
-                        <input type="radio" id="role_buyer" name="role" value="buyer"> Pembeli
-                    </label>
-                </div>
-                <div class="mb-3">
-                    <input type="text" name="first_name" class="form-control" placeholder="Nama Depan" required>
-                </div>
-                <div class="mb-3">
-                    <input type="text" name="last_name" class="form-control" placeholder="Nama Belakang" required>
-                </div>
-                <div class="mb-3">
-                    <label for="gender" class="form-label">Jenis Kelamin</label><br>
-                    <input type="radio" id="pria" name="gender" value="Pria" required> Pria
-                    <input type="radio" id="wanita" name="gender" value="Wanita" required> Wanita
-                </div>
-                <div class="mb-3">
-                    <input type="text" name="username" class="form-control" placeholder="Username" required>
-                </div>
-                <div class="mb-3">
-                    <input type="email" name="email" class="form-control" placeholder="Email" required>
-                </div>
-                <div class="mb-3">
-                    <input type="text" name="phone" class="form-control" placeholder="No Telepon" required>
-                </div>
-                <div class="mb-3" style="position: relative;">
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Kata Sandi" style="padding-right: 40px;" required>
-                    <i id="togglePassword" class="fa-regular fa-eye" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer; color: #6c757d;"></i>
-                </div>
-
-                <button type="submit" class="btn btn-pink w-100">Daftar</button>
-            </form>
+<div class="container mt-5 p-4 bg-white rounded-lg shadow-md max-w-md mx-auto">
+    <h2 class="text-center mb-4 font-bold text-xl">My Profile</h2>
+    <div class="text-center mb-4">
+        <div class="relative w-32 h-32 mx-auto">
+            <?php if ($profile_picture): ?>
+                <img id="profilePicture" src="/Tubes_WebPro_PremurosaClothes/uploads/<?= htmlspecialchars($profile_picture); ?>" class="rounded-full w-full h-full object-cover border-4 border-pink-200" alt="Foto Profil" />
+            <?php else: ?>
+                <img id="profilePicture" class="rounded-full w-full h-full object-cover border-4 border-pink-200" alt="Foto Profil" />
+            <?php endif; ?>
+            <p id="noPhotoText" class="text-muted italic">Foto profil belum ditambahkan</p>
+            <input type="file" id="profilePictureInput" name="profile_picture" accept="image/*" style="display:none;">
         </div>
     </div>
 
-    <script>
-        document.getElementById("togglePassword").addEventListener("click", function () {
-            const passwordInput = document.getElementById("password");
-            const toggleIcon = document.getElementById("togglePassword");
+    <form id="profileForm" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="existing_profile_picture" value="<?= htmlspecialchars($profile_picture); ?>">
+        
+        <div class="mb-3">
+            <label for="name" class="form-label text-sm">Nama Lengkap</label>
+            <input type="text" id="name" name="name" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($full_name); ?>" disabled>
+        </div>
+        <div class="mb-3">
+            <label for="username" class="form-label text-sm">Username</label>
+            <input type="text" id="username" name="username" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($username); ?>" disabled>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label text-sm">Email</label>
+            <input type="email" id="email" name="email" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($email); ?>" disabled>
+        </div>
+        <!-- Tanggal Lahir -->
+        <div class="mb-3">
+            <label for="birthDate" class="form-label text-sm">Tanggal Lahir</label>
+            <input type="date" id="birthDate" name="birthDate" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($birth_date); ?>" disabled>
+        </div>
 
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                toggleIcon.classList.remove("fa-eye");
-                toggleIcon.classList.add("fa-eye-slash");
-            } else {
-                passwordInput.type = "password";
-                toggleIcon.classList.remove("fa-eye-slash");
-                toggleIcon.classList.add("fa-eye");
-            }
-        });
+        <div class="mb-3">
+            <label for="phone" class="form-label text-sm">Nomor Telepon</label>
+            <input type="text" id="phone" name="phone" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($phone); ?>" disabled>
+        </div>
+        <div class="mb-3">
+            <label for="gender" class="form-label text-sm">Jenis Kelamin</label>
+            <select id="gender" name="gender" class="form-control rounded-md text-sm" disabled>
+                <option value="Pria" <?= $gender == 'Pria' ? 'selected' : ''; ?>>Pria</option>
+                <option value="Wanita" <?= $gender == 'Wanita' ? 'selected' : ''; ?>>Wanita</option>
+            </select>
+        </div>
+        <div class="text-center">
+            <button type="button" id="editButton" class="bg-[#655D8A] text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-[#4f4784]">
+                Edit
+            </button>
+            <button type="submit" class="bg-[#655D8A] text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-[#4f4784]" id="saveButton" style="display:none;">
+                Simpan
+            </button>
+            <button type="button" id="logoutButton" class="bg-[#655D8A] text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-[#4f4784]">
+                Keluar
+            </button>
+        </div>
+        
+    </form>
+</div>
 
-        document.getElementById('registerForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Mencegah reload form
-            const formData = new FormData(this);
-            fetch('register.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: data.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.href = 'login.php'; // Redirect ke halaman login setelah sukses
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Gagal!',
-                        text: data.message,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    title: 'Kesalahan Server!',
-                    text: 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            });
-        });
-    </script>
-</body>
-</html>
+<script>
+    // Script untuk mengaktifkan tombol edit
+    document.getElementById('editButton').addEventListener('click', function() {
+        document.getElementById('name').disabled = false;
+        document.getElementById('username').disabled = false;
+        document.getElementById('email').disabled = false;
+        document.getElementById('birthDate').disabled = false;
+        document.getElementById('phone').disabled = false;
+        document.getElementById('gender').disabled = false;
+        document.getElementById('saveButton').style.display = 'inline-block';
+        document.getElementById('profilePictureInput').style.display = 'block';
+    });
+
+    // Script untuk logout
+    document.getElementById('logoutButton').addEventListener('click', function() {
+        window.location.href = '/Tubes_WebPro_PremurosaClothes/login.php';
+    });
+
+    // Script untuk menampilkan preview foto profil yang diunggah
+    document.getElementById('profilePictureInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profilePicture').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
