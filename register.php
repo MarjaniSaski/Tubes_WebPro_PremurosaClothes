@@ -5,6 +5,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $gender = $_POST['gender'];
+    if ($gender === 'Lainnya') {
+        $gender = $_POST['other_gender'] ?: 'Lainnya'; // Gunakan input tambahan jika ada, jika tidak gunakan 'Lainnya'
+    }
     $username = $_POST['username'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
@@ -24,20 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sql->bind_param("ssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $password, $role);
 
     if ($sql->execute()) {
-        // Mendapatkan ID pengguna yang baru
-        $user_id = $conn->insert_id;
-    
-        // Menyimpan ID pengguna dalam sesi
-        session_start(); // Pastikan session dimulai
-        $_SESSION['user_id'] = $user_id;
-    
+        session_start();
+        $_SESSION['user_id'] = $conn->insert_id;
         echo json_encode(['status' => 'success', 'message' => 'Pendaftaran akun berhasil!']);
-        $id = $conn->insert_id;
-        // Jika registrasi berhasil, kirimkan respons sukses dalam JSON
-        echo json_encode(['status' => 'success', 'message' => 'Pendaftaran akun berhasil!', 'id' => $id]);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Pendaftaran akun gagal.']);
-    }    
+    }
 
     $sql->close();
     $conn->close();
@@ -79,26 +74,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="w-full max-w-md">
             <h3 class="text-center text-2xl font-semibold mb-2">Daftar Akun Baru!</h3><br>
             <form id="registerForm" class="space-y-4">
-                <!-- Role Selection -->
-                <div class="mb-4">
-                    <label class="mr-3">
-                        <input type="radio" id="role_admin" name="role" value="admin" required> Admin
-                    </label>
-                    <label>
-                        <input type="radio" id="role_buyer" name="role" value="buyer"> Pembeli
-                    </label>
-                </div>
                 <div class="mb-3">
                     <input type="text" name="first_name" class="form-control" placeholder="Nama Depan" required>
                 </div>
                 <div class="mb-3">
                     <input type="text" name="last_name" class="form-control" placeholder="Nama Belakang" required>
                 </div>
-                <div class="mb-3">
-                    <label for="gender" class="form-label">Jenis Kelamin</label><br>
-                    <input type="radio" id="pria" name="gender" value="Pria" required> Pria
-                    <input type="radio" id="wanita" name="gender" value="Wanita" required> Wanita
+                <div class="form-group position-relative mb-3">
+                    <label for="role" class="form-label">Jenis Kelamin</label>
+                    <select name="role" id="role" class="form-select" required>
+                        <option value="">-- Pilih Jenis Kelamin --</option>
+                        <option value="Pria">Pria</option>
+                        <option value="Wanita">Wanita</option>
+                    </select>
+                    <i class="bi bi-chevron-compact-down position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;"></i>
                 </div>
+                <div class="form-group position-relative mb-3">
+                    <label for="role" class="form-label">Peran</label>
+                    <select id="role" name="role" class="form-select" required>
+                        <option value="" selected>-- Pilih Peran --</option>
+                        <option value="admin">Admin</option>
+                        <option value="buyer">Pembeli</option>
+                    </select>
+                    <i class="bi bi-chevron-compact-down position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;"></i>
+                </div>                
                 <div class="mb-3">
                     <input type="text" name="username" class="form-control" placeholder="Username" required>
                 </div>
@@ -132,6 +131,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 toggleIcon.classList.remove("fa-eye-slash");
                 toggleIcon.classList.add("fa-eye");
             }
+        });
+
+        document.querySelectorAll('input[name="gender"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                const otherGenderInput = document.getElementById('other-gender');
+                if (this.value === 'Lainnya') {
+                    otherGenderInput.style.display = 'block';
+                } else {
+                    otherGenderInput.style.display = 'none';
+                    otherGenderInput.value = ''; // Reset nilai input "Lainnya"
+                }
+            });
         });
 
         document.getElementById('registerForm').addEventListener('submit', function(event) {

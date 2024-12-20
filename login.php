@@ -66,13 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Right Section -->
     <div class="flex-1 flex items-center justify-center bg-white p-6">
         <div class="w-full max-w-md">
-            <h3 class="text-left text-l font-semibold mb-2">Selamat Datang di</h3>
+            <h3 class="text-left text-xl font-semibold mb-1">Selamat Datang di</h3>
             <h3 class="text-left text-2xl font-semibold mb-6">Premurosa Clothes!</h3>
 
             <form id="loginForm" class="space-y-4">
                 <!-- Username -->
                 <div>
-                    <input type="text" id="username" name="username" class="form-control rounded-lg p-3 w-full" placeholder="Username" required>
+                    <input type="username" id="username" name="username" style="width: 100%; padding: 12px 40px 12px 12px; font-size: 16px; border: 1px solid #d1d5db; border-radius: 8px;" placeholder="Username" required>
                 </div>
                 <!-- Password -->
                 <div style="position: relative; width: 100%;">
@@ -81,15 +81,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <!-- Role Selection -->
-                <div class="mb-4">
-                    <label class="mr-3">
-                        <input type="radio" id="role_admin" name="role" value="admin" required> Admin
-                    </label>
-                    <label>
-                        <input type="radio" id="role_buyer" name="role" value="buyer"> Pembeli
-                    </label>
+                <div class="mb-3">
+                    <div class="input-group">
+                    <select id="role" name="role" class="form-select form-select-placeholder" style="color: #6b7280;" required>
+                        <option value="" selected disabled style:>Pilih Peran</option>
+                        <option value="admin">Admin</option>
+                        <option value="buyer">Pembeli</option>
+                    </select>
+                    
+                    </div>
                 </div>
-
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-pink w-full py-2 text-lg rounded-lg font-semibold bg-pink-300 text-white hover:bg-pink-400">
                     Login
@@ -174,4 +175,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </body>
 </html>
-

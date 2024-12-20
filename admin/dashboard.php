@@ -76,19 +76,19 @@ include "template/header_admin.php"
                     <div class="w-full border-b-2 border-gray-300 mt-1 mb-4"></div>
                     <ul>
                         <li class="flex justify-between items-center mb-4">
-                            <span>Lorem Ipsum</span>
-                            <span class="text-gray-700">Rp 125.000</span>
+                            <span>Blouse Pink Flower</span>
+                            <span class="text-gray-700">Rp 200.000</span>
                         </li>
                         <li class="flex justify-between items-center mb-4">
-                            <span>Lorem Ipsum</span>
-                            <span class="text-gray-700">Rp 125.000</span>
+                            <span>Blose Blue Flower</span>
+                            <span class="text-gray-700">Rp 200.000</span>
                         </li>
                         <li class="flex justify-between items-center mb-4">
-                            <span>Lorem Ipsum</span>
-                            <span class="text-gray-700">Rp 125.000</span>
+                            <span>Midi Dress</span>
+                            <span class="text-gray-700">Rp 250.000</span>
                         </li>
                         <li class="flex justify-between items-center">
-                            <span>Lorem Ipsum</span>
+                            <span>T-Shirt Men</span>
                             <span class="text-gray-700">Rp 125.000</span>
                         </li>
                     </ul>
@@ -104,36 +104,36 @@ include "template/header_admin.php"
                     <ul>
                         <li class="flex items-center mb-4">
                             <!-- Circle -->
-                            <div class="w-8 h-8 rounded-full bg-pink-500 flex-shrink-0"></div>
+                            <div class="w-8 h-8 rounded-full bg-purple-500 flex-shrink-0"></div>
                             <!-- Name and Email -->
                             <div class="ml-4">
-                                <span class="block font-medium">Amanda Salima</span>
-                                <span class="block text-sm text-gray-500">amanda@example.com</span>
+                                <span class="block font-medium">Widya Mustika Sari</span>
+                                <span class="block text-sm text-gray-500">widya@gmail.com</span>
                             </div>
                             <!-- Amount -->
                             <span class="ml-auto text-gray-700">Rp 150.000</span>
                         </li>
                         <li class="flex items-center mb-4">
-                            <div class="w-8 h-8 rounded-full bg-pink-500 flex-shrink-0"></div>
+                            <div class="w-8 h-8 rounded-full bg-purple-500 flex-shrink-0"></div>
                             <div class="ml-4">
                                 <span class="block font-medium">Amanda Salima</span>
-                                <span class="block text-sm text-gray-500">amanda@example.com</span>
+                                <span class="block text-sm text-gray-500">amanda@gmail.com</span>
                             </div>
                             <span class="ml-auto text-gray-700">Rp 150.000</span>
                         </li>
                         <li class="flex items-center mb-4">
-                            <div class="w-8 h-8 rounded-full bg-pink-500 flex-shrink-0"></div>
+                            <div class="w-8 h-8 rounded-full bg-purple-500 flex-shrink-0"></div>
                             <div class="ml-4">
-                                <span class="block font-medium">Amanda Salima</span>
-                                <span class="block text-sm text-gray-500">amanda@example.com</span>
+                                <span class="block font-medium">Marjani Dzakiyyah Arifah</span>
+                                <span class="block text-sm text-gray-500">marjani@gmail.com</span>
                             </div>
                             <span class="ml-auto text-gray-700">Rp 150.000</span>
                         </li>
                         <li class="flex items-center">
-                            <div class="w-8 h-8 rounded-full bg-pink-500 flex-shrink-0"></div>
+                            <div class="w-8 h-8 rounded-full bg-purple-500 flex-shrink-0"></div>
                             <div class="ml-4">
-                                <span class="block font-medium">Amanda Salima</span>
-                                <span class="block text-sm text-gray-500">amanda@example.com</span>
+                                <span class="block font-medium">Amanda Dzakiyyah Sari</span>
+                                <span class="block text-sm text-gray-500">amzari@gmail.com</span>
                             </div>
                             <span class="ml-auto text-gray-700">Rp 150.000</span>
                         </li>
@@ -148,31 +148,31 @@ include "template/header_admin.php"
                     <ul>
                         <li class="flex flex-col mb-4 border-b border-gray-200 pb-2">
                             <div class="flex justify-between items-center">
-                                <span>Lorem Ipsum</span>
+                                <span>Midi Dress</span>
                                 <span class="text-gray-700">5 Sales</span>
                             </div>
-                            <span class="text-sm text-gray-500 mt-1">Category: Electronics</span>
+                            <span class="text-sm text-gray-500 mt-1">Category: Dress</span>
                         </li>
                         <li class="flex flex-col mb-4 border-b border-gray-200 pb-2">
                             <div class="flex justify-between items-center">
-                                <span>Lorem Ipsum</span>
+                                <span>Cargo Army Men</span>
                                 <span class="text-gray-700">2 Sales</span>
                             </div>
-                            <span class="text-sm text-gray-500 mt-1">Category: Home Appliances</span>
+                            <span class="text-sm text-gray-500 mt-1">Category: Bottoms</span>
                         </li>
                         <li class="flex flex-col mb-4 border-b border-gray-200 pb-2">
                             <div class="flex justify-between items-center">
-                                <span>Lorem Ipsum</span>
+                                <span>Blouse Pink Flower</span>
                                 <span class="text-gray-700">1 Sales</span>
                             </div>
-                            <span class="text-sm text-gray-500 mt-1">Category: Furniture</span>
+                            <span class="text-sm text-gray-500 mt-1">Category: Tops</span>
                         </li>
                         <li class="flex flex-col">
                             <div class="flex justify-between items-center">
-                                <span>Lorem Ipsum</span>
+                                <span>Jeans</span>
                                 <span class="text-gray-700">1 Sales</span>
                             </div>
-                            <span class="text-sm text-gray-500 mt-1">Category: Kitchenware</span>
+                            <span class="text-sm text-gray-500 mt-1">Category: Bottoms</span>
                         </li>
                     </ul>
                 </div>

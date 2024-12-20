@@ -26,8 +26,8 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes')
                 <!-- Navigation Links -->
                 <div class="d-flex gap-4">
                     <a href="indexuser.php" class="text-dark text-decoration-none fw-bold text-sm">HOME</a> <!-- Diubah -->
-                    <a href="#" class="text-dark text-decoration-none fw-bold text-sm">NEW ARRIVAL</a>
-                    <a href="#" class="text-dark text-decoration-none fw-bold text-sm">PRODUCT</a>
+                    <a href="newarrival.php" class="text-dark text-decoration-none fw-bold text-sm">NEW ARRIVAL</a>
+                    <a href="product.php" class="text-dark text-decoration-none fw-bold text-sm">PRODUCT</a>
                     <a href="menuswap.php" class="text-dark text-decoration-none fw-bold text-sm">SWAP</a>
                 </div>
     

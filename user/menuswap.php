@@ -132,9 +132,10 @@ $stmt->close();
             <li>Admin berhak membatalkan penukaran pakaian jika ditemukan indikasi kecurangan atau pelanggaran.</li>
             <li>Admin tidak bertanggung jawab atas kerugian yang timbul akibat kesalahan dalam proses penukaran pakaian.</li>
         </ol>
-        <p class="ml-10">
+        <p class="ml-10 ">
             Dengan melakukan penukaran ini, Anda dianggap telah menyetujui semua syarat dan ketentuan yang berlaku.
         </p>
+        <br>
     </div>
 </main>
 
