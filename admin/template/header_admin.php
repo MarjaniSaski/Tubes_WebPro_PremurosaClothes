@@ -5,6 +5,8 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
     exit; // Pastikan eksekusi dihentikan setelah header
 }
 define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
+
+$current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
 <!DOCTYPE html>
@@ -37,31 +39,41 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
             <!-- Menu Items -->
             <ul class="space-y-4">
                 <li>
-                    <a href="dashboard.php" class="block px-4 py-2 rounded-lg font-semibold hover:bg-purple-400 transition">
+                    <a href="dashboard.php" 
+                       class="block px-4 py-2 rounded-lg font-semibold transition 
+                              <?= $current_page == 'dashboard.php' ? 'bg-purple-400 text-white' : 'hover:bg-purple-400'; ?>">
                         <i class="bi bi-grid-fill me-2"></i>
                         <span>DASHBOARD</span>
                     </a>
                 </li>
                 <li>
-                    <a href="producthome.php" class="block px-4 py-2 rounded-lg font-semibold hover:bg-purple-400 transition">
+                    <a href="producthome.php" 
+                       class="block px-4 py-2 rounded-lg font-semibold transition 
+                              <?= $current_page == 'producthome.php' ? 'bg-purple-400 text-white' : 'hover:bg-purple-400'; ?>">
                         <i class="bi bi-box-seam"></i>
                         <span>PRODUCTS</span>
                     </a>
                 </li>
                 <li>
-                    <a href="orderlist.php" class="block px-4 py-2 rounded-lg font-semibold hover:bg-purple-400 transition">
+                    <a href="orderlist.php" 
+                       class="block px-4 py-2 rounded-lg font-semibold transition 
+                              <?= $current_page == 'orderlist.php' ? 'bg-purple-400 text-white' : 'hover:bg-purple-400'; ?>">
                         <i class="fa-solid fa-list-check"></i>
                         <span>ORDER LIST</span>
                     </a>
                 </li>
                 <li>
-                    <a href="adminswap.php" class="block px-4 py-2 rounded-lg font-semibold hover:bg-purple-400 transition">
+                    <a href="adminswap.php" 
+                       class="block px-4 py-2 rounded-lg font-semibold transition 
+                              <?= $current_page == 'adminswap.php' ? 'bg-purple-400 text-white' : 'hover:bg-purple-400'; ?>">
                         <i class="fa-solid fa-repeat"></i>
                         <span>SWAP</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="block px-4 py-2 rounded-lg font-semibold hover:bg-purple-400 transition">
+                    <a href="#" 
+                       class="block px-4 py-2 rounded-lg font-semibold transition 
+                              <?= $current_page == '#' ? 'bg-purple-400 text-white' : 'hover:bg-purple-400'; ?>">
                         <i class="fa-regular fa-envelope"></i>
                         <span>MESSAGE</span>
                     </a>
