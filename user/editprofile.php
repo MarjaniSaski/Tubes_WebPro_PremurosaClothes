@@ -107,4 +107,7 @@ $conn->close();
         </form>
     </div>
 </body>
+<?php
+include "template/footer_user.php"
+?>
 </html>

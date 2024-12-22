@@ -89,4 +89,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
     </section>
 
 </body>
+<?php
+include "template/footer_user.php"
+?>
 </html>

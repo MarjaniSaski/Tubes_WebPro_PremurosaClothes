@@ -32,3 +32,6 @@ if ($stmt->execute()) {
 $stmt->close();
 $conn->close();
 ?>
+<?php
+include "template/footer_user.php"
+?>

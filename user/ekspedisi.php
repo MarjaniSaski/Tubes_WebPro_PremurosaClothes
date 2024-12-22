@@ -159,6 +159,9 @@ document.getElementById('popupOkButton').addEventListener('click', function() {
 </script>
 
 </body>
+<?php
+include "template/footer_user.php"
+?>
 
 </html>
 

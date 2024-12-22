@@ -6,7 +6,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/templat
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 // Pastikan pengguna sudah login
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'buyer') {
     header("Location: login.php");
     exit();
 }

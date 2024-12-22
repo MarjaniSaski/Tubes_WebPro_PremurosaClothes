@@ -288,5 +288,7 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 </script>
 
 </body>
-
+<?php
+include "template/footer_user.php"
+?>
 </html>
