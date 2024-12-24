@@ -1,50 +1,13 @@
 <?php
-include "template/header_user.php"
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 ?>
-<style>
-    .categories .card {
-    border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #655D8A; /* Warna latar belakang kategori */
-    border-radius: 10px;
-    padding: 0;
-}
-</style>
-<!-- Categories Section -->
-<section class="categories container mt-5">
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-            <div class="card bg-purple-500 rounded-lg shadow-lg overflow-hidden transition-all transform hover:scale-105 hover:opacity-100 opacity-80 hover:shadow-xl">
-                <img src="<?= HOST ?>/foto/T1.png" class="card-img-top" alt="Tops" style="height: 250px; object-fit: cover;">
-                <!-- Link ke halaman Tops -->
-                <a href="tops.php" class="btn btn-purple w-100 py-3 text-white font-semibold">TOPS</a>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card bg-purple-500 rounded-lg shadow-lg overflow-hidden transition-all transform hover:scale-105 hover:opacity-100 opacity-80 hover:shadow-xl">
-                <img src="<?= HOST ?>/foto/C1.png" class="card-img-top" alt="Bottoms" style="height: 250px; object-fit: cover;">
-                <!-- Link ke halaman Bottoms -->
-                <a href="bottoms.php" class="btn btn-purple py-3 text-white font-semibold">BOTTOMS</a>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card bg-purple-500 rounded-lg shadow-lg overflow-hidden transition-all transform hover:scale-105 hover:opacity-100 opacity-80 hover:shadow-xl">
-                <img src="<?= HOST ?>/foto/B1.png" class="card-img-top" alt="Dresses" style="height: 250px; object-fit: cover;">
-                <!-- Link ke halaman Dresses -->
-                <a href="dresses.php" class="btn btn-purple w-100 py-3 text-white font-semibold">DRESSES</a>
-            </div>
-        </div>
-    </div>
-</section>
 
-    
-
-    <!-- Terlaris Section -->
-    <section class="terlaris mt-5">
-        <div class="terlarislogo bg-pink-200 p-3 flex items-center gap-3">
+<!-- New Arrivals Section -->
+<section class="newarrival mt-5">
+        <div class="newarrivallogo bg-pink-200 p-3 flex items-center gap-3">
             <h2 class="text-xl font-bold pl-4">
-                <i class="bi bi-star-fill text-pink-500 mr-3"></i>  Terlaris
+                <i class="bi bi-stars text-pink-500 mr-3"></i>New Arrivals
             </h2>
         </div>
         <div class="products row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mt-4 ml-1 mr-1">
@@ -161,13 +124,13 @@ include "template/header_user.php"
                 </div>
             </div>   
         </div>
-        
-    
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 <?php
 include "template/footer_user.php"
 ?>
-
 </html>

@@ -148,4 +148,7 @@ include "template/header_user.php"
     <!-- Tambahkan script Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<?php
+include "template/footer_user.php"
+?>
 </html>

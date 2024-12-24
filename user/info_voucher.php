@@ -18,3 +18,6 @@ if (isset($_GET['voucher_code'])) {
     }
 }
 ?>
+<?php
+include "template/footer_user.php"
+?>
