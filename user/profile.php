@@ -301,7 +301,6 @@ $conn->close();
             reader.readAsDataURL(file);
         }
     });
-<<<<<<< HEAD
 
 
      // Fungsi untuk menampilkan pop-up yang diperbarui
@@ -345,6 +344,3 @@ include "template/footer_user.php"
 ?>
 </html>
 
-=======
-</script>
->>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
