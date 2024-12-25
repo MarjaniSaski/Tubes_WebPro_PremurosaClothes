@@ -7,16 +7,7 @@ $query = mysqli_query($conn, $sqlStatement);
 $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 ?>
 
-<<<<<<< HEAD
 <!-- Main Content -->
-=======
-<style>
-    #myModal {
-        display: none;
-    }
-</style>
-
->>>>>>> b46aa38c2ccc725d88e3aa6e263b941b06f3d305
 <div class="flex-1 p-10">
     <div class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-2xl font-bold mb-4">Swap > Product</h2>

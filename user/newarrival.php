@@ -89,13 +89,13 @@ if (!isset($_SESSION['wishlist'])) {
     }
 </style>
 <!-- New Arrivals Section -->
-<section class="newarrival mt-5">
-        <div class="newarrivallogo bg-pink-200 p-3 flex items-center gap-3">
-            <h2 class="text-xl font-bold pl-4">
-                <i class="bi bi-stars text-pink-500 mr-3"></i>New Arrivals
-            </h2>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="newarrivallogo bg-pink-200 p-3 flex items-center gap-3">
+    <h2 class="text-xl font-bold pl-4">
+        <i class="bi bi-stars text-pink-500 mr-3"></i>New Arrivals
+    </h2>
+</div>
+<section class="container mx-auto mt-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
         <?php foreach ($products as $product): ?>
             <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
                 <img src="<?= HOST . $product['image'] ?>" alt="<?= $product['name'] ?>" class="w-full mb-4 rounded-md">

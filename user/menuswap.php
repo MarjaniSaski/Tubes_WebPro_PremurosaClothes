@@ -2,26 +2,8 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
-<<<<<<< HEAD
 
 $user_id = $_SESSION['user_id'];
-=======
-$sqlPoin = "SELECT poin FROM `user` WHERE id = ?";
-$stmt = $conn->prepare($sqlPoin);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$resultPoin = $stmt->get_result();
-$rowPoin = $resultPoin->fetch_assoc();
-$poin = $rowPoin ? $rowPoin['poin'] : 0;
-
-$sqlPenukaran = "SELECT COUNT(*) AS jumlah_penukaran FROM `orders` WHERE id_order = ?";
-$stmt = $conn->prepare($sqlPenukaran);
-$stmt->bind_param("i", $id_order);
-$stmt->execute();
-$resultPenukaran = $stmt->get_result();
-$rowPenukaran = $resultPenukaran->fetch_assoc();
-$jumlah_penukaran = $rowPenukaran ? $rowPenukaran['jumlah_penukaran'] : 0;
->>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
 
 $resultDataSQL = $conn->query("SELECT first_name, last_name FROM user WHERE id = '$user_id'");
 
@@ -180,11 +162,7 @@ $conn->close();
                         <p class="text-gray-600">JUMLAH PENUKARAN</p>
                         <div class="d-flex justify-content-center gap-3 mt-4">
                             <button type="button" class="btn bg-pink-500 hover:bg-pink-700 text-white font-medium py-3 px-5 w-full rounded-lg shadow-md transition duration-300" onclick="window.location.href='menutukarpakaian.php';">
-<<<<<<< HEAD
                                 <i class="fas fa-arrow-right mr-2"></i> Tukar Pakaian
-=======
-                                <i class="fas fa-arrow-right mr-2"></i> Tukar Poin
->>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
                             </button>
                         </div>
                         <div class="d-flex justify-content-center gap-3 mt-3">

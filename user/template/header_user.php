@@ -145,13 +145,8 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
 </a>
 
 
-<<<<<<< HEAD
                     <a href="wishlist.php" class="text-dark text-lg nav-icon"><i class="bi bi-heart"></i></a>
                     <a href="pencarian.php" class="text-dark text-lg nav-icon"><i class="bi bi-search"></i></a>
-=======
-                    <a href="favorite.php" class="text-dark text-lg nav-icon"><i class="bi bi-heart"></i></a>
-                    <a href="search.php" class="text-dark text-lg nav-icon"><i class="bi bi-search"></i></a>
->>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
                     <a href="keranjang.php" class="text-dark text-lg nav-icon"><i class="bi bi-cart2"></i></a>
                     <a href="chat.php" class="text-dark text-lg nav-icon"><i class="bi bi-chat-dots"></i></a>
                     <a href="notifikasi.php" class="text-dark text-lg nav-icon"><i class="bi bi-bell"></i></a>
