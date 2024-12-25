@@ -1,3 +1,4 @@
+
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
@@ -23,93 +24,54 @@ $nama_lengkap = $user_data['first_name'] . ' ' . $user_data['last_name'];
 $stmt_user->close();
 
 $uploadedImage = "";
-$response = [];
 
-// Proses form jika ada request
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btntukar'])) {
-    try {
-        $foto = $_FILES['foto'];
-        $jenis_barang = $_POST['jenis_barang'];
-        $jenis_bahan = $_POST['jenis_bahan'];
-        $details = $_POST['details'];
-        $nama_lengkap = $_POST['nama_lengkap'];
-        $alamat_lengkap = $_POST['alamat_lengkap'];
-        $alamat = $_POST['alamat'];
-        $tanggal_penjemputan = $_POST['tanggal_penjemputan'];
-        $berat_kg = $_POST['berat_kg'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $foto = $_FILES['foto'];
+    $jenis_barang =  $_POST['jenisBarang'];
+    $jenis_bahan = $_POST['jenisBahan'];
+    $details = $_POST['details'];
+    $alamat_lengkap = $_POST['alamatLengkap'];
+    $alamat = $_POST['provinsi'];
+    $tanggal_penjemputan = $_POST['tanggalPenjemputan'];
+    $berat_kg = $_POST['berat_kg'];
 
-        // Validasi input
-        if (empty($jenis_barang)) {
-            throw new Exception("Jenis barang harus dipilih!");
-        }
-        if (empty($foto['name'])) {
-            throw new Exception("Foto harus diupload!");
-        }
+    $foto_name = 'ORDERS' . time() . '_' . $_SESSION['username'];
+    $foto_path = $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/images/' . $foto_name;
+    move_uploaded_file($_FILES['foto']['tmp_name'], $foto_path);
 
-        // Validasi file upload
-        $allowed_types = ['image/jpeg', 'image/png', 'image/jpg'];
-        if (!in_array($foto['type'], $allowed_types)) {
-            throw new Exception("Format file tidak didukung! Hanya JPG dan PNG yang diperbolehkan.");
-        }
+    $sql = "INSERT INTO orders (foto, jenis_barang, jenis_bahan, details, nama_lengkap, alamat_lengkap, alamat, tanggal_penjemputan, berat_kg, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        $max_file_size = 5 * 1024 * 1024; // 5 MB
-        if ($foto['size'] > $max_file_size) {
-            throw new Exception("Ukuran file terlalu besar! Maksimal 5MB.");
-        }
+    $stmt = $conn->prepare($sql);
+    $status = "Pending";  // Default status
 
-        // Upload foto
-        $photoName = time() . '_' . basename($foto['name']);
-        $uploadPath = $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/images/' . $photoName;
+    $stmt->bind_param("ssssssssis", $foto_name, $jenis_barang, $jenis_bahan, $details, $nama_lengkap, $alamat_lengkap, $alamat, $tanggal_penjemputan, $berat_kg, $status);
 
-        if (!move_uploaded_file($foto['tmp_name'], $uploadPath)) {
-            throw new Exception("Gagal mengupload foto.");
-        }
-
-        $uploadedImage = '/Tubes_WebPro_PremurosaClothes/images/' . $photoName;
-
-        // Insert ke database
-        $sqlStatement = "INSERT INTO orders (foto, jenis_barang, jenis_bahan, details, nama_lengkap, alamat_lengkap, alamat, tanggal_penjemputan, berat_kg) 
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sqlStatement);
-
-        if (!$stmt) {
-            throw new Exception("Gagal mempersiapkan statement: " . $conn->error);
-        }
-
-        if (!$stmt->bind_param("ssssssssi", $photoName, $jenis_barang, $jenis_bahan, $details, $nama_lengkap, $alamat_lengkap, $alamat, $tanggal_penjemputan, $berat_kg)) {
-            throw new Exception("Error pada bind_param: " . $stmt->error);
-        }
-
-        if (!$stmt->execute()) {
-            throw new Exception("Gagal menyimpan data: " . $stmt->error);
-        }
-
-        $response = [
-            'status' => 'success',
-            'message' => 'Data berhasil disimpan!'
-        ];
-
-        $stmt->close();
-
-    } catch (Exception $e) {
-        $response = [
-            'status' => 'error',
-            'message' => $e->getMessage()
-        ];
-
-        error_log("Error: " . $e->getMessage()); // Simpan log error di server
+    if ($stmt->execute()) {
+        //pop-up 
+        echo "
+            <script src=\"https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script>
+            <script type=\"text/javascript\">
+            Swal.fire({
+                title: 'Berhasil!',
+                text: 'Kami akan atur penjemputan Anda',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'menuswap.php'; // Redirect if needed
+                }
+            });
+            </script>
+        ";
+    } else {
+        echo "Error updating points: " . $stmt->error;
     }
-
-    // Return JSON response untuk AJAX
-    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-        header('Content-Type: application/json');
-        echo json_encode($response);
-        exit;
-    }
-}
+    
+    $stmt->close();
+};
+    
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -155,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btntukar'])) {
                             <h1 class="text-center text-pink-500 font-bold mb-3 text-3xl">Upload here!</h1>
                             <div class="d-flex justify-content-center">
                                 <label for="fileInput" class="cursor-pointer text-pink-600 font-semibold">Choose File</label>
-                                <input type="file" id="fileInput" class="d-none" accept="image/*" name="foto" required>
+                                <input type="file" id="fileInput" class="d-none" accept="image/*" name="foto">
                             </div>
                             <div id="preview" class="mt-4 text-center">
                                 <?php if (!empty($uploadedImage)): ?>
@@ -167,8 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btntukar'])) {
                     
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="jenisBarang" class="form-label">Jenis Barang</label>
-                            <select class="form-select" id="jenisBarang" name="jenis_barang" required>
+                            <label for="jenisBarang" class="form-label" >Jenis Barang</label>
+                            <select class="form-select" id="jenisBarang" name="jenisBarang">
                                 <option value="" selected disabled>Pilih jenis barang...</option>
                                 <option value="top">Top</option>
                                 <option value="bottom">Bottom</option>
@@ -177,11 +139,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btntukar'])) {
                         </div>
                         <div class="mb-3">
                             <label for="jenisBahan" class="form-label">Jenis Bahan</label>
-                            <input type="text" class="form-control" id="jenisBahan" name="jenis_bahan" placeholder="Masukkan jenis bahan" required>
+                            <input type="text" class="form-control" id="jenisBahan" name="jenisBahan" placeholder="Masukkan jenis bahan">
                         </div>
                         <div class="mb-3">
                             <label for="details" class="form-label">Details</label>
-                            <textarea class="form-control" id="details" rows="3" name="details" placeholder="Masukkan detail pakaian yang ingin ditukarkan." required></textarea>
+                            <textarea class="form-control" id="details" rows="3" name="details" placeholder="Masukkan detail pakaian yang ingin ditukarkan." ></textarea>
                         </div>
                     </div>
                     <br>
@@ -196,17 +158,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btntukar'])) {
                         </div>
                         <div class="mb-3">
                             <label for="alamatLengkap" class="form-label">Alamat Lengkap</label>
-                            <input type="text" id="alamatLengkap" name="alamat_lengkap" class="form-control" placeholder="Alamat Lengkap" required>
+                            <input type="text" id="alamatLengkap" name="alamatLengkap" class="form-control" placeholder="Alamat Lengkap" >
                         </div>
                         <div class="mb-3">
                             <label for="provinsi" class="form-label">Provinsi, Kab/Kota, Kecamatan, Kode Pos</label>
-                            <input type="text" id="provinsi" class="form-control" name="alamat" placeholder="Provinsi, Kab/Kota, Kecamatan, Kode Pos" required>
+                            <input type="text" id="provinsi" class="form-control" name="provinsi" placeholder="Provinsi, Kab/Kota, Kecamatan, Kode Pos" >
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="tanggalPenjemputan" class="form-label">Tambahkan Tanggal Penjemputan</label>
-                            <input type="date" id="tanggalPenjemputan" name="tanggal_penjemputan" class="form-control" required>
+                            <input type="date" id="tanggalPenjemputan" name="tanggalPenjemputan" class="form-control" >
+                            <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const today = new Date().toISOString().split('T')[0];
+                                document.getElementById("tanggalPenjemputan").setAttribute("min", today);
+                            });
+                        </script>
                         </div>
                         <div class="mb-3">
                             <label for="beratBarang" class="form-label">Pilih Berat</label>
@@ -215,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btntukar'])) {
                                 <button type="button" class="btn btn-white weight-btn" data-weight="3">3 Kg</button>
                                 <button type="button" class="btn btn-white weight-btn" data-weight="5">5 Kg</button>
                             </div>
-                            <input type="hidden" id="selectedWeight" name="berat_kg" value="" required>
+                            <input type="hidden" id="selectedWeight" name="berat_kg">
                         </div>
                         <br>
                         <br>
@@ -246,116 +214,161 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btntukar'])) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const fileInput = document.getElementById("fileInput");
-        const previewContainer = document.getElementById("preview");
-        const weightButtons = document.querySelectorAll(".weight-btn");
-        const weightInput = document.getElementById("selectedWeight");
-        const form = document.getElementById("exchangeForm");
+        document.addEventListener("DOMContentLoaded", function () {
+            const fileInput = document.getElementById("fileInput");
+            const previewContainer = document.getElementById("preview");
+            const alamatLengkapInput = document.getElementById("alamatLengkap");
+            const alamatInput = document.getElementById("provinsi");
+            const barangInput = document.getElementById("jenisBarang");
+            const bahanInput = document.getElementById("jenisBahan");
+            const detailsInput = document.getElementById("details");
+            const tanggalPenjemputanInput = document.getElementById("tanggalPenjemputan");
+            const weightButtons = document.querySelectorAll(".weight-btn");
+            const weightInput = document.getElementById("selectedWeight");
+            const form = document.getElementById("exchangeForm");
 
-        // Preview Image
-        fileInput.addEventListener("change", function () {
-            const file = fileInput.files[0];
-            if (file) {
-                // Validasi tipe file
-                if (!file.type.startsWith("image/")) {
-                    Swal.fire({
-                        title: "File Tidak Valid",
-                        text: "Silakan unggah file gambar yang valid (JPEG/PNG).",
-                        icon: "error",
-                        confirmButtonText: "OK"
-                    });
-                    fileInput.value = "";
-                    previewContainer.innerHTML = "";
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    previewContainer.innerHTML = ""; // Kosongkan preview sebelumnya
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.alt = "Selected Image";
-                    img.style.maxWidth = "200px";
-                    img.style.borderRadius = "5px";
-                    previewContainer.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                previewContainer.innerHTML = "";
-            }
-        });
-
-        // Weight Button Click Event
-        weightButtons.forEach((button) => {
-            button.addEventListener("click", function () {
-                weightButtons.forEach((btn) => btn.classList.remove("active"));
-                this.classList.add("active");
-                weightInput.value = this.getAttribute("data-weight");
-            });
-        });
-
-        // Form Submission
-        form.addEventListener("submit", function (event) {
-            event.preventDefault(); // Mencegah reload form
-
-            // Validasi berat
-            if (!weightInput.value) {
-                Swal.fire({
-                    title: "Error!",
-                    text: "Silakan pilih berat barang terlebih dahulu.",
-                    icon: "error",
-                    confirmButtonText: "OK"
-                });
-                return;
-            }
-
-            const formData = new FormData(this);
-
-            // Kirim permintaan POST ke server
-            fetch("your_php_script.php", { // Ganti dengan URL file PHP
-                method: "POST",
-                body: formData
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Gagal terhubung ke server.");
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.status === "success") {
+            // Preview Image
+            fileInput.addEventListener("change", function () {
+                const file = fileInput.files[0];
+                if (file) {
+                    // Validasi tipe file
+                    if (!file.type.startsWith("image/")) {
                         Swal.fire({
-                            title: "Penukaran Akan Segera Diproses!",
-                            text: "Kami akan segera melakukan penjemputan barang Anda.",
-                            icon: "success",
-                            confirmButtonText: "OK"
-                        }).then(() => {
-                            window.location.href = "your_redirect_page.php"; // Ganti dengan halaman redirect
-                        });
-                    } else {
-                        Swal.fire({
-                            title: "Penukaran Gagal",
-                            text: data.message,
+                            title: "File Tidak Valid",
+                            text: "Silakan unggah file gambar yang valid (JPEG/PNG).",
                             icon: "error",
                             confirmButtonText: "OK"
                         });
+                        fileInput.value = "";
+                        previewContainer.innerHTML = "";
+                        return;
                     }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewContainer.innerHTML = ""; // Kosongkan preview sebelumnya
+                        const img = document.createElement("img");
+                        img.src = e.target.result;
+                        img.alt = "Selected Image";
+                        img.style.maxWidth = "200px";
+                        img.style.borderRadius = "5px";
+                        previewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    previewContainer.innerHTML = "";
+                }
+            });
+
+            // Weight Button Click Event
+            weightButtons.forEach((button) => {
+                button.addEventListener("click", function () {
+                    weightButtons.forEach((btn) => btn.classList.remove("active"));
+                    this.classList.add("active");
+                    weightInput.value = this.getAttribute("data-weight");
+                });
+            });
+
+            // Form Submission
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                if (fileInput.files.length === 0) {
                     Swal.fire({
-                        title: "Kesalahan Server",
-                        text: "Terjadi kesalahan saat mencoba proses penukaran.",
+                        title: "Error Files!",
+                        text: "Silakan pilih berat barang terlebih dahulu.",
                         icon: "error",
                         confirmButtonText: "OK"
                     });
-                });
-        });
-    });
-</script>
+                    return;
+                }
+                
+                if (!alamatLengkapInput.value){
+                    Swal.fire({
+                        title: "Alamat!",
+                        text: "Silakan pilih berat barang terlebih dahulu.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
 
+                if (!alamatInput.value){
+                    Swal.fire({
+                        title: "Alamat!",
+                        text: "Silakan pilih berat barang terlebih dahulu.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
+
+                if (!barangInput.value){
+                    Swal.fire({
+                        title: "Barang!",
+                        text: "Silakan pilih berat barang terlebih dahulu.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
+                
+                if (!bahanInput.value){
+                    Swal.fire({
+                        title: "Bahan!",
+                        text: "Silakan pilih berat barang terlebih dahulu.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
+
+                if (!detailsInput.value){
+                    Swal.fire({
+                        title: "Bahan!",
+                        text: "Silakan pilih berat barang terlebih dahulu.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
+
+                if (!tanggalPenjemputanInput.value){
+                    Swal.fire({
+                        title: "TGL!",
+                        text: "Silakan pilih berat barang terlebih dahulu.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
+
+                if (!weightInput.value) {
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Silakan pilih berat barang terlebih dahulu.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
+
+                if (!alamatLengkapInput.value){
+                    Swal.fire({
+                        title: "Alamat!",
+                        text: "Silakan pilih berat barang terlebih dahulu.",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
+
+                form.submit();
+            }); 
+        });
+    </script>
 </body>
 <?php
 include "template/footer_user.php"

@@ -1,22 +1,23 @@
+
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
-
 
 $user_id = $_SESSION['user_id'];
 
 $resultDataSQL = $conn->query("SELECT first_name, last_name FROM user WHERE id = '$user_id'");
 
+// Poin Jumlah Penukaran
 if ($resultDataSQL && $resultDataSQL->num_rows > 0) {
     // Fetch the result as an associative array
     $row = $resultDataSQL->fetch_assoc();
     $fullname = $row['first_name'] . ' ' . $row['last_name'];
 } else {
     // Handle the case where no data is found
-    $fullname = "Name not found";
+    $fullname = "Nama Tidak Ditemukan";
 }
 
-$getPoin = $conn->prepare("SELECT COUNT(*) FROM `orders` WHERE nama_lengkap = ?");
+$getPoin = $conn->prepare("SELECT COUNT(*) FROM orders WHERE nama_lengkap = ?");
 $getPoin->bind_param("s", $fullname);
 
 if ($getPoin->execute()) {
@@ -28,10 +29,71 @@ if ($getPoin->execute()) {
 
 $getPoin->close();
 
+// Poin Jumlah 
+
+$resultData = $conn->query("SELECT first_name, last_name FROM user WHERE id = '$user_id'");
+
+if ($resultData && $resultData->num_rows > 0) {
+    // Fetch the result as an associative array
+    $row = $resultData->fetch_assoc();
+    $fullname = $row['first_name'] . ' ' . $row['last_name'];
+} else {
+    // Handle the case where no data is found
+    $fullname = "Nama Tidak Ditemukan";
+}
+
+$getPoinTukar = $conn->prepare("SELECT COUNT(*) FROM orders WHERE nama_lengkap = ?");
+$getPoinTukar->bind_param("s", $fullname);
+
+if ($getPoinTukar->execute()) {
+    $result = $getPoinTukar->get_result();
+    $resultPoinTukar = $result->fetch_row()[0];
+} else {
+    echo "Error: " . $getPoinTukar->error;
+}
+
+$getPoinTukar->close();
+
+
 // Terima request penukaran
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tukar_pakaian'])) {
     $user_id = $_SESSION['user_id']; // Ambil ID user dari session
     updateJumlahPenukaran($user_id, $conn);
+}
+
+// Ambil nama lengkap pengguna berdasarkan user_id
+$resultData = $conn->query("SELECT first_name, last_name FROM user WHERE id = '$user_id'");
+
+if ($resultData && $resultData->num_rows > 0) {
+    // Fetch the result as an associative array
+    $row = $resultData->fetch_assoc();
+    $fullname = $row['first_name'] . ' ' . $row['last_name'];
+} else {
+    // Handle the case where no data is found
+    $fullname = "Nama Tidak Ditemukan";
+}
+
+// Query untuk menjumlahkan poin berdasarkan nama lengkap
+$getPoinTukar = $conn->prepare("SELECT SUM(poin) FROM orders WHERE nama_lengkap = ?");
+$getPoinTukar->bind_param("s", $fullname);
+
+if ($getPoinTukar->execute()) {
+    $result = $getPoinTukar->get_result();
+    $resultPoinTukar = $result->fetch_row()[0];
+
+    // Jika tidak ada poin yang ditemukan, set poin menjadi 0
+    if ($resultPoinTukar === null) {
+        $resultPoinTukar = 0;
+    }
+} else {
+    echo "Error: " . $getPoinTukar->error;
+}
+
+$getPoinTukar->close();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['poin'])) {
+    $user_id = $_SESSION['user_id']; // Ambil ID user dari session
+    updateJumlahPenukaran($user_id, $conn, $resultPoinTukar);
 }
 
 $conn->close();
@@ -137,7 +199,7 @@ $conn->close();
                 <div class="card shadow-lg border-0 rounded-lg overflow-hidden">
                     <img src="<?= HOST ?>/foto/jml.poin.png" alt="Gambar" class="card-img-top">
                     <div class="card-body text-center">
-                        <h3 class="card-title text-3xl font-bold"><?= $poin ?></h3>
+                        <h3 class="card-title text-3xl font-bold"><?= $resultPoinTukar ?></h3>
                         <p class="text-gray-600">JUMLAH POIN</p>
                         <div class="d-flex justify-content-center gap-3 mt-4">
                             <button type="button" class="btn bg-pink-500 hover:bg-pink-700 text-white font-medium py-3 px-5 w-full rounded-lg shadow-md transition duration-300" onclick="window.location.href='menutukar.php';">
