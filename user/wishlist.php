@@ -125,9 +125,9 @@ $wishlist_products = array_filter($products, fn($product) => in_array($product['
 
     <section class="container mx-auto mt-8">
         <?php if (empty($wishlist_products)): ?>
-            <div class="empty-wishlist">
-                <i class="fas fa-heart-broken text-6xl text-pink-300 mb-4"></i>
-                <h3 class="text-xl font-medium mb-2">Your wishlist is empty</h3>
+            <div class="empty-wishlist flex flex-col items-center justify-center min-h-[60vh] text-center">
+                <i class="fas fa-heart-broken text-5xl text-pink-300 mb-4"></i>
+                <h3 class="text-lg font-medium mb-2">Your wishlist is empty</h3>
                 <p class="text-gray-600">Browse our products and add your favorites!</p>
             </div>
         <?php else: ?>
@@ -192,4 +192,7 @@ $wishlist_products = array_filter($products, fn($product) => in_array($product['
 }
 </script>
 </body>
+<?php
+include "template/footer_user.php"
+?>
 </html>
