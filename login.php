@@ -18,11 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Jika login berhasil, simpan informasi ke session
         $_SESSION['username'] = $user['username'];
         $_SESSION['role'] = $user['role']; // Simpan role di session
-<<<<<<< HEAD
         $_SESSION['user_id'] = $user['id'];
-=======
-        
->>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
 
         // Return JSON response
         echo json_encode([

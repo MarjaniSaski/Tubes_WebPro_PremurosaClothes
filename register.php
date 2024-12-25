@@ -2,54 +2,59 @@
 require 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $gender = $_POST['gender'];
+    // Mengambil input dari form
+    $first_name = $_POST['first_name'] ?? '';
+    $last_name = $_POST['last_name'] ?? '';
+    $gender = $_POST['gender'] ?? '';
     if ($gender === 'Lainnya') {
-        $gender = $_POST['other_gender'] ?: 'Lainnya'; // Gunakan input tambahan jika ada, jika tidak gunakan 'Lainnya'
+        $gender = $_POST['other_gender'] ?? 'Lainnya';
     }
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash password
-    $role = $_POST['role']; // Role bisa 'admin' atau 'buyer'
-<<<<<<< HEAD
+    $username = $_POST['username'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $phone = $_POST['phone'] ?? '';
+    $password = $_POST['password'] ?? '';
+    $role = $_POST['role'] ?? '';
     $foto = "Default_Picture.jpg";
-=======
->>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
+
+    // Validasi data wajib
+    if (empty($first_name) || empty($last_name) || empty($username) || empty($email) || empty($phone) || empty($password) || empty($role)) {
+        echo json_encode(['status' => 'error', 'message' => 'Semua kolom wajib diisi.']);
+        exit;
+    }
+
+    // Hash password
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Koneksi ke database
     $conn = new mysqli('localhost', 'root', '', 'premurosa');
     if ($conn->connect_error) {
-        die("Koneksi gagal: " . $conn->connect_error);
+        echo json_encode(['status' => 'error', 'message' => 'Gagal terhubung ke database.']);
+        exit;
     }
 
-    // Menyisipkan data ke tabel user dengan prepared statement untuk menghindari SQL Injection
-<<<<<<< HEAD
-    $sql = $conn->prepare("INSERT INTO `user` (first_name, last_name, gender, username, email, phone, password, role, foto) 
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    // Menyisipkan data ke tabel user dengan prepared statement
+    $sql = $conn->prepare("INSERT INTO user (first_name, last_name, gender, username, email, phone, password, role, foto) 
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    if ($sql) {
+        $sql->bind_param("sssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $hashed_password, $role, $foto);
 
-    $sql->bind_param("ssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $password, $role, $foto);
-=======
-    $sql = $conn->prepare("INSERT INTO `user` (first_name, last_name, gender, username, email, phone, password, role) 
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-
-    $sql->bind_param("ssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $password, $role);
->>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
-
-    if ($sql->execute()) {
-        session_start();
-        $_SESSION['user_id'] = $conn->insert_id;
-        echo json_encode(['status' => 'success', 'message' => 'Pendaftaran akun berhasil!']);
+        if ($sql->execute()) {
+            session_start();
+            $_SESSION['user_id'] = $conn->insert_id;
+            echo json_encode(['status' => 'success', 'message' => 'Pendaftaran akun berhasil!']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Pendaftaran akun gagal. Silakan coba lagi.']);
+        }
+        $sql->close();
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Pendaftaran akun gagal.']);
+        echo json_encode(['status' => 'error', 'message' => 'Query tidak valid.']);
     }
 
-    $sql->close();
     $conn->close();
     exit;
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -75,6 +80,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .btn-pink:hover {
             background-color: #e099c2;
         }
+        .fa-eye {
+            color: #6c757d;
+        }
+
+        .fa-eye-slash {
+            color: #6c757d;
+        }
+
     </style>
 </head>
 <body class="flex min-h-screen bg-gray-100">
@@ -84,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="flex-1 flex items-center justify-center bg-white p-6">
         <div class="w-full max-w-md">
             <h3 class="text-center text-2xl font-semibold mb-2">Daftar Akun Baru!</h3><br>
-            <form id="registerForm" class="space-y-4">
+            <form id="registerForm" action="register.php" method="POST" class="space-y-4">
                 <div class="mb-3">
                     <input type="text" name="first_name" class="form-control" placeholder="Nama Depan" required>
                 </div>
@@ -122,76 +135,68 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <input type="password" id="password" name="password" class="form-control" placeholder="Kata Sandi" style="padding-right: 40px;" required>
                     <i id="togglePassword" class="fa-regular fa-eye" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer; color: #6c757d;"></i>
                 </div>
-
+                
                 <button type="submit" class="btn btn-pink w-100">Daftar</button>
             </form>
+            <div class="text-center mt-4">
+                <p class="text-sm">Sudah punya akun? 
+                    <a href="login.php" class="text-pink-500 font-semibold hover:underline">Log In</a>
+                </p>
+            </div>
         </div>
     </div>
-
     <script>
-        document.getElementById("togglePassword").addEventListener("click", function () {
-            const passwordInput = document.getElementById("password");
-            const toggleIcon = document.getElementById("togglePassword");
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordField = document.getElementById('password');
+            const isPasswordVisible = passwordField.getAttribute('type') === 'password';
 
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                toggleIcon.classList.remove("fa-eye");
-                toggleIcon.classList.add("fa-eye-slash");
-            } else {
-                passwordInput.type = "password";
-                toggleIcon.classList.remove("fa-eye-slash");
-                toggleIcon.classList.add("fa-eye");
-            }
-        });
+            // Toggle tipe input
+            passwordField.setAttribute('type', isPasswordVisible ? 'text' : 'password');
 
-        document.querySelectorAll('input[name="gender"]').forEach(radio => {
-            radio.addEventListener('change', function () {
-                const otherGenderInput = document.getElementById('other-gender');
-                if (this.value === 'Lainnya') {
-                    otherGenderInput.style.display = 'block';
-                } else {
-                    otherGenderInput.style.display = 'none';
-                    otherGenderInput.value = ''; // Reset nilai input "Lainnya"
-                }
-            });
+            // Ubah ikon mata
+            this.classList.toggle('fa-eye'); // Ikon mata biasa
+            this.classList.toggle('fa-eye-slash'); // Ikon mata tercoret
         });
 
         document.getElementById('registerForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Mencegah reload form
-            const formData = new FormData(this);
-            fetch('register.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: data.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.href = 'login.php'; // Redirect ke halaman login setelah sukses
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Gagal!',
-                        text: data.message,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            })
-            .catch(error => {
+        event.preventDefault(); // Mencegah reload form
+        const formData = new FormData(this);
+    
+        fetch('register.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
                 Swal.fire({
-                    title: 'Kesalahan Server!',
-                    text: 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.',
+                    title: 'Berhasil!',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = 'login.php'; // Redirect ke halaman login setelah sukses
+                });
+            } else {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: data.message,
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
+            }
+        })
+        .catch(error => {
+            Swal.fire({
+                title: 'Kesalahan Server!',
+                text: 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.',
+                icon: 'error',
+                confirmButtonText: 'OK'
             });
+            console.error('Error:', error);
         });
+    });
     </script>
+
 </body>
 </html>
