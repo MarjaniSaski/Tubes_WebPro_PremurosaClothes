@@ -213,6 +213,14 @@ if (!isset($_SESSION['wishlist'])) {
 
 <!-- Product Section -->
 <section class="container mx-auto mt-8">
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <form method="GET" style="display: flex; width: 50%;">
+            <input type="text" name="search" placeholder="Cari produk..." style="border: 1px solid #F472B6; border-radius: 8px 0 0 8px; padding: 8px; flex: 1;" value="<?= htmlspecialchars($search); ?>">
+            <button type="submit" style="background-color: #F472B6; color: white; padding: 8px 16px; border: none; border-radius: 0 8px 8px 0; cursor: pointer;">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
     <div class="flex justify-end mb-4">
         <div class="sort-dropdown">
             <button onclick="toggleDropdown()" class="btn bg-pink-400 text-black flex justify-between items-center font-semibold rounded-lg px-4 py-2" style="width: 200px;">
