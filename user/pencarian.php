@@ -5,12 +5,15 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 // Mengatur filter berdasarkan GET parameter
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'Terlaris';
 
+// kata kunci pencarian
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+
 // Daftar produk dengan nama, gambar, harga, dan rating
 $products = [
     ["name" => "Ivory Midi Skirt", "image" => "/foto/rok putih.png", "price" => 299000, "rating" => 4.5],
     ["name" => "Unisex T-Shirt", "image" => "/foto/7.png", "price" => 199000, "rating" => 4.2],
     ["name" => "Striped Shirt", "image" => "/foto/11.png", "price" => 299000, "rating" => 4.3],
-    ["name" => "Cargo Army Men", "image" => "/foto/18.png", "price" => 199000, "rating" => 4.0],
+    ["name" => "Cabana Men Shirt", "image" => "/foto/18.png", "price" => 199000, "rating" => 4.0],
     ["name" => "Jeans Kulot Highwaist", "image" => "/foto/jeans kulot.png", "price" => 399000, "rating" => 4.7],
     ["name" => "Pink Blouse", "image" => "/foto/blouse pink.png", "price" => 259000, "rating" => 4.6],
     ["name" => "Ruffle Blouse", "image" => "/foto/blouse chocolate.png", "price" => 229000, "rating" => 4.1],
@@ -20,6 +23,13 @@ $products = [
     ["name" => "Floral Shirt", "image" => "/foto/Pink floral.png", "price" => 299000, "rating" => 4.3],
     ["name" => "Titanium Shirt", "image" => "/foto/kemeja abu.png", "price" => 299000, "rating" => 4.0]
 ];
+
+// Filter produk berdasarkan pencarian
+if (!empty($search)) {
+    $products = array_filter($products, function ($product) use ($search) {
+        return stripos($product['name'], $search) !== false; // Memeriksa apakah nama produk mengandung kata kunci
+    });
+}
 
 // Mengurutkan produk berdasarkan filter
 switch ($filter) {
@@ -56,9 +66,6 @@ switch ($filter) {
             return $b['rating'] - $a['rating'];
         });
         break;
-}
-if (!isset($_SESSION['wishlist'])) {
-    $_SESSION['wishlist'] = [];
 }
 ?>
 
@@ -130,6 +137,7 @@ if (!isset($_SESSION['wishlist'])) {
         display: block;
     }
 
+    /* Mengatur teks di dropdown button ke kanan */
     .btn span {
         text-align: right;
         width: 100%;
@@ -139,55 +147,18 @@ if (!isset($_SESSION['wishlist'])) {
     #currentSort{
         text-align:left;
     }
-    .rating-wishlist {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    position: relative; 
-}
-
-.rating {
-    display: flex;
-    align-items: center;
-}
-
-.rating span {
-    margin-left: 0.5rem;
-    font-size: 0.9rem;
-    color: #333;
-}
-
-
-.wishlist-icon {
-    position: absolute; 
-    top: 50%;
-    right: 0px; 
-    transform: translateY(-30%); 
-    font-size: 1.5rem;
-    color: grey;
-    cursor: pointer;
-    transition: color 0.3s, transform 0.3s;
-}
-
-.wishlist-icon:hover {
-    color: red;
-    transform: translateY(-30%) scale(1.2);
-}
-
-.wishlist-icon.wishlist-active {
-    color: red;
-}
-
 </style>
-
-<div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
-    <h2 class="text-xl font-bold pl-4">
-        <i class="bi bi-bag-heart-fill text-pink-500 mr-3"></i> Product
-    </h2>
-</div>
 
 <!-- Product Section -->
 <section class="container mx-auto mt-8">
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <form method="GET" style="display: flex; width: 50%;">
+            <input type="text" name="search" placeholder="Cari produk..." style="border: 1px solid #F472B6; border-radius: 8px 0 0 8px; padding: 8px; flex: 1;" value="<?= htmlspecialchars($search); ?>">
+            <button type="submit" style="background-color: #F472B6; color: white; padding: 8px 16px; border: none; border-radius: 0 8px 8px 0; cursor: pointer;">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
     <div class="flex justify-end mb-4">
         <div class="sort-dropdown">
             <button onclick="toggleDropdown()" class="btn bg-pink-400 text-black flex justify-between items-center font-semibold rounded-lg px-4 py-2" style="width: 200px;">
@@ -205,32 +176,25 @@ if (!isset($_SESSION['wishlist'])) {
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
         <?php foreach ($products as $product): ?>
             <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-                <img src="<?= HOST . $product['image'] ?>" alt="<?= $product['name'] ?>" class="w-full mb-4 rounded-md">
+                <img src="<?= HOST . $product['image'] ?>" alt="<?= $product['name'] ?>" class="w-full mb-4">
                 <h3 class="text-sm font-medium"><?= $product['name'] ?></h3>
                 <p class="text-pink-500 font-bold">Rp<?= number_format($product['price'], 0, ',', '.') ?></p>
-                <div class="rating-wishlist flex items-center justify-center space-x-2">
-                    <div class="rating flex items-center">
-                        <?php
-                        $fullStars = floor($product['rating']);
-                        $halfStars = ($product['rating'] - $fullStars) >= 0.5 ? 1 : 0;
-                        $emptyStars = 5 - $fullStars - $halfStars;
-                        for ($i = 0; $i < $fullStars; $i++) {
-                            echo '<i class="fas fa-star"></i>';
-                        }
-                        if ($halfStars) {
-                            echo '<i class="fas fa-star-half-alt"></i>';
-                        }
-                        for ($i = 0; $i < $emptyStars; $i++) {
-                            echo '<i class="far fa-star"></i>';
-                        }
-                        ?>
-                        <span><?= $product['rating'] ?></span>
-                    </div>
-                    <!-- Ikon wishlist -->
-                    <i class="fas fa-heart wishlist-icon <?= in_array($product['name'], $_SESSION['wishlist']) ? 'wishlist-active' : '' ?>" 
-                        data-name="<?= $product['name'] ?>" 
-                        onclick="toggleWishlist(this, '<?= $product['name'] ?>')">
-                    </i>
+                <div class="rating">
+                    <?php
+                    $fullStars = floor($product['rating']);
+                    $halfStars = ($product['rating'] - $fullStars) >= 0.5 ? 1 : 0;
+                    $emptyStars = 5 - $fullStars - $halfStars;
+                    for ($i = 0; $i < $fullStars; $i++) {
+                        echo '<i class="fas fa-star"></i>';
+                    }
+                    if ($halfStars) {
+                        echo '<i class="fas fa-star-half-alt"></i>';
+                    }
+                    for ($i = 0; $i < $emptyStars; $i++) {
+                        echo '<i class="far fa-star"></i>';
+                    }
+                    ?>
+                    <span><?= $product['rating'] ?></span>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -253,36 +217,6 @@ window.onclick = function(event) {
             }
         }
     }
-}
-
-function toggleWishlist(icon, productName) {
-    // Ambil wishlist dari localStorage
-    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-
-    if (wishlist.includes(productName)) {
-        // Jika produk sudah ada, hapus dari wishlist
-        wishlist = wishlist.filter(item => item !== productName);
-        icon.classList.remove('wishlist-active');
-    } else {
-        // Jika produk belum ada, tambahkan ke wishlist
-        wishlist.push(productName);
-        icon.classList.add('wishlist-active');
-    }
-
-    // Simpan ke local storage
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-
-    // Kirim data ke server 
-    fetch('save_wishlist.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wishlist })
-    }).then(response => response.json())
-      .then(data => {
-          if (data.status !== 'success') {
-              console.error('Gagal menyimpan wishlist di server:', data.message);
-          }
-      });
 }
 </script>
 

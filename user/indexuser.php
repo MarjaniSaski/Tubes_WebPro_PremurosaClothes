@@ -1,5 +1,7 @@
 <?php
 include "template/header_user.php"
+
+
 ?>
 <style>
     .categories .card {
