@@ -269,6 +269,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+<?php
+include "template/footer_user.php"
+?>
 </body>
 </html>
 

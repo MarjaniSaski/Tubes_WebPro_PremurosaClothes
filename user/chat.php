@@ -20,6 +20,9 @@ include "template/header_user.php"
             </div>
         </div>
     </main>
-
+    
+<?php
+include "template/footer_user.php"
+?>
 </body>
 </html>

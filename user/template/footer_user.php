@@ -20,6 +20,15 @@ if (!defined('HOST')) {
     <link href="<?= HOST ?>/assets/css/styles.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        main{
+            flex-grow: 1;
+        }
         footer {
             background: #FFABE1;
             color: #333;
