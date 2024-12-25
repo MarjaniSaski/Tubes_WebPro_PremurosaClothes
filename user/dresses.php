@@ -11,7 +11,7 @@ $products = [
     ["name" => "School Dress", "image" => "/foto/D12.png", "price" => 330000, "rating" => 4.2],
     ["name" => "Ivory Flower Dress", "image" => "/foto/D9.png", "price" => 399000, "rating" => 4.5],
     ["name" => "Denim Dress", "image" => "/foto/D7.png", "price" => 369000, "rating" => 4.2],
-    ["name" => "Bubblegum Dress", "image" => "/foto/D5.png", "price" => 319000, "rating" => 5.0],
+    ["name" => "Bubblegum Dress", "image" => "/foto/D5.png", "price" => 3199000, "rating" => 5.0],
     ["name" => "Unicorn Dress", "image" => "/foto/D10.png", "price" => 359000, "rating" => 4.6],
     ["name" => "Seasalt Dress", "image" => "/foto/D2.png", "price" => 399000, "rating" => 4.7],
     ["name" => "Sun Dress", "image" => "/foto/D3.png", "price" => 439000, "rating" => 4.4],
