@@ -6,7 +6,7 @@ $products = [
     ["name" => "Ivory Midi Skirt", "image" => "/foto/rok putih.png", "price" => 299000, "rating" => 4.5],
     ["name" => "Unisex T-Shirt", "image" => "/foto/7.png", "price" => 199000, "rating" => 4.2],
     ["name" => "Striped Shirt", "image" => "/foto/11.png", "price" => 299000, "rating" => 4.3],
-    ["name" => "Cabana Men Shirt", "image" => "/foto/18.png", "price" => 199000, "rating" => 4.0],
+    ["name" => "Cargo Army Men", "image" => "/foto/18.png", "price" => 199000, "rating" => 4.0],
     ["name" => "Jeans Kulot Highwaist", "image" => "/foto/jeans kulot.png", "price" => 399000, "rating" => 4.7],
     ["name" => "Pink Blouse", "image" => "/foto/blouse pink.png", "price" => 259000, "rating" => 4.6],
     ["name" => "Ruffle Blouse", "image" => "/foto/blouse chocolate.png", "price" => 229000, "rating" => 4.1],
@@ -14,8 +14,30 @@ $products = [
     ["name" => "Black Midi Skirt", "image" => "/foto/rok mini.png", "price" => 299000, "rating" => 4.5],
     ["name" => "Jeans Skirt", "image" => "/foto/rok jeans payung.png", "price" => 330000, "rating" => 4.2],
     ["name" => "Floral Shirt", "image" => "/foto/Pink floral.png", "price" => 299000, "rating" => 4.3],
-    ["name" => "Titanium Shirt", "image" => "/foto/kemeja abu.png", "price" => 299000, "rating" => 4.0]
+    ["name" => "Titanium Shirt", "image" => "/foto/kemeja abu.png", "price" => 299000, "rating" => 4.0],
+    ["name" => "Sea Dress", "image" => "/foto/D6.png", "price" => 299000, "rating" => 4.5],
+    ["name" => "Ivory Dress", "image" => "/foto/D8.png", "price" => 299000, "rating" => 4.5],
+    ["name" => "Sunset Dress", "image" => "/foto/D4.png", "price" => 199000, "rating" => 4.0],
+    ["name" => "Rain Dress", "image" => "/foto/D11.png", "price" => 399000, "rating" => 4.7],
+    ["name" => "Lolipop Dress", "image" => "/foto/D1.png", "price" => 299000, "rating" => 4.0],
+    ["name" => "School Dress", "image" => "/foto/D12.png", "price" => 330000, "rating" => 4.2],
+    ["name" => "Ivory Flower Dress", "image" => "/foto/D9.png", "price" => 399000, "rating" => 4.5],
+    ["name" => "Denim Dress", "image" => "/foto/D7.png", "price" => 369000, "rating" => 4.2],
+    ["name" => "Bubblegum Dress", "image" => "/foto/D5.png", "price" => 319000, "rating" => 5.0],
+    ["name" => "Unicorn Dress", "image" => "/foto/D10.png", "price" => 359000, "rating" => 4.6],
+    ["name" => "Seasalt Dress", "image" => "/foto/D2.png", "price" => 399000, "rating" => 4.7],
+    ["name" => "Sun Dress", "image" => "/foto/D3.png", "price" => 439000, "rating" => 4.4],
+    ["name" => "Jeans Kulot", "image" => "/foto/12.png", "price" => 399000, "rating" => 4.5],
+    ["name" => "Jeans Cargo", "image" => "/foto/kulot jeans cargo.png", "price" => 369000, "rating" => 4.2],
+    ["name" => "Jeans Kulot Red", "image" => "/foto/red jenas kuot.png", "price" => 319000, "rating" => 5.0],
+    ["name" => "Petal Skirt", "image" => "/foto/1.png", "price" => 359000, "rating" => 4.6],
+    ["name" => "Denim Diamond Skirt", "image" => "/foto/2.png", "price" => 399000, "rating" => 4.7],
+    ["name" => "Black Diamond Shirt", "image" => "/foto/3.png", "price" => 439000, "rating" => 4.4],
+    ["name" => "Sea Blouse", "image" => "/foto/blouse blue.png", "price" => 299000, "rating" => 4.7],
+    ["name" => "Contrast Craft Shirt", "image" => "/foto/kemeja bw.png", "price" => 299000, "rating" => 4.3],
+    ["name" => "Dress Teracota", "image" => "/foto/dress coklat.png", "price" => 359000, "rating" => 4.8]
 ];
+
 
 $wishlist = $_SESSION['wishlist'] ?? [];
 $wishlist_products = array_filter($products, fn($product) => in_array($product['name'], $wishlist));

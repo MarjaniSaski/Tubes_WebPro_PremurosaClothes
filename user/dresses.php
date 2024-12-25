@@ -1,99 +1,158 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
+$products = [
+
+    ["name" => "Sea Dress", "image" => "/foto/D6.png", "price" => 299000, "rating" => 4.5],
+    ["name" => "Ivory Dress", "image" => "/foto/D8.png", "price" => 299000, "rating" => 4.5],
+    ["name" => "Sunset Dress", "image" => "/foto/D4.png", "price" => 199000, "rating" => 4.0],
+    ["name" => "Rain Dress", "image" => "/foto/D11.png", "price" => 399000, "rating" => 4.7],
+    ["name" => "Lolipop Dress", "image" => "/foto/D1.png", "price" => 299000, "rating" => 4.0],
+    ["name" => "School Dress", "image" => "/foto/D12.png", "price" => 330000, "rating" => 4.2],
+    ["name" => "Ivory Flower Dress", "image" => "/foto/D9.png", "price" => 399000, "rating" => 4.5],
+    ["name" => "Denim Dress", "image" => "/foto/D7.png", "price" => 369000, "rating" => 4.2],
+    ["name" => "Bubblegum Dress", "image" => "/foto/D5.png", "price" => 319000, "rating" => 5.0],
+    ["name" => "Unicorn Dress", "image" => "/foto/D10.png", "price" => 359000, "rating" => 4.6],
+    ["name" => "Seasalt Dress", "image" => "/foto/D2.png", "price" => 399000, "rating" => 4.7],
+    ["name" => "Sun Dress", "image" => "/foto/D3.png", "price" => 439000, "rating" => 4.4],
+];
+if (!isset($_SESSION['wishlist'])) {
+    $_SESSION['wishlist'] = [];
+}
 ?> 
+<style>
+    .rating {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+    }
 
-<!-- Bagian Produk -->
-<section class="container mx-auto my-8">
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-        <!-- Produk 1 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D6.png" alt="Sea Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">Sea Dress</h3>
-            <p class="text-pink-500 font-bold">Rp249.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
+    .rating i {
+        font-size: 1.2rem;
+        color: #ffcc00;
+        margin: 0 2px;
+        transition: transform 0.2s ease;
+    }
 
-        <!-- Produk 2 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D8.png" alt="Ivory Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">Ivory Dress</h3>
-            <p class="text-pink-500 font-bold">Rp200.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
+    .rating i:hover {
+        transform: scale(1.2);
+    }
 
-        <!-- Produk 3 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D4.png" alt="Sunset Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">Sunset Dress</h3>
-            <p class="text-pink-500 font-bold">Rp399.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
+    .rating span {
+        font-size: 1rem;
+        color: #555;
+        font-weight: bold;
+        margin-left: 10px;
+    }
 
-        <!-- Produk 4 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D11.png" alt="Rain Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">Rain Dress</h3>
-            <p class="text-pink-500 font-bold">Rp299.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
+    .rating-wishlist {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative; 
+    }
 
-        <!-- Produk 5 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D1.png" alt="Lolipop Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">Lolipop Dress</h3>
-            <p class="text-pink-500 font-bold">Rp299.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
+    .rating {
+        display: flex;
+        align-items: center;
+    }
 
-        <!-- Produk 6 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D12.png" alt="School Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">School Dress</h3>
-            <p class="text-pink-500 font-bold">Rp250.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
+    .rating span {
+        margin-left: 0.5rem;
+        font-size: 0.9rem;
+        color: #333;
+    }
 
-        <!-- Produk 7 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D9.png" alt="Ivory Flower Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">Ivory Flower Dress</h3>
-            <p class="text-pink-500 font-bold">Rp299.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
 
-        <!-- Produk 8 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D7.png" alt="Denim Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">Denim Dress</h3>
-            <p class="text-pink-500 font-bold">Rp250.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
+    .wishlist-icon {
+        position: absolute; 
+        top: 50%;
+        right: 0px; 
+        transform: translateY(-30%); 
+        font-size: 1.5rem;
+        color: grey;
+        cursor: pointer;
+        transition: color 0.3s, transform 0.3s;
+    }
 
-        <!-- Produk 9 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D5.png" alt="Bubblegum Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">Bubblegum Dress</h3>
-            <p class="text-pink-500 font-bold">Rp359.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
+    .wishlist-icon:hover {
+        color: red;
+        transform: translateY(-30%) scale(1.2);
+    }
 
-        <!-- Produk 10 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D10.png" alt="Unicorn Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">Unicorn Dress</h3>
-            <p class="text-pink-500 font-bold">Rp350.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
-
-        <!-- Produk 11 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D2.png" alt="Seasalt Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">Seasalt Dress</h3>
-            <p class="text-pink-500 font-bold">Rp300.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
-
-        <!-- Produk 12 -->
-        <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-            <img src="<?= HOST ?>/foto/D3.png" alt="Sun Dress" class="w-full mb-4">
-            <h3 class="text-sm font-medium">Sun Dress</h3>
-            <p class="text-pink-500 font-bold">Rp359.000</p> <!-- Menyesuaikan harga dengan kualitas -->
-        </div>
+    .wishlist-icon.wishlist-active {
+        color: red;
+    }
+</style>
+<section class="container mx-auto mt-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <?php foreach ($products as $product): ?>
+            <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
+                <img src="<?= HOST . $product['image'] ?>" alt="<?= $product['name'] ?>" class="w-full mb-4 rounded-md">
+                <h3 class="text-sm font-medium"><?= $product['name'] ?></h3>
+                <p class="text-pink-500 font-bold">Rp<?= number_format($product['price'], 0, ',', '.') ?></p>
+                <div class="rating-wishlist flex items-center justify-center space-x-2">
+                    <div class="rating flex items-center">
+                        <?php
+                        $fullStars = floor($product['rating']);
+                        $halfStars = ($product['rating'] - $fullStars) >= 0.5 ? 1 : 0;
+                        $emptyStars = 5 - $fullStars - $halfStars;
+                        for ($i = 0; $i < $fullStars; $i++) {
+                            echo '<i class="fas fa-star"></i>';
+                        }
+                        if ($halfStars) {
+                            echo '<i class="fas fa-star-half-alt"></i>';
+                        }
+                        for ($i = 0; $i < $emptyStars; $i++) {
+                            echo '<i class="far fa-star"></i>';
+                        }
+                        ?>
+                        <span><?= $product['rating'] ?></span>
+                    </div>
+                    <!-- Ikon wishlist -->
+                    <i class="fas fa-heart wishlist-icon <?= in_array($product['name'], $_SESSION['wishlist']) ? 'wishlist-active' : '' ?>" 
+                        data-name="<?= $product['name'] ?>" 
+                        onclick="toggleWishlist(this, '<?= $product['name'] ?>')">
+                    </i>
+                </div>
+            </div>
+        <?php endforeach; ?>
     </div>
 </section>
+<script>
+    function toggleWishlist(icon, productName) {
+    // Ambil wishlist dari localStorage
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+    if (wishlist.includes(productName)) {
+        // Jika produk sudah ada, hapus dari wishlist
+        wishlist = wishlist.filter(item => item !== productName);
+        icon.classList.remove('wishlist-active');
+    } else {
+        // Jika produk belum ada, tambahkan ke wishlist
+        wishlist.push(productName);
+        icon.classList.add('wishlist-active');
+    }
+
+    // Simpan ke local storage
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+
+    // Kirim data ke server 
+    fetch('save_wishlist.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ wishlist })
+    }).then(response => response.json())
+      .then(data => {
+          if (data.status !== 'success') {
+              console.error('Gagal menyimpan wishlist di server:', data.message);
+          }
+      });
+}
+</script>
 <?php
 include "template/footer_user.php"
 ?>
-
 </body>
 </html>
