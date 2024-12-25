@@ -2,6 +2,7 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
+
 // Mengatur filter berdasarkan GET parameter
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'Terlaris';
 
@@ -61,6 +62,47 @@ if (!isset($_SESSION['wishlist'])) {
     $_SESSION['wishlist'] = [];
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produk dengan Rating</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<style>
+    /* Rating */
+    .rating {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .rating i {
+            font-size: 1.2rem;
+            color: #ffcc00;
+            margin: 0 2px;
+            transition: transform 0.2s ease;
+        }
+
+        .rating i:hover {
+            transform: scale(1.2);
+        }
+
+        .rating span {
+            font-size: 1rem;
+            color: #555;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+</style>
+
+<div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
+            <h2 class="text-xl font-bold pl-4">
+                <i class="bi bi-bag-heart-fill text-pink-500 mr-3"></i> Product
+            </h2>
+        </div>
 
 
 <!DOCTYPE html>
@@ -189,10 +231,20 @@ if (!isset($_SESSION['wishlist'])) {
 <!-- Product Section -->
 <section class="container mx-auto mt-8">
     <div class="flex justify-end mb-4">
+<<<<<<< HEAD
         <div class="sort-dropdown">
             <button onclick="toggleDropdown()" class="btn bg-pink-400 text-black flex justify-between items-center font-semibold rounded-lg px-4 py-2" style="width: 200px;">
                 <span id="currentSort"><?php echo $filter; ?></span>
                 <i class="fas fa-chevron-down ml-2"></i>
+=======
+        <div class="dropdown">
+            <button class="btn bg-pink-400 text-black dropdown-toggle flex justify-between items-center font-semibold rounded-lg" style="width: 200px;" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <?php
+                    // Menampilkan filter yang dipilih
+                    echo ucfirst($filter);
+                ?>
+                
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
             </button>
             <div id="sortDropdown" class="sort-dropdown-content">
                 <a href="?filter=Terlaris">Terlaris</a>
@@ -208,8 +260,12 @@ if (!isset($_SESSION['wishlist'])) {
                 <img src="<?= HOST . $product['image'] ?>" alt="<?= $product['name'] ?>" class="w-full mb-4 rounded-md">
                 <h3 class="text-sm font-medium"><?= $product['name'] ?></h3>
                 <p class="text-pink-500 font-bold">Rp<?= number_format($product['price'], 0, ',', '.') ?></p>
+<<<<<<< HEAD
                 <div class="rating-wishlist flex items-center justify-center space-x-2">
                     <div class="rating flex items-center">
+=======
+                <div class="rating">
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
                         <?php
                         $fullStars = floor($product['rating']);
                         $halfStars = ($product['rating'] - $fullStars) >= 0.5 ? 1 : 0;
@@ -226,17 +282,21 @@ if (!isset($_SESSION['wishlist'])) {
                         ?>
                         <span><?= $product['rating'] ?></span>
                     </div>
+<<<<<<< HEAD
                     <!-- Ikon wishlist -->
                     <i class="fas fa-heart wishlist-icon <?= in_array($product['name'], $_SESSION['wishlist']) ? 'wishlist-active' : '' ?>" 
                         data-name="<?= $product['name'] ?>" 
                         onclick="toggleWishlist(this, '<?= $product['name'] ?>')">
                     </i>
                 </div>
+=======
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
             </div>
         <?php endforeach; ?>
     </div>
 </section>
 
+<<<<<<< HEAD
 <script>
 function toggleDropdown() {
     document.getElementById("sortDropdown").classList.toggle("show");
@@ -288,3 +348,11 @@ function toggleWishlist(icon, productName) {
 
 <?php include "template/footer_user.php" ?>
 </html>
+=======
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+<?php
+include "template/footer_user.php"
+?>
+</html>
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe

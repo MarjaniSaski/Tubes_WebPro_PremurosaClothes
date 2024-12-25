@@ -13,7 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone = $_POST['phone'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash password
     $role = $_POST['role']; // Role bisa 'admin' atau 'buyer'
+<<<<<<< HEAD
     $foto = "Default_Picture.jpg";
+=======
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
 
     // Koneksi ke database
     $conn = new mysqli('localhost', 'root', '', 'premurosa');
@@ -22,10 +25,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Menyisipkan data ke tabel user dengan prepared statement untuk menghindari SQL Injection
+<<<<<<< HEAD
     $sql = $conn->prepare("INSERT INTO `user` (first_name, last_name, gender, username, email, phone, password, role, foto) 
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $sql->bind_param("ssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $password, $role, $foto);
+=======
+    $sql = $conn->prepare("INSERT INTO `user` (first_name, last_name, gender, username, email, phone, password, role) 
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
+    $sql->bind_param("ssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $password, $role);
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
 
     if ($sql->execute()) {
         session_start();

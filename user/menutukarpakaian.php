@@ -23,7 +23,9 @@ $nama_lengkap = $user_data['first_name'] . ' ' . $user_data['last_name'];
 $stmt_user->close();
 
 $uploadedImage = "";
+$response = [];
 
+<<<<<<< HEAD
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $foto = $_FILES['foto'];
     $jenis_barang =  $_POST['jenisBarang'];
@@ -70,6 +72,75 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmtTukarPoinSQL->close();
 };
     
+=======
+// Process exchange if form submitted
+if (isset($_POST['btntukar'])) {
+    try {
+        $foto = $_FILES['foto'];
+        $jenis_barang = $_POST['jenis_barang'];
+        $jenis_bahan = $_POST['jenis_bahan'];
+        $details = $_POST['details'];
+        $nama_lengkap = $_POST['nama_lengkap'];
+        $alamat_lengkap = $_POST['alamat_lengkap'];
+        $alamat = $_POST['alamat'];
+        $tanggal_penjemputan = $_POST['tanggal_penjemputan'];
+        $berat_kg = $_POST['berat_kg'];
+
+        // Validate required fields
+        if (empty($jenis_barang)) {
+            throw new Exception("Jenis barang harus dipilih!");
+        }
+
+        // Handle photo upload
+        if (!empty($foto['name'])) {
+            $photoName = time() . '_' . basename($foto['name']);
+            $uploadPath = $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/images/' . $photoName;
+            
+            if (!move_uploaded_file($foto['tmp_name'], $uploadPath)) {
+                throw new Exception("Gagal mengupload foto.");
+            }
+            $uploadedImage = '/Tubes_WebPro_PremurosaClothes/images/' . $photoName;
+        } else {
+            throw new Exception("Foto harus diupload!");
+        }
+
+        // Insert data into database
+        $sqlStatement = "INSERT INTO orders (foto, jenis_barang, jenis_bahan, details, nama_lengkap, alamat_lengkap, alamat, tanggal_penjemputan, berat_kg) 
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sqlStatement);
+        
+        if (!$stmt) {
+            throw new Exception("Gagal mempersiapkan statement: " . $conn->error);
+        }
+
+        $stmt->bind_param("ssssssssi", $photoName, $jenis_barang, $jenis_bahan, $details, $nama_lengkap, $alamat_lengkap, $alamat, $tanggal_penjemputan, $berat_kg);
+        
+        if (!$stmt->execute()) {
+            throw new Exception("Gagal menyimpan data: " . $stmt->error);
+        }
+
+        $response = [
+            'status' => 'success',
+            'message' => 'Data berhasil disimpan!'
+        ];
+
+        $stmt->close();
+
+    } catch (Exception $e) {
+        $response = [
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ];
+    }
+
+    // Return JSON response for AJAX requests
+    if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit;
+    }
+}
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
 ?>
 
 <!DOCTYPE html>
@@ -138,7 +209,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         <div class="mb-3">
                             <label for="jenisBahan" class="form-label">Jenis Bahan</label>
+<<<<<<< HEAD
                             <input type="text" class="form-control" id="jenisBahan" name="jenisBahan" placeholder="Masukkan jenis bahan">
+=======
+                            <input type="text" class="form-control" id="jenisBahan" name="jenis_bahan" placeholder="Masukkan jenis bahan" required>
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
                         </div>
                         <div class="mb-3">
                             <label for="details" class="form-label">Details</label>
@@ -182,7 +257,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <button type="button" class="btn btn-white weight-btn" data-weight="3">3 Kg</button>
                                 <button type="button" class="btn btn-white weight-btn" data-weight="5">5 Kg</button>
                             </div>
+<<<<<<< HEAD
                             <input type="hidden" id="selectedWeight" name="berat_kg">
+=======
+                            <input type="hidden" id="selectedWeight" name="berat_kg" value="" required>
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
                         </div>
                         <br>
                         <br>
@@ -213,11 +292,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<<<<<<< HEAD
 
+=======
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const fileInput = document.getElementById("fileInput");
             const previewContainer = document.getElementById("preview");
+<<<<<<< HEAD
             const alamatLengkapInput = document.getElementById("alamatLengkap");
             const alamatInput = document.getElementById("provinsi");
             const barangInput = document.getElementById("jenisBarang");
@@ -229,6 +312,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             const form = document.getElementById("exchangeForm");
 
             // Preview Image
+=======
+            const form = document.getElementById("exchangeForm");
+            const weightButtons = document.querySelectorAll(".weight-btn");
+            const weightInput = document.getElementById("selectedWeight");
+
+            // Image preview handler
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
             fileInput.addEventListener("change", function () {
                 const file = fileInput.files[0];
                 if (file) {
@@ -247,6 +337,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     const reader = new FileReader();
                     reader.onload = function (e) {
+<<<<<<< HEAD
                         previewContainer.innerHTML = ""; // Kosongkan preview sebelumnya
                         const img = document.createElement("img");
                         img.src = e.target.result;
@@ -254,6 +345,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         img.style.maxWidth = "200px";
                         img.style.borderRadius = "5px";
                         previewContainer.appendChild(img);
+=======
+                        previewContainer.innerHTML = `<img src="${e.target.result}" alt="Selected Image">`;
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
                     };
                     reader.readAsDataURL(file);
                 } else {
@@ -261,7 +355,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             });
 
+<<<<<<< HEAD
             // Weight Button Click Event
+=======
+            // Weight button handler
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
             weightButtons.forEach((button) => {
                 button.addEventListener("click", function () {
                     weightButtons.forEach((btn) => btn.classList.remove("active"));
@@ -270,6 +368,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 });
             });
 
+<<<<<<< HEAD
             // Form Submission
             form.addEventListener("submit", function (event) {
                 event.preventDefault();
@@ -350,10 +449,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         text: "Silakan pilih berat barang terlebih dahulu.",
                         icon: "error",
                         confirmButtonText: "OK"
+=======
+            // Form submission handler
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                // Validate weight selection
+                if (!weightInput.value) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Silakan pilih berat barang terlebih dahulu',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
                     });
                     return;
                 }
 
+<<<<<<< HEAD
                 if (!alamatLengkapInput.value){
                     Swal.fire({
                         title: "Alamat!",
@@ -366,6 +479,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 form.submit();
             }); 
+=======
+                const formData = new FormData(this);
+
+                fetch(window.location.href, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        Swal.fire({
+                            title: 'Penukaran Akan Segera Diproses!',
+                            text: 'Kami akan segera melakukan penjemputan barang Anda.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            // Redirect ke halaman menu swap setelah berhasil
+                            window.location.href = 'menuswap.html';
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Penukaran Gagal',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Kesalahan Server',
+                        text: 'Terjadi kesalahan saat mencoba proses penukaran.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            });
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
         });
     </script>
 </body>

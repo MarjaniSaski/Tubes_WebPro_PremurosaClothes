@@ -152,7 +152,11 @@ if (!defined('HOST')) {
                         <a href="https://www.instagram.com/saaskiw_/" target="_blank" title="Instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
+<<<<<<< HEAD
                         <a href="https://www.tiktok.com/@elephantkiw?_t=8sQqm39xkfK&_r=1" target="_blank" title="TikTok">
+=======
+                        <a href="https://www.instagram.com/saaskiw_/" target="_blank" title="TikTok">
+>>>>>>> c12138fec85cd5f84038a36d27175cfab493aebe
                             <i class="fab fa-tiktok"></i>
                         </a>
                     </div>
