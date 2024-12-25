@@ -1,4 +1,3 @@
-
 <?php
 // Memulai output buffering untuk menghindari pengiriman output sebelum header
 ob_start();
@@ -239,7 +238,6 @@ $conn->close();
             </div>
             <div class="mb-3">
                 <label for="username" class="form-label text-sm">Username</label>
-                <!-- Pastikan 'username' input tetap disabled -->
                 <input type="text" id="username" name="username" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($username); ?>" disabled>
             </div>
             <div class="mb-3">
@@ -277,9 +275,9 @@ $conn->close();
 <script>
     // Script untuk mengaktifkan tombol edit
     document.getElementById('editButton').addEventListener('click', function() {
-        document.getElementById('first_name').disabled = true;
-        document.getElementById('last_name').disabled = true;
-        document.getElementById('username').disabled = false;  
+        document.getElementById('first_name').disabled = false;
+        document.getElementById('last_name').disabled = false;
+        document.getElementById('username').disabled = false;
         document.getElementById('email').disabled = false;
         document.getElementById('phone').disabled = false;
         document.getElementById('gender').disabled = false;
