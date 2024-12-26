@@ -23,7 +23,6 @@ $nama_lengkap = $user_data['first_name'] . ' ' . $user_data['last_name'];
 $stmt_user->close();
 
 $uploadedImage = "";
-$response = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $foto = $_FILES['foto'];
@@ -65,10 +64,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </script>
         ";
     } else {
-        echo "Error updating points: " . $stmtTukarPoinSQL->error;
+        echo "Error updating points: " . $stmt->error;
     }
     
-    $stmtTukarPoinSQL->close();
+    $stmt->close();
 };
     
 ?>
@@ -153,8 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="mb-3">
                             <label for="namaLengkap" class="form-label">Nama Lengkap</label>
                             <input type="text" id="namaLengkap" name="nama_lengkap" class="form-control" 
-                                value="<?php echo htmlspecialchars($nama_lengkap); ?>" 
-                                readonly required>
+                            value="<?php echo htmlspecialchars($nama_lengkap); ?>" 
+                            readonly required>
                         </div>
                         <div class="mb-3">
                             <label for="alamatLengkap" class="form-label">Alamat Lengkap</label>
@@ -214,6 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const fileInput = document.getElementById("fileInput");

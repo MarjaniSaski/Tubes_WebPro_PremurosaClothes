@@ -16,7 +16,7 @@ if ($resultDataSQL && $resultDataSQL->num_rows > 0) {
     $fullname = "Nama Tidak Ditemukan";
 }
 
-$getPoin = $conn->prepare("SELECT COUNT(*) FROM orders WHERE nama_lengkap = ?");
+$getPoin = $conn->prepare("SELECT COUNT(*) FROM `orders` WHERE nama_lengkap = ?");
 $getPoin->bind_param("s", $fullname);
 
 if ($getPoin->execute()) {
@@ -41,7 +41,7 @@ if ($resultData && $resultData->num_rows > 0) {
     $fullname = "Nama Tidak Ditemukan";
 }
 
-$getPoinTukar = $conn->prepare("SELECT COUNT(*) FROM orders WHERE nama_lengkap = ?");
+$getPoinTukar = $conn->prepare("SELECT COUNT(*) FROM `orders` WHERE nama_lengkap = ?");
 $getPoinTukar->bind_param("s", $fullname);
 
 if ($getPoinTukar->execute()) {

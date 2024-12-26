@@ -1,4 +1,3 @@
-
 <?php
 ob_start();
 include "template/header_admin.php";

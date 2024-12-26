@@ -14,11 +14,10 @@ if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'buyer') {
 // Ambil user_id dari sesi
 $insert_id = $_SESSION['user_id'];
 
-// Jika ada data yang dikirimkan untuk update profil
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Ambil data dari form
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
+    $first_name = $_POST['first_name'];  // Nama depan tetap
+    $last_name = $_POST['last_name'];    // Nama belakang tetap
     $username = $_POST['username'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
@@ -33,6 +32,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Jika tidak ada file baru, gunakan gambar lama
         $profile_picture = $_POST['existing_profile_picture'];
     }
+
+    // Query untuk update data pengguna, pastikan nama depan dan belakang tetap
+    $sql = "UPDATE user SET username = ?, email = ?, phone = ?, gender = ?, foto = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssi", $username, $email, $phone, $gender, $profile_picture, $insert_id);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Profil berhasil diperbarui!'); window.location.href = 'profile.php';</script>";
+    } else {
+        echo "<script>alert('Terjadi kesalahan saat memperbarui profil.');</script>";
+    }
+    $stmt->close();
+}
     
 
     // if (empty($_FILES['profile_picture']['name'])) {
@@ -45,18 +57,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // }
     
 
-    // Query untuk update data pengguna
-    $sql = "UPDATE user SET first_name = ?, last_name = ?, username = ?, email = ?, phone = ?, gender = ?, foto = ? WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssi", $first_name, $last_name, $username, $email, $phone, $gender, $profile_picture, $insert_id);
+//     // Query untuk update data pengguna
+//     $sql = "UPDATE user SET first_name = ?, last_name = ?, username = ?, email = ?, phone = ?, gender = ?, foto = ? WHERE id = ?";
+//     $stmt = $conn->prepare($sql);
+//     $stmt->bind_param("sssssssi", $first_name, $last_name, $username, $email, $phone, $gender, $profile_picture, $insert_id);
 
-    if ($stmt->execute()) {
-        echo "<script>alert('Profil berhasil diperbarui!'); window.location.href = 'profile.php';</script>";
-    } else {
-        echo "<script>alert('Terjadi kesalahan saat memperbarui profil.');</script>";
-    }
-    $stmt->close();
-}
+//     if ($stmt->execute()) {
+//         echo "<script>alert('Profil berhasil diperbarui!'); window.location.href = 'profile.php';</script>";
+//     } else {
+//         echo "<script>alert('Terjadi kesalahan saat memperbarui profil.');</script>";
+//     }
+//     $stmt->close();
+// }
 
 // Query untuk mendapatkan data pengguna
 $tmp_id = $_SESSION['user_id'];
@@ -229,13 +241,14 @@ $conn->close();
             <input type="hidden" name="existing_profile_picture" value="<?= htmlspecialchars($profile_picture); ?>">
             
             <div class="mb-3">
-                <label for="name" class="form-label text-sm">Nama Depan</label>
-                <input type="text" id="first_name" name="first_name" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($first_name); ?>" disabled>
+                <label for="first_name" class="form-label text-sm">Nama Depan</label>
+                <input type="text" id="first_name" name="first_name" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($first_name); ?>" readonly>
             </div>
             <div class="mb-3">
-                <label for="name" class="form-label text-sm">Nama Belakang</label>
-                <input type="text" id="last_name" name="last_name" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($last_name); ?>" disabled>
+                <label for="last_name" class="form-label text-sm">Nama Belakang</label>
+                <input type="text" id="last_name" name="last_name" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($last_name); ?>" readonly>
             </div>
+
             <div class="mb-3">
                 <label for="username" class="form-label text-sm">Username</label>
                 <input type="text" id="username" name="username" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($username); ?>" disabled>
@@ -275,8 +288,7 @@ $conn->close();
 <script>
     // Script untuk mengaktifkan tombol edit
     document.getElementById('editButton').addEventListener('click', function() {
-        document.getElementById('first_name').disabled = false;
-        document.getElementById('last_name').disabled = false;
+    // Hanya izinkan kolom selain first_name dan last_name untuk diedit
         document.getElementById('username').disabled = false;
         document.getElementById('email').disabled = false;
         document.getElementById('phone').disabled = false;

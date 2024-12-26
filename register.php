@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Menyisipkan data ke tabel user dengan prepared statement
-    $sql = $conn->prepare("INSERT INTO user (first_name, last_name, gender, username, email, phone, password, role, foto) 
+    $sql = $conn->prepare("INSERT INTO `user` (first_name, last_name, gender, username, email, phone, password, role, foto) 
                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     if ($sql) {
         $sql->bind_param("sssssssss", $first_name, $last_name, $gender, $username, $email, $phone, $hashed_password, $role, $foto);

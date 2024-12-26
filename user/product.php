@@ -306,5 +306,7 @@ function toggleWishlist(icon, productName) {
 }
 </script>
 
-<?php include "template/footer_user.php" ?>
+<?php
+ include "template/footer_user.php"
+?>
 </html>

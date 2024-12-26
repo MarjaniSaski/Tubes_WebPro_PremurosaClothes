@@ -291,4 +291,8 @@ include "template/header_admin.php"
         });
     </script>
     </body>
+
+    <?php
+    include "template/footer_admin.php"
+    ?>
 </html>

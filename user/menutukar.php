@@ -2,6 +2,8 @@
 include "template/header_user.php";
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
+$user_id = $_SESSION['user_id'];
+
 $sqlStatement = "SELECT * FROM produk";
 $query = mysqli_query($conn, $sqlStatement);
 $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
@@ -9,24 +11,45 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 $sqlStatement = "SELECT * FROM vouchers";
 $query = mysqli_query($conn, $sqlStatement);
 $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
+
+$resultData = $conn->query("SELECT first_name, last_name FROM user WHERE id = '$user_id'");
+
+if ($resultData && $resultData->num_rows > 0) {
+    // Fetch the result as an associative array
+    $row = $resultData->fetch_assoc();
+    $fullname = $row['first_name'] . ' ' . $row['last_name'];
+} else {
+    // Handle the case where no data is found
+    $fullname = "Nama Tidak Ditemukan";
+}
+
+// Query untuk menjumlahkan poin berdasarkan nama lengkap
+$getPoinTukar = $conn->prepare("SELECT SUM(poin) FROM orders WHERE nama_lengkap = ?");
+$getPoinTukar->bind_param("s", $fullname);
+
+if ($getPoinTukar->execute()) {
+    $result = $getPoinTukar->get_result();
+    $resultPoinTukar = $result->fetch_row()[0];
+
+    // Jika tidak ada poin yang ditemukan, set poin menjadi 0
+    if ($resultPoinTukar === null) {
+        $resultPoinTukar = 0;
+    }
+} else {
+    echo "Error: " . $getPoinTukar->error;
+}
+
+$getPoinTukar->close();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['poin'])) {
+    $user_id = $_SESSION['user_id']; // Ambil ID user dari session
+    updateJumlahPenukaran($user_id, $conn, $resultPoinTukar);
+}
+
+$conn->close();
 ?>
 
 <style>
-  .custom-voucher-card {
-    border: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #655D8A;
-    border-radius: 10px;
-    padding: 0;
-  }
-
-  .custom-voucher-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
-  }
-
-  /* Pop-up Styles */
   #voucherPopup,
   #productPopup {
     display: none;
@@ -93,29 +116,33 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
     <!-- Points Section -->
     <div>
-      <div class="d-flex align-items-center border border-indigo-500 rounded-lg px-4 py-2 text-indigo-500 text-lg font-semibold">
-        <i class="bi bi-gem me-2" style="font-size: 20px;"></i>
-        350
+      <div class="d-flex align-items-center border border-pink-700 rounded-lg px-4 py-2 text-pink-500 text-lg font-semibold">
+        <i class="bi bi-coin me-2" style="font-size: 30px;"></i>
+        <?= $resultPoinTukar ?>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Main Content -->
-<main class="container py-5">
+<main>
   <!-- Voucher Section -->
-  <section class="mb-5">
-    <h2 class="text-lg font-bold text-purple-700 mb-4">
-      <i class="bi bi-ticket-detailed"></i> Voucher
-    </h2>
-    <div class="flex gap-3 overflow-x-auto">
+  <section class="mb-10">
+    <div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
+      <h2 class="text-xl font-bold pl-4">
+          <i class="bi bi-ticket-perforated text-pink-900 mr-3"></i> Voucher
+      </h2>
+    </div>
+    <br>
+    <div class="flex gap-3 overflow-x-auto mr-5">
       <?php foreach ($datavoucher as $key => $voucher) { ?>
         <!-- Voucher Card as Button -->
-        <button class="bg-gradient-to-r from-purple-400 to-purple-200 text-indigo-800 rounded-lg p-4 w-48 text-center shadow-lg transform hover:translate-x-[-10px]"
-          onclick="showVoucherInfo(<?php echo $voucher['voucher_code']; ?>)">
-          <h3 class="text-xl font-bold"><?= $voucher['voucher_name'] ?></h3>
-          <p class="text-sm">Min. Blj Rp <?= $voucher['max_amount'] ?></p>
-          <p class="text-sm">S/D: <?= $voucher['max_period'] ?></p>
+        <button class="bg-gradient-to-r from-pink-600 to-pink-400 text-pink-200 rounded-lg p-4 w-48 text-center shadow-lg transform hover:translate-x-[-10px] ml-4">
+          <div class="text-center">
+            <h3 class="text-xl font-bold"><?= $voucher['voucher_name'] ?></h3>
+            <p class="text-sm">Min. Blj Rp <?= $voucher['max_amount'] ?></p>
+            <p class="text-sm">S/D: <?= $voucher['max_period'] ?></p>
+          </div>
         </button>
       <?php } ?>
     </div>
@@ -123,19 +150,23 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
   <!-- Product Section -->
   <section>
-    <h2 class="text-lg font-bold text-purple-700 mb-4">
-      <i class="bi bi-bag-fill"></i> Product
-    </h2>
+    <div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
+      <h2 class="text-xl font-bold pl-4">
+          <i class="bi bi-bag-heart text-pink-900 mr-3"></i> Product
+      </h2>
+    </div>
+    <br>
     <div class="row g-4">
-      <?php foreach ($data as $key => $produk) { ?>
-        <div class="col-6 col-md-3">
-          <button class="custom-voucher-card rounded-lg p-3 text-white shadow-lg text-center transform hover:translate-y-1"
-            onclick="showProductInfo(<?php echo $produk['id_produk']; ?>)">
-            <img src="../images/<?= $produk["foto"] ?>" alt="Product" class="w-full rounded-lg mb-3">
-            <h3 class="text-2xl font-bold"><?= $produk['poin'] ?></h3>
-            <p class="text-sm">Poin</p>
-          </button>
-        </div>
+        <?php foreach ($data as $key => $produk) { ?>
+          <div class="col-6 col-md-3">
+              <button 
+                  onclick="redirectToKatalogSwap(<?= $produk['id_produk'] ?>)" 
+                  class="card bg-pink-200 rounded-lg shadow-md p-4 transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300 ml-4 flex flex-col justify-center items-center">
+                  <img src="../images/<?= $produk["foto"] ?>" alt="Product" class="w-full rounded-lg mb-3">
+                  <h3 class="text-2xl font-bold text-center"><?= $produk['poin'] ?></h3>
+                  <p class="text-sm text-center">Poin</p>
+              </button>
+          </div>
       <?php } ?>
     </div>
   </section>
@@ -285,6 +316,12 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
       productPopup.classList.remove('show');
     }
   }
+
+  function redirectToKatalogSwap(id_produk) {
+    // Redirect ke halaman katalogswap.php dengan ID produk sebagai parameter
+    window.location.href = `katalogswap.php?id_produk=${id_produk}`;
+}
+
 </script>
 
 </body>
