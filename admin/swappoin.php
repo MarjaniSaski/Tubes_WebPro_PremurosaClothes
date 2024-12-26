@@ -58,17 +58,26 @@ $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
 ob_end_flush();
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    
     <style>
             .main-content {
             margin-left: 16rem;
             margin-top: 4rem;
         }
-
+    
         .table-container {
             margin-top: 0;
         }
-
+    
         .popup-container {
             position: fixed;
             top: 0;
@@ -84,12 +93,12 @@ ob_end_flush();
             opacity: 0;
             transition: visibility 0.2s, opacity 0.2s;
         }
-
+    
         .popup-container.active {
             visibility: visible;
             opacity: 1;
         }
-
+    
         .popup {
             background: #ffffff;
             border-radius: 12px;
@@ -104,14 +113,14 @@ ob_end_flush();
             <div class="p-6">
                 <!-- Buttons -->
                 <div class="flex justify-end mb-4 space-x-4">
-                    <button onclick="showPopupAddVoucher()" class="bg-pink-300 text-black text-sm px-4 py-2 rounded-lg shadow">
+                    <button onclick="showPopupAddVoucher()" class="bg-purple-300 text-black font-semibold text-sm px-4 py-2 rounded-lg shadow">
                         <i class="fa-solid fa-plus"></i> ADD NEW VOUCHER
                     </button>
-                    <button onclick="showPopupAddProduct()" class="bg-pink-300 text-black text-sm px-4 py-2 rounded-lg shadow">
+                    <button onclick="showPopupAddProduct()" class="bg-purple-300 text-black font-semibold text-sm px-4 py-2 rounded-lg shadow">
                         <i class="fa-solid fa-plus"></i> ADD NEW PRODUCT
                     </button>
                 </div>
-
+    
                 <!-- Tabel Voucher -->
                 <div class="mt-4 table-container">
                     <h2 class="text-xl font-bold mb-4">Voucher List</h2>
@@ -123,6 +132,7 @@ ob_end_flush();
                                 <th class="px-6 py-3 text-left">Discount</th>
                                 <th class="px-6 py-3 text-left">Poin</th>
                                 <th class="px-6 py-3 text-left">Usage Period</th>
+                                <th class="px-6 py-3 text-left">Max Period</th>
                                 <th class="px-6 py-3 text-left">Actions</th>
                             </tr>
                         </thead>
@@ -136,16 +146,28 @@ ob_end_flush();
                                     <td class="px-6 py-3 text-left"><?= $vouchers['discount'] ?></td>
                                     <td class="px-6 py-3 text-left"><?= $vouchers['points'] ?></td>
                                     <td class="px-6 py-3 text-left"><?= $vouchers['usage_period'] ?></td>
+                                    <td class="px-6 py-3 text-left"><?= $vouchers['max_period']?></td>
                                     <td>
-                                        <a href="editvoucherswap.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>">
-                                            <button class="bg-blue-500 text-black text-sm px-2 py-1 rounded-lg shadow">
-                                                Edit
-                                            </button>
-                                        </a>
-                                        <a href="deletevoucher.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>"
+                                        <div class="flex justify-center space-x-2">
+                                            <!-- Tombol Edit -->
+                                            <a href="editvoucherswap.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>">
+                                                <button class="flex justify-center items-center px-2 py-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20h9" />
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 3.5a2.121 2.121 0 013 0l1.5 1.5a2.121 2.121 0 010 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                                    </svg>
+                                                </button>
+                                            </a>
+                                            <!-- Tombol Hapus -->
+                                            <a href="deletevoucher.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>" 
                                             onclick="return confirm('Yakin akan menghapus data?')">
-                                            <button class="bg-red-500 text-black py-1 px-2 rounded-lg shadow">Delete</button>
-                                        </a>
+                                                <button class="flex justify-center items-center px-2 py-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-2 14H7l-2-14m4-4h8a2 2 0 012 2v1H6V5a2 2 0 012-2z" />
+                                                    </svg>
+                                                </button>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php
@@ -155,7 +177,7 @@ ob_end_flush();
                     </table>
                 </div>
                 <br>
-
+    
                 <!-- Tabel Produk -->
                 <div class="mt-4 table-container">
                     <h2 class="text-xl font-bold mb-4">Product List</h2>
@@ -179,14 +201,24 @@ ob_end_flush();
                                     <td class="px-6 py-3 text-left"><?= $produk['poin'] ?></td>
                                     <td class="px-6 py-3 text-left"><?= $produk['detail'] ?></td>
                                     <td>
-                                        <a href="editproduk.php?id_produk=<?= urlencode($produk['id_produk']) ?>">
-                                            <button class="bg-blue-500 text-black text-sm px-2 py-1 rounded-lg shadow">Edit</button>
-                                        </a>
-
-                                        <a href="deleteprodukswap.php?id_produk=<?= urlencode($produk['id_produk']) ?>"
-                                            onclick="return confirm('Yakin akan menghapus data?')">
-                                            <button class="bg-red-500 text-black py-1 px-2 rounded-lg shadow">Delete</button>
-                                        </a>
+                                        <div class="flex justify-center space-x-2">
+                                            <a href="editproduk.php?id_produk=<?= urlencode($produk['id_produk']) ?>">
+                                                <button class="flex justify-center items-center px-2 py-1">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20h9" />
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 3.5a2.121 2.121 0 013 0l1.5 1.5a2.121 2.121 0 010 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                                        </svg>
+                                                </button>                                        
+                                            </a>
+                                            <a href="deleteprodukswap.php?id_produk=<?= urlencode($produk['id_produk']) ?>"
+                                                onclick="return confirm('Yakin akan menghapus data?')">
+                                                <button class="flex justify-center items-center px-2 py-1">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-2 14H7l-2-14m4-4h8a2 2 0 012 2v1H6V5a2 2 0 012-2z" />
+                                                    </svg>
+                                                </button>
+                                            </a>
+                                        </div>   
                                     </td>
                                 </tr>
                             <?php
@@ -198,7 +230,7 @@ ob_end_flush();
             </div>
         </div>
     </div>
-
+    
     <!-- Pop-Up Add Voucher -->
     <div id="popup-add-voucher" class="popup-container">
         <div class="popup">
@@ -245,7 +277,7 @@ ob_end_flush();
             </form>
         </div>
     </div>
-
+    
     <!-- Pop-Up Add Product -->
     <div id="popup-add-product" class="popup-container">
         <div class="popup">
@@ -269,8 +301,8 @@ ob_end_flush();
                         <!-- Input file for image upload -->
                         <input type="file" accept="image/*" class="w-full border rounded px-3 py-2" id="product-image" name="foto">
                         <p class="text-sm text-gray-500 mt-2">Select an image from your device</p>
-
-
+    
+    
                     </div>
                     <div class="col-span-2">
                         <label class="block text-sm font-medium mb-1">Details</label>
@@ -284,9 +316,7 @@ ob_end_flush();
             </form>
         </div>
     </div>
-
-
-    <!-- JavaScript -->
+</body>
     <script>
         function showPopupAddVoucher() {
             document.getElementById('popup-add-voucher').classList.add('active');
@@ -305,7 +335,4 @@ ob_end_flush();
             document.getElementById('popup-add-product').classList.remove('active');
         }
     </script>
-
-</body>
-
 </html>
