@@ -4,25 +4,45 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/templa
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 //buat 
 if (isset($_POST['btnsubmit'])) {
-    $id_produk = $_POST['id_produk'];
-    $nama = $_POST['nama'];
-    $poin = $_POST['poin'];
+    $id_produk = mysqli_real_escape_string($conn, $_POST['id_produk']);
+    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
+    $poin = mysqli_real_escape_string($conn, $_POST['poin']);
     $foto = $_FILES['foto'];
-    if (!empty($foto['name'])) {
-        $photoName = time() . '_' . $foto['name'];
-        move_uploaded_file($foto['tmp_name'], '../images/' . $photoName);
-    } else {
-        $photoName = "";
-    }
-    $detail = $_POST['detail'];
+    $detail = mysqli_real_escape_string($conn, $_POST['detail']);
 
-    $sqlStatement = "INSERT INTO produk VALUES('$id_produk','$nama','$poin','$photoName','$detail')";
-    // echo $sqlStatement;
+    // Validasi input kosong
+    if (empty($id_produk) || empty($nama) || empty($poin) || empty($detail)) {
+        echo "Semua kolom wajib diisi.";
+        exit;
+    }
+
+    // Penanganan upload gambar
+    $photoName = "";
+    if (!empty($foto['name'])) {
+        $photoName = time() . '_' . basename($foto['name']);
+        $targetDir = '../images/';
+        $targetFile = $targetDir . $photoName;
+
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true); // Buat direktori jika belum ada
+        }
+
+        if (!move_uploaded_file($foto['tmp_name'], $targetFile)) {
+            echo "Gagal mengunggah gambar.";
+            exit;
+        }
+    }
+
+    // Query insert
+    $sqlStatement = "INSERT INTO produk (id_produk, nama, poin, foto, detail) 
+                     VALUES ('$id_produk', '$nama', '$poin', '$photoName', '$detail')";
+
     $query = mysqli_query($conn, $sqlStatement);
-    if (mysqli_affected_rows($conn) > 0) {
-        header("location:swappoin.php"); //untuk mendirect data ke mana
+
+    if ($query) {
+        header("Location: swappoin.php"); // Redirect setelah berhasil
     } else {
-        echo "Penambahan produk gagal";
+        echo "Penambahan produk gagal: " . mysqli_error($conn); // Debugging error MySQL
     }
 }
 
