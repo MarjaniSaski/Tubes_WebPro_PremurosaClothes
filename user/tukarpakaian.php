@@ -443,6 +443,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             });
         });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("exchangeForm");
+            const submitButton = form.querySelector('button[type="submit"]');
+
+            form.addEventListener('submit', function (e) {
+                // Mengambil nilai dari input yang wajib diisi
+                const namaLengkap = document.getElementById('namaLengkap').value;
+                const alamatLengkap = document.getElementById('alamatLengkap').value;
+                const provinsi = document.getElementById('provinsi').value;
+                const kabupatenKota = document.getElementById('kabupatenKota').value;
+                const kecamatan = document.getElementById('kecamatan').value;
+                const kodePos = document.getElementById('kodePos').value;
+                const jenisBarang = document.getElementById('jenisBarang').value;
+                const jenisBahan = document.getElementById('jenisBahan').value;
+                const details = document.getElementById('details').value;
+                const tanggalPenjemputan = document.getElementById('tanggalPenjemputan').value;
+                const berat_kg = document.getElementById('selectedWeight').value;
+
+                // Validasi
+                if (!namaLengkap || !alamatLengkap || !provinsi || !kabupatenKota || !kecamatan || !kodePos || !jenisBarang || !jenisBahan || !details || !tanggalPenjemputan || !berat_kg) {
+                    e.preventDefault();  // Mencegah pengiriman form
+                    Swal.fire({
+                        title: 'Peringatan!',
+                        text: 'Harap isi semua field yang wajib diisi!',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
         
     </script>
 </body>

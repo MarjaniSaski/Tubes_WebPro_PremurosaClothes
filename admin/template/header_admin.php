@@ -16,13 +16,10 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premurosa Clothes</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Rubik font -->
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-    <!-- Bootstrap Icons CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
@@ -33,7 +30,6 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
         background-color: #fff;
     }
 
-    /* Dropdown Menu Styles */
     .dropdown-content {
         display: none;
         position: absolute;
@@ -43,7 +39,6 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
         z-index: 1;
     }
 
-    /* Menampilkan dropdown saat kelas 'show' ditambahkan */
     .dropdown.show .dropdown-content {
         display: block;
     }
@@ -52,19 +47,18 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
         cursor: pointer;
     }
 
-    /* Update Hover dan Active Menu */
     .sidebar a {
-        color: black; /* Warna default teks menu */
+        color: black;
         transition: background-color 0.3s, color 0.3s;
     }
 
     .sidebar a:hover, .sidebar .active {
-        background-color:rgba(138, 65, 216, 0.85); /* Warna ungu saat hover */
-        color: white; /* Warna teks putih saat hover */
+        background-color:rgba(138, 65, 216, 0.85); 
+        color: white;
     }
 
     .sidebar .active {
-        background-color: rgba(138, 65, 216, 0.85); /* Warna ungu untuk menu aktif */
+        background-color: rgba(138, 65, 216, 0.85);
         color: white;
     }
 
@@ -83,7 +77,6 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
 
             <!-- Menu Items -->
             <div class="relative">
-                <!-- Sidebar -->
                 <ul class="text-black">
                     <li class="mb-5">
                         <a href="dashboard.php?page=dashboard" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200 transition">
@@ -103,17 +96,16 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
                             <span>ORDER LIST</span>
                         </a>
                     </li>
-                    <!-- Swap Menu with Dropdown -->
                     <li class="mb-4 dropdown">
                         <a href="#" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200 transition dropdown-button">
                             <i class="fa-solid fa-repeat me-2"></i>
                             <span>SWAP</span>
-                            <i class="fa-solid fa-chevron-down ml-2"></i> <!-- Dropdown Icon -->
+                            <i class="fa-solid fa-chevron-down ml-2"></i>
                         </a>
                         <!-- Dropdown Menu -->
                         <div class="dropdown-content p-2">
                             <a href="swappoin.php" class="block px-4 py-2 text-black hover:bg-pink-200 transition">Tukar Poin</a>
-                            <a href="adminswap.php" class="block px-4 py-2 text-black hover:bg-pink-200 transition">Tukar Product</a>
+                            <a href="swapproduct.php" class="block px-4 py-2 text-black hover:bg-pink-200 transition">Tukar Product</a>
                         </div>
                     </li>
                 </ul>
