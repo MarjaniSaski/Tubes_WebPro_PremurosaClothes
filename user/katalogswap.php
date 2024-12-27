@@ -36,6 +36,39 @@ if (isset($_FILES['foto']) && $_FILES['foto']['name'] != "") {
     // Jika tidak ada foto baru, gunakan foto lama
     $foto = $produk['foto']; // Ambil nama foto dari database
 }
+
+
+$user_id = $_SESSION['user_id']; // Pastikan user_id sudah ada dalam session
+
+// Query untuk mengambil nama lengkap pengguna
+$resultData = $conn->query("SELECT first_name, last_name FROM user WHERE id = '$user_id'");
+
+if ($resultData && $resultData->num_rows > 0) {
+    // Fetch the result as an associative array
+    $row = $resultData->fetch_assoc();
+    $fullname = $row['first_name'] . ' ' . $row['last_name'];
+} else {
+    // Handle the case where no data is found
+    $fullname = "Nama Tidak Ditemukan";
+}
+
+// Query untuk menjumlahkan poin berdasarkan nama lengkap
+$getPoinTukar = $conn->prepare("SELECT SUM(poin) FROM orders WHERE nama_lengkap = ?");
+$getPoinTukar->bind_param("s", $fullname);
+
+if ($getPoinTukar->execute()) {
+    $result = $getPoinTukar->get_result();
+    $resultPoinTukar = $result->fetch_row()[0];
+
+    // Jika tidak ada poin yang ditemukan, set poin menjadi 0
+    if ($resultPoinTukar === null) {
+        $resultPoinTukar = 0;
+    }
+} else {
+    echo "Error: " . $getPoinTukar->error;
+}
+
+$getPoinTukar->close();
 ?>
 
 <!DOCTYPE html>
@@ -43,10 +76,11 @@ if (isset($_FILES['foto']) && $_FILES['foto']['name'] != "") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premurosa Produk</title>
+    <title>Katalog Produk Swap</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Menambahkan Font Awesome untuk ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
           body {
             margin: 0;
@@ -183,6 +217,7 @@ if (isset($_FILES['foto']) && $_FILES['foto']['name'] != "") {
             color: #666;
         }
     </style>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -227,14 +262,38 @@ if (isset($_FILES['foto']) && $_FILES['foto']['name'] != "") {
                     </ul>
                 </div>
 
-                <button class="btn-tukar" onclick="window.location.href='ekspedisi.php?id_produk=<?php echo htmlspecialchars($produk['id_produk']); ?>'">
+                <button class="btn-tukar" onclick="checkPoin(<?php echo $resultPoinTukar; ?>, <?php echo $produk['poin']; ?>, '<?php echo htmlspecialchars($produk['id_produk']); ?>')">
                     <i class="fas fa-exchange-alt"></i> Tukarkan Sekarang
                 </button>
+
             </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function checkPoin(poinUser, poinProduk, idProduk) {
+        if (poinUser < poinProduk) {
+            // Menampilkan pop-up SweetAlert2 jika poin tidak cukup
+            Swal.fire({
+                icon: 'error',
+                title: 'Mohon maaf!',
+                text: 'Poin Anda tidak cukup untuk menukar produk ini.',
+                confirmButtonText: 'OK',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Setelah klik "OK", kembali ke halaman menutukar.php
+                    window.location.href = 'menutukar.php';
+                }
+            });
+        } else {
+            // Jika poin cukup, lanjutkan ke halaman ekspedisi
+            window.location.href = 'ekspedisi.php?id_produk=' + idProduk;
+        }
+    }
+</script>
+
+
 </body>
 </html>
