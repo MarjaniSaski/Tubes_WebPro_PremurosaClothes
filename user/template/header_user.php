@@ -115,8 +115,10 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
         }
 
         .dropdown-menu {
-            margin-top: 15px !important;
-            width: 250px;
+            position: absolute !important;
+            top: 100% !important;
+            left: 0;
+            z-index: 1050;
         }
 
         .dropdown-item {
