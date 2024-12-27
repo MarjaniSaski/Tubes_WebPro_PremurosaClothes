@@ -17,18 +17,15 @@ $user_id = $_SESSION['user_id'];
 // Query untuk mendapatkan foto profil pengguna
 $sql = "SELECT foto FROM user WHERE id = ?";
 $stmt = $conn->prepare($sql);
-if (!$stmt) {
-    die("Query preparation failed: " . $conn->error);
-}
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $user_data = $result->fetch_assoc();
 $stmt->close();
 
-// Tentukan apakah menggunakan ikon default atau gambar profil
-$is_default_picture = empty($user_data['foto']);
-$profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialchars($user_data['foto']) : '';
+// Tentukan URL gambar profil
+$profile_picture = $user_data['foto'] ?? 'default_avatar.png';
+$profile_picture_url = HOST . "/images/" . htmlspecialchars($profile_picture);
 
 ?>
 
@@ -38,17 +35,14 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> 
 
     <style>
-        .navbar {
+       .navbar {
             position: fixed;
             top: 0;
             left: 0;
@@ -59,6 +53,7 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
             backdrop-filter: blur(5px);
             transition: box-shadow 0.3s ease;
         }
+
 
         body {
             padding-top: 80px;
@@ -102,20 +97,17 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
             transform: scale(1.05);
         }
 
-        .profile-picture {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 25px;
-            height: 25px;
-            background-color: #f8f9fa;
-            border-radius: 50%;
-            overflow: hidden;
-        }
-
+        /* Tampilan dropdown profile */
         .dropdown-menu {
-            margin-top: 15px !important;
-            width: 250px;
+            min-width: 200px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 10px !important;
+            padding: 0.5rem 0;
+            position: absolute !important;
+            left: auto !important;
+            right: 0 !important;
+            transform: none !important;
         }
 
         .dropdown-item {
@@ -136,50 +128,7 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
             margin-right: 10%;
             border-color: grey;
         }
-
-        .dropdown-menu .fa-solid, 
-        .dropdown-menu .fa-heart, 
-        .dropdown-menu .fa-gear {
-            color: #ff69b4;
-        }
-
-        .dropdown-menu .fa-right-from-bracket, 
-        .dropdown-menu .text-danger {
-            color: #ff0000 !important;
-        }
-
-        /* Menu chat */
-        .floating-chat {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #655D8A;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            z-index: 1100;
-        }
-
-        .floating-chat:hover {
-            transform: translateY(-5px);
-            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .floating-chat i {
-            font-size: 20px;
-        }
-
-        .floating-chat span {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
+        
         /* Mobile Menu */
         @media (max-width: 991px) {
             .navbar-collapse {
@@ -222,20 +171,53 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
         .bi {
             transition: all 0.2s ease;
         }
+
+        /* Menu chat */
+        .floating-chat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #655D8A;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            z-index: 1100;
+        }
+
+        .floating-chat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .floating-chat i {
+            font-size: 20px;
+        }
+
+        .floating-chat span {
+            font-size: 16px;
+            font-weight: bold;
+        }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
     <header>
         <nav class="navbar p-3 shadow-sm">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <!-- Navigation -->
                 <div class="d-flex gap-4 navbar-links">
                     <a href="indexuser.php" class="text-dark text-decoration-none fw-bold text-sm">HOME</a>
+                    <!-- <a href="newarrival.php" class="text-dark text-decoration-none fw-bold text-sm">NEW ARRIVAL</a> -->
                     <a href="product.php" class="text-dark text-decoration-none fw-bold text-sm">PRODUCT</a>
                     <a href="menuswap.php" class="text-dark text-decoration-none fw-bold text-sm">SWAP</a>
                     <a href="productthrift.php" class="text-dark text-decoration-none fw-bold text-sm">THRIFT</a>
                 </div>
-
+    
                 <!-- Logo -->
                 <div class="d-flex justify-content-center">
                     <img src="<?= HOST ?>/foto/logoPremurosa.png" alt="Premurosa Logo" class="h-10">
@@ -246,37 +228,28 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
                     <a href="pencarian.php" class="text-dark text-lg nav-icon">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </a>
+
                     <a href="notifikasi.php" class="text-dark text-lg nav-icon">
                         <i class="bi bi-bell-fill"></i>
                     </a>
+
                     <a href="keranjang.php" class="text-dark text-lg nav-icon">
                         <i class="fa-solid fa-cart-shopping"></i>
                     </a>
+
                     <div class="vr"></div>
 
                     <div class="dropdown">
                         <a href="#" class="d-flex align-items-center text-dark text-decoration-none" id="dropdownUserMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                            <div class="profile-picture">
-                                <?php if ($is_default_picture): ?>
-                                    <i class="fa-solid fa-user-circle"></i>
-                                <?php else: ?>
-                                    <img src="<?= $profile_picture_url ?>" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
-                                <?php endif; ?>
-                            </div>
+                            <img src="<?= $profile_picture_url ?>" alt="User Avatar" class="rounded-circle" style="width: 20px; height: 20px; object-fit: cover;">
                             <span class="ms-2 fw-bold text-sm">Hi, <?= htmlspecialchars($_SESSION['username']); ?></span>
                             <i class="bi bi-chevron-down ms-1"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUserMenu">
                             <li class="px-3 py-2 d-flex flex-column align-items-center border-bottom">
-                                <div class="profile-picture" style="width: 70px; height: 70px;">
-                                    <?php if ($is_default_picture): ?>
-                                        <i class="fa-solid fa-user-circle"></i>
-                                    <?php else: ?>
-                                        <img src="<?= $profile_picture_url ?>" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
-                                    <?php endif; ?>
-                                </div>
+                                <img src="<?= $profile_picture_url ?>" alt="User Avatar" class="rounded-circle mb-2" style="width: 70px; height: 70px; object-fit: cover;">
                                 <span class="fw-semibold"><?= htmlspecialchars($_SESSION['username']); ?></span>
-                            </li>
+                            </li>                            
                             <li><a class="dropdown-item d-flex align-items-center gap-2" href="profile.php">
                                 <i class="fa-solid fa-user"></i>
                                 My Profile
@@ -289,7 +262,9 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
                                 <i class="fa-solid fa-gear"></i>
                                 Settings
                             </a></li>
+                            
                             <li><hr class="dropdown-divider"></li>
+                            
                             <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="../login.php">
                                 <i class="fa-solid fa-right-from-bracket"></i>
                                 Logout
@@ -297,12 +272,17 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
                         </ul>
                     </div>
                 </div>
+
             </div>
         </nav>
     </header>
-
+    
     <!-- Menu chat -->
     <div class="floating-chat" onclick="window.location.href='chat.php'">
         <i class="bi bi-chat-right-dots-fill"></i>
         <span>Chat</span>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

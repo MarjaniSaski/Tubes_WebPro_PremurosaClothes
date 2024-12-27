@@ -4,94 +4,39 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 $user_id = $_SESSION['user_id'];
 
-$resultDataSQL = $conn->query("SELECT first_name, last_name FROM user WHERE id = '$user_id'");
+$resultDataSQL = $conn->prepare("SELECT first_name, last_name FROM user WHERE id = ?");
+$resultDataSQL->bind_param("i", $user_id);
+$resultDataSQL->execute();
+$resultData = $resultDataSQL->get_result();
 
-// Poin Jumlah Penukaran
-if ($resultDataSQL && $resultDataSQL->num_rows > 0) {
-    // Fetch the result as an associative array
-    $row = $resultDataSQL->fetch_assoc();
+if ($resultData && $resultData->num_rows > 0) {
+    $row = $resultData->fetch_assoc();
     $fullname = $row['first_name'] . ' ' . $row['last_name'];
 } else {
-    // Handle the case where no data is found
     $fullname = "Nama Tidak Ditemukan";
 }
+
+$resultDataSQL->close();
 
 $getPoin = $conn->prepare("SELECT COUNT(*) FROM `orders` WHERE nama_lengkap = ?");
 $getPoin->bind_param("s", $fullname);
-
-if ($getPoin->execute()) {
-    $result = $getPoin->get_result();
-    $resultPoin = $result->fetch_row()[0];
-} else {
-    echo "Error: " . $getPoin->error;
-}
-
+$getPoin->execute();
+$result = $getPoin->get_result();
+$resultPoin = $result->fetch_row()[0] ?? 0;
 $getPoin->close();
 
-// Poin Jumlah 
-
-$resultData = $conn->query("SELECT first_name, last_name FROM user WHERE id = '$user_id'");
-
-if ($resultData && $resultData->num_rows > 0) {
-    // Fetch the result as an associative array
-    $row = $resultData->fetch_assoc();
-    $fullname = $row['first_name'] . ' ' . $row['last_name'];
-} else {
-    // Handle the case where no data is found
-    $fullname = "Nama Tidak Ditemukan";
-}
-
-$getPoinTukar = $conn->prepare("SELECT COUNT(*) FROM `orders` WHERE nama_lengkap = ?");
+$getPoinTukar = $conn->prepare("SELECT SUM(poin) FROM orders WHERE nama_lengkap = ?");
 $getPoinTukar->bind_param("s", $fullname);
-
-if ($getPoinTukar->execute()) {
-    $result = $getPoinTukar->get_result();
-    $resultPoinTukar = $result->fetch_row()[0];
-} else {
-    echo "Error: " . $getPoinTukar->error;
-}
-
+$getPoinTukar->execute();
+$result = $getPoinTukar->get_result();
+$resultPoinTukar = $result->fetch_row()[0] ?? 0;
 $getPoinTukar->close();
 
-
-// Terima request penukaran
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tukar_pakaian'])) {
-    $user_id = $_SESSION['user_id']; // Ambil ID user dari session
     updateJumlahPenukaran($user_id, $conn);
 }
 
-// Ambil nama lengkap pengguna berdasarkan user_id
-$resultData = $conn->query("SELECT first_name, last_name FROM user WHERE id = '$user_id'");
-
-if ($resultData && $resultData->num_rows > 0) {
-    // Fetch the result as an associative array
-    $row = $resultData->fetch_assoc();
-    $fullname = $row['first_name'] . ' ' . $row['last_name'];
-} else {
-    // Handle the case where no data is found
-    $fullname = "Nama Tidak Ditemukan";
-}
-
-// Query untuk menjumlahkan poin berdasarkan nama lengkap
-$getPoinTukar = $conn->prepare("SELECT SUM(poin) FROM orders WHERE nama_lengkap = ?");
-$getPoinTukar->bind_param("s", $fullname);
-
-if ($getPoinTukar->execute()) {
-    $result = $getPoinTukar->get_result();
-    $resultPoinTukar = $result->fetch_row()[0];
-
-    // Jika tidak ada poin yang ditemukan, set poin menjadi 0
-    if ($resultPoinTukar === null) {
-        $resultPoinTukar = 0;
-    }
-} else {
-    echo "Error: " . $getPoinTukar->error;
-}
-
-$getPoinTukar->close();
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['poin'])) {
-    $user_id = $_SESSION['user_id']; // Ambil ID user dari session
     updateJumlahPenukaran($user_id, $conn, $resultPoinTukar);
 }
 
@@ -99,6 +44,17 @@ $conn->close();
 ?>
 
 <style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-left: 10px;
+        padding-right: 15px;
+    }
+
+    .card {
+        margin: 15px 0;
+    }
+
     .btn-pink {
         background-color: #ff69b4;
         border-color: #ff69b4;
@@ -141,56 +97,9 @@ $conn->close();
         margin-top: 10px;
         color: #ff1493;
     }
-
-    /* Styling for the Terms and Conditions container */
-    .terms-container {
-        background-color: #fff;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        margin-top: 30px;
-        height: auto;
-    }
-
-    .terms-container h2 {
-        color: #ff1493;
-        font-size: 24px;
-        font-weight: bold;
-    }
-
-    .terms-container p,
-    .terms-container ol {
-        color: #333;
-        font-size: 16px;
-        line-height: 1.6;
-    }
-
-    /* Card Styling */
-    .card-terms {
-        width: 100%;
-        height: auto;
-        margin-bottom: 20px;
-    }
-
-    .card-body-terms {
-        padding: 20px;
-        text-align: left;
-    }
-
-    .card-body-terms ol {
-        margin-left: 20px;
-    }
 </style>
 
-<div class="container-fluid bg-pink-200 py-3">
-    <div class="container">
-        <h1 class="text-left text-2xl font-semibold text-black">
-            <i class="bi bi-gem"></i> My Poin
-        </h1>
-    </div>
-</div>
-
-<main class="mt-5">
+<body class="bg-gray-50">
     <div class="container">
         <div class="row justify-content-center">
             <!-- Kolom Jumlah Poin -->
@@ -201,7 +110,7 @@ $conn->close();
                         <h3 class="card-title text-3xl font-bold"><?= $resultPoinTukar ?></h3>
                         <p class="text-gray-600">JUMLAH POIN</p>
                         <div class="d-flex justify-content-center gap-3 mt-4">
-                            <button type="button" class="btn bg-pink-500 hover:bg-pink-700 text-white font-medium py-3 px-5 w-full rounded-lg shadow-md transition duration-300" onclick="window.location.href='menutukar.php';">
+                            <button type="button" class="btn bg-pink-500 hover:bg-pink-700 text-white font-medium py-3 px-5 w-full rounded-lg shadow-md transition duration-300" onclick="window.location.href='tukarpoin.php';">
                                 <i class="fas fa-arrow-right mr-2"></i> Tukar Poin
                             </button>
                         </div>
@@ -222,7 +131,7 @@ $conn->close();
                         <h3 class="card-title text-3xl font-bold"><?= $resultPoin ?></h3>
                         <p class="text-gray-600">JUMLAH PENUKARAN</p>
                         <div class="d-flex justify-content-center gap-3 mt-4">
-                            <button type="button" class="btn bg-pink-500 hover:bg-pink-700 text-white font-medium py-3 px-5 w-full rounded-lg shadow-md transition duration-300" onclick="window.location.href='menutukarpakaian.php';">
+                            <button type="button" class="btn bg-pink-500 hover:bg-pink-700 text-white font-medium py-3 px-5 w-full rounded-lg shadow-md transition duration-300" onclick="window.location.href='tukarpakaian.php';">
                                 <i class="fas fa-arrow-right mr-2"></i> Tukar Pakaian
                             </button>
                         </div>
@@ -235,21 +144,16 @@ $conn->close();
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="newarrivallogo bg-pink-200 p-3 flex items-center gap-3">
-            <h2 class="text-xl font-bold pl-4">
+        <!-- Kolom Syarat dan Ketentuan -->
+        <div>
+            <br>
+            <h2 style="font-size: 25px; color: #D5006D; font-weight: bold;">
                 <i class="bi bi-stars text-pink-500 mr-3"></i>Syarat dan Ketentuan
             </h2>
-        </div>
-
-    <!-- Syarat dan Ketentuan Container -->
-    <div class="card card-terms">
-        <div class="card-body card-body-terms">
-        <h2 style="font-size: 25px; color: #D5006D; font-weight: bold;">Syarat dan Ketentuan Penukaran Pakaian</h2>
-        <br>
-        <p>Pastikan Anda Membaca dan Memahami Seluruh Ketentuan Berikut Sebelum Melakukan Penukaran Poin:</p>
-            <ol class="list-decimal">
+            <br>
+            <p>Pastikan Anda Membaca dan Memahami Seluruh Ketentuan Berikut Sebelum Melakukan Penukaran!</p>
+            <ol class="list-decimal text-m list-inside mt-2">
                 <li>Pastikan produk yang ditukarkan dalam kondisi sudah dicuci.</li>
                 <li>Pastikan produk yang ditukarkan tidak bernjamur dan masih layak pakai.</li>
                 <li>Pakaian yang kotor atau rusak tidak dapat ditukar.</li>
@@ -263,9 +167,8 @@ $conn->close();
             <p>Dengan melakukan penukaran ini, Anda dianggap telah menyetujui semua syarat dan ketentuan yang berlaku.</p>
         </div>
     </div>
-</main>
 </body>
+
 <?php
-include "template/footer_user.php"
+include "template/footer_user.php";
 ?>
-</html>
