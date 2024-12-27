@@ -2,7 +2,7 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/template/header_admin.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
-$sqlStatement = "SELECT * FROM tukar_pakaian WHERE status = 'Pending'";
+$sqlStatement = "SELECT * FROM orders WHERE status = 'Pending'";
 $query = mysqli_query($conn, $sqlStatement);
 $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
@@ -153,8 +153,8 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                 <?php
                 foreach ($data as $key => $swap) {
                 ?>
-                    <tr data-id="<?= $swap['id'] ?>">
-                        <td class="py-2 px-4 border-b"><?= $swap['id'] ?></td>
+                    <tr data-id="<?= $swap['id_order'] ?>">
+                        <td class="py-2 px-4 border-b"><?= $swap['id_order'] ?></td>
                         <td class="py-2 px-4 border-b"><?= $swap['nama_lengkap'] ?></td>
                         <td class="py-2 px-4 border-b"><?= $swap['tanggal_penjemputan'] ?></td>
                         <td class="py-2 px-4 border-b"><?= $swap['jenis_barang'] ?></td>
@@ -178,10 +178,10 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                             </span>
 
                         </td>
-                        <td class="py-2 px-4 border-b"><?= $swap['id'] ?></td>
+                        <td class="py-2 px-4 border-b"><?= $swap['poin'] ?></td>
                         <td class="py-2 px-4 border-b text-center">
-                        <a href="update_poin.php?id=<?= urlencode($swap['id']) ?>">
-                        <button class="text-blue-500 hover:text-blue-700 focus:outline-none">
+                        <a href="update_poin.php?id_order=<?= urlencode($swap['id_order']) ?>">
+                            <button class="text-blue-500 hover:text-blue-700 focus:outline-none">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20h9" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 3.5a2.121 2.121 0 013 0l1.5 1.5a2.121 2.121 0 010 3L7 19l-4 1 1-4L16.5 3.5z" />
