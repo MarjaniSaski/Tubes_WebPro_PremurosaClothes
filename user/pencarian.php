@@ -6,9 +6,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'Terlaris';
 
 // kata kunci pencarian
-$search = isset($_GET['search']) ? $_GET['search'] : '';
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-// Daftar produk dengan nama, gambar, harga, dan rating
+/// Daftar produk dengan nama, gambar, harga, dan rating
 $products = [
     ["name" => "Ivory Midi Skirt", "image" => "/foto/rok putih.png", "price" => 299000, "rating" => 4.5],
     ["name" => "Unisex T-Shirt", "image" => "/foto/7.png", "price" => 199000, "rating" => 4.2],
@@ -46,64 +46,55 @@ $products = [
 ];
 
 // Filter produk berdasarkan pencarian
+$filtered_products = $products;
 if (!empty($search)) {
-    $products = array_filter($products, function ($product) use ($search) {
-        return stripos($product['name'], $search) !== false; // Memeriksa apakah nama produk mengandung kata kunci
+    $filtered_products = array_filter($filtered_products, function ($product) use ($search) {
+        return stripos(strtolower($product['name']), strtolower($search)) !== false;
     });
 }
 
-// Mengurutkan produk berdasarkan filter
+// Mengurutkan produk yang sudah difilter berdasarkan filter
 switch ($filter) {
     case 'Terlaris':
-        // Urutkan berdasarkan rating tertinggi ke terendah
-        usort($products, function ($a, $b) {
-            return $b['rating'] - $a['rating'];
+        usort($filtered_products, function ($a, $b) {
+            return $b['rating'] <=> $a['rating'];
         });
         break;
 
     case 'Harga Terendah':
-        // Urutkan berdasarkan harga terendah, jika harga sama urutkan berdasarkan rating tertinggi
-        usort($products, function ($a, $b) {
-            if ($a['price'] == $b['price']) {
-                return $b['rating'] - $a['rating'];
+        usort($filtered_products, function ($a, $b) {
+            if ($a['price'] === $b['price']) {
+                return $b['rating'] <=> $a['rating'];
             }
-            return $a['price'] - $b['price'];
+            return $a['price'] <=> $b['price'];
         });
         break;
 
     case 'Harga Tertinggi':
-        // Urutkan berdasarkan harga tertinggi, jika harga sama urutkan berdasarkan rating tertinggi
-        usort($products, function ($a, $b) {
-            if ($a['price'] == $b['price']) {
-                return $b['rating'] - $a['rating'];
+        usort($filtered_products, function ($a, $b) {
+            if ($a['price'] === $b['price']) {
+                return $b['rating'] <=> $a['rating'];
             }
-            return $b['price'] - $a['price'];
-        });
-        break;
-
-    default:
-        // Filter default (fallback) ke "Terlaris"
-        usort($products, function ($a, $b) {
-            return $b['rating'] - $a['rating'];
+            return $b['price'] <=> $a['price'];
         });
         break;
 }
+
 if (!isset($_SESSION['wishlist'])) {
     $_SESSION['wishlist'] = [];
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produk dengan Rating</title>
+    <title>Pencarian Produk Premurosa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 <style>
-   .rating {
+    .rating {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -167,100 +158,178 @@ if (!isset($_SESSION['wishlist'])) {
         padding-right: 10px;
     }
 
-    #currentSort{
-        text-align:left;
+    #currentSort {
+        text-align: left;
     }
+
     .rating-wishlist {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    position: relative; 
-}
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        position: relative; 
+    }
 
-.rating {
-    display: flex;
-    align-items: center;
-}
+    .rating {
+        display: flex;
+        align-items: center;
+    }
 
-.rating span {
-    margin-left: 0.5rem;
-    font-size: 0.9rem;
-    color: #333;
-}
+    .rating span {
+        margin-left: 0.5rem;
+        font-size: 0.9rem;
+        color: #333;
+    }
 
+    .wishlist-icon {
+        position: absolute; 
+        top: 50%;
+        right: 0px; 
+        transform: translateY(-30%); 
+        font-size: 1.5rem;
+        color: grey;
+        cursor: pointer;
+        transition: color 0.3s, transform 0.3s;
+    }
 
-.wishlist-icon {
-    position: absolute; 
-    top: 50%;
-    right: 0px; 
-    transform: translateY(-30%); 
-    font-size: 1.5rem;
-    color: grey;
-    cursor: pointer;
-    transition: color 0.3s, transform 0.3s;
-}
+    .wishlist-icon:hover {
+        color: red;
+        transform: translateY(-30%) scale(1.2);
+    }
 
-.wishlist-icon:hover {
-    color: red;
-    transform: translateY(-30%) scale(1.2);
-}
+    .wishlist-icon.wishlist-active {
+        color: red;
+    }
 
-.wishlist-icon.wishlist-active {
-    color: red;
-}
+    /* Style untuk Error Message */
+    .error-message {
+        text-align: center;
+        padding: 4rem 2rem;
+        margin: 2rem auto;
+        max-width: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
 
+    .error-icon {
+        width: 100px;
+        height: 100px;
+        background-color: #f8d7e9;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .error-icon i {
+        font-size: 3rem;
+        color: #ff4081;
+    }
+
+    .error-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .error-subtitle {
+        color: #666;
+        font-size: 1rem;
+    }
 </style>
+
+<section class="container mx-auto mt-8">
+    <div class="flex flex-col items-center mb-4">
+        <!-- Search Form -->
+        <form action="" method="GET" class="w-full max-w-xl mb-4">
+            <div class="relative flex items-center">
+                <input 
+                    type="text" 
+                    name="search" 
+                    placeholder="Cari produk..." 
+                    value="<?php echo htmlspecialchars($search); ?>"
+                    class="w-full px-4 py-2 rounded-lg border-4 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 bg-white placeholder-pink-400"
+                >
+                <?php if (!empty($filter)): ?>
+                    <input type="hidden" name="filter" value="<?php echo htmlspecialchars($filter); ?>">
+                <?php endif; ?>
+                <button 
+                    type="submit" 
+                    class="absolute right-0 h-full px-4 bg-pink-400 rounded-r-lg hover:bg-pink-500 transition-colors"
+                >
+                    <i class="fas fa-search text-white"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
 
 <!-- Product Section -->
 <section class="container mx-auto mt-8">
     <div class="flex justify-end mb-4">
         <div class="sort-dropdown">
             <button onclick="toggleDropdown()" class="btn bg-pink-400 text-black flex justify-between items-center font-semibold rounded-lg px-4 py-2" style="width: 200px;">
-                <span id="currentSort"><?php echo $filter; ?></span>
+                <span id="currentSort"><?php echo htmlspecialchars($filter); ?></span>
                 <i class="fas fa-chevron-down ml-2"></i>
             </button>
             <div id="sortDropdown" class="sort-dropdown-content">
-                <a href="?filter=Terlaris">Terlaris</a>
-                <a href="?filter=Harga Tertinggi">Harga Tertinggi</a>
-                <a href="?filter=Harga Terendah">Harga Terendah</a>
+                <a href="?filter=Terlaris<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">Terlaris</a>
+                <a href="?filter=Harga Tertinggi<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">Harga Tertinggi</a>
+                <a href="?filter=Harga Terendah<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">Harga Terendah</a>
             </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <?php foreach ($products as $product): ?>
-            <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-                <img src="<?= HOST . $product['image'] ?>" alt="<?= $product['name'] ?>" class="w-full mb-4 rounded-md">
-                <h3 class="text-sm font-medium"><?= $product['name'] ?></h3>
-                <p class="text-pink-500 font-bold">Rp<?= number_format($product['price'], 0, ',', '.') ?></p>
-                <div class="rating-wishlist flex items-center justify-center space-x-2">
-                    <div class="rating flex items-center">
-                        <?php
-                        $fullStars = floor($product['rating']);
-                        $halfStars = ($product['rating'] - $fullStars) >= 0.5 ? 1 : 0;
-                        $emptyStars = 5 - $fullStars - $halfStars;
-                        for ($i = 0; $i < $fullStars; $i++) {
-                            echo '<i class="fas fa-star"></i>';
-                        }
-                        if ($halfStars) {
-                            echo '<i class="fas fa-star-half-alt"></i>';
-                        }
-                        for ($i = 0; $i < $emptyStars; $i++) {
-                            echo '<i class="far fa-star"></i>';
-                        }
-                        ?>
-                        <span><?= $product['rating'] ?></span>
-                    </div>
-                    <!-- Ikon wishlist -->
-                    <i class="fas fa-heart wishlist-icon <?= in_array($product['name'], $_SESSION['wishlist']) ? 'wishlist-active' : '' ?>" 
-                        data-name="<?= $product['name'] ?>" 
-                        onclick="toggleWishlist(this, '<?= $product['name'] ?>')">
-                    </i>
-                </div>
+    <?php if (empty($filtered_products) && !empty($search)): ?>
+        <div class="error-message">
+            <div class="error-icon">
+                <i class="fas fa-search"></i>
             </div>
-        <?php endforeach; ?>
-    </div>
+            <h2 class="error-title">Produk tidak ditemukan</h2>
+            <p class="error-subtitle">
+                Maaf, tidak ada produk yang sesuai dengan pencarian "<?php echo htmlspecialchars($search); ?>".
+                <br>Silakan coba dengan kata kunci lain.
+            </p>
+        </div>
+    <?php else: ?>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <?php foreach ($filtered_products as $product): ?>
+                <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
+                    <img src="<?= HOST . htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>" class="w-full mb-4 rounded-md">
+                    <h3 class="text-sm font-medium"><?= htmlspecialchars($product['name']) ?></h3>
+                    <p class="text-pink-500 font-bold">Rp<?= number_format($product['price'], 0, ',', '.') ?></p>
+                    <div class="rating-wishlist flex items-center justify-center space-x-2">
+                        <div class="rating flex items-center">
+                            <?php
+                            $fullStars = floor($product['rating']);
+                            $halfStars = ($product['rating'] - $fullStars) >= 0.5 ? 1 : 0;
+                            $emptyStars = 5 - $fullStars - $halfStars;
+                            for ($i = 0; $i < $fullStars; $i++) {
+                                echo '<i class="fas fa-star"></i>';
+                            }
+                            if ($halfStars) {
+                                echo '<i class="fas fa-star-half-alt"></i>';
+                            }
+                            for ($i = 0; $i < $emptyStars; $i++) {
+                                echo '<i class="far fa-star"></i>';
+                            }
+                            ?>
+                            <span><?= $product['rating'] ?></span>
+                        </div>
+                        <i class="fas fa-heart wishlist-icon <?= in_array($product['name'], $_SESSION['wishlist']) ? 'wishlist-active' : '' ?>" 
+                            data-name="<?= htmlspecialchars($product['name']) ?>" 
+                            onclick="toggleWishlist(this, '<?= htmlspecialchars(addslashes($product['name'])) ?>')">
+                        </i>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 </section>
+
 <script>
 function toggleDropdown() {
     document.getElementById("sortDropdown").classList.toggle("show");
@@ -278,6 +347,7 @@ window.onclick = function(event) {
         }
     }
 }
+
 function toggleWishlist(icon, productName) {
     // Ambil wishlist dari localStorage
     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
