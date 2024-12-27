@@ -109,6 +109,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         color: white;
     }
 
+    .weight-btn.active {
+        background-color: #fa7fcf;
+        color: white;
+        border-color: #FFABE1;
+    }
+
     #preview {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -138,11 +144,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form id="exchangeForm" method="POST" enctype="multipart/form-data">
                 <div class="row align-items-start">
                     <div class="border rounded shadow-sm p-4 bg-light d-flex flex-column align-items-center">
-                        <h1 class="text-center text-pink-400 font-bold mb-3 text-3xl">Upload here!</h1>
+                        <h1 class="text-center text-pink-600 font-bold mb-3 text-3xl">Unggah disini!</h1>
                         <div class="d-flex justify-content-center">
-                            <label for="fileInput" class="cursor-pointer text-pink-400 font-semibold">Choose Files <i class="fa-regular fa-hand-pointer"></i></label>
-                            <input type="file" id="fileInput" class="d-none" accept="image/*" name="foto[]" multiple>
+                            <label for="fileInput" class="cursor-pointer text-pink-600 font-medium">Klik untuk mengunggah gambar <i class="fa-regular fa-hand-pointer"></i></label>
+                            <input type="file" id="fileInput" class="d-none" accept="image/png, image/jpg, image/jpeg" name="foto[]" multiple>
                         </div>
+                        <p class="text-center text-gray-400">(Unggah minimal 3 foto, PNG/JPG/JPEG)</p>
                         <div id="preview" class="mt-4 text-center"></div>
                     </div>
                 </div>
@@ -230,8 +237,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <br>
                         <br>
                         <div class="d-flex justify-content-end">
-                            <button type="button" class="btn bg-gray-200 text-black hover:bg-gray-600 border-0 me-3" onclick="window.location.href='menuswap.php';">Kembali</button>
-                            <button type="submit" name="btnpenjemputan" class="btn bg-pink-300 hover:bg-pink-600 text-Black">Atur Penjemputan</button>
+                            <button type="button" class="btn bg-gray-200 text-black hover:bg-gray-400 border-0 me-3" onclick="window.location.href='menuswap.php';">Kembali</button>
+                            <button type="submit" name="btnpenjemputan" class="btn bg-pink-500 hover:bg-pink-600 text-Black">Atur Penjemputan</button>
                         </div>
                     </div>
                 </div>
@@ -265,28 +272,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const fileInput = document.getElementById("fileInput");
-        const previewContainer = document.getElementById("preview");
+        document.addEventListener("DOMContentLoaded", function () {
+            const fileInput = document.getElementById("fileInput");
+            const previewContainer = document.getElementById("preview");
 
-        fileInput.addEventListener("change", function () {
-            previewContainer.innerHTML = ""; // Kosongkan preview sebelumnya
-            Array.from(fileInput.files).forEach(file => {
-                if (file.type.startsWith("image/")) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const img = document.createElement("img");
-                        img.src = e.target.result;
-                        img.alt = "Uploaded Image";
-                        previewContainer.appendChild(img);
-                    };
-                    reader.readAsDataURL(file);
+            fileInput.addEventListener("change", function () {
+                const files = fileInput.files;
+                const validExtensions = ['image/jpeg', 'image/png', 'image/jpg'];
+                let validFiles = true;
+
+                // Validasi file
+                Array.from(files).forEach(file => {
+                    if (!validExtensions.includes(file.type)) {
+                        validFiles = false;
+                        alert('Hanya file gambar dengan ekstensi JPG, PNG, atau JPEG yang diperbolehkan!');
+                    }
+                });
+
+                if (validFiles) {
+                    previewContainer.innerHTML = "";
+                    Array.from(files).forEach(file => {
+                        if (file.type.startsWith("image/")) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                const img = document.createElement("img");
+                                img.src = e.target.result;
+                                img.alt = "Gambar yang Diupload";
+                                previewContainer.appendChild(img);
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                } else {
+                    fileInput.value = ''; // Reset input file jika file tidak valid
                 }
             });
         });
-    });
 
+        document.addEventListener("DOMContentLoaded", function () {
+            const weightButtons = document.querySelectorAll('.weight-btn');
+            const selectedWeightInput = document.getElementById('selectedWeight');
 
+            weightButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Menghapus kelas aktif dari semua tombol
+                    weightButtons.forEach(btn => btn.classList.remove('active'));
+
+                    // Menambahkan kelas aktif pada tombol yang dipilih
+                    this.classList.add('active');
+
+                    // Menyimpan nilai berat yang dipilih pada input hidden
+                    selectedWeightInput.value = this.getAttribute('data-weight');
+                });
+            });
+        });
 
         document.addEventListener("DOMContentLoaded", function () {
             const provinsiSelect = document.getElementById("provinsi");
@@ -294,7 +333,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             const kecamatanSelect = document.getElementById("kecamatan");
             const kodePosSelect = document.getElementById("kodePos");
 
-            // Data kecamatan dengan beberapa kode pos
             const kecamatanData = {
                 "Kabupaten Bandung": {
                     "Arjasari": ["40379"],
@@ -388,15 +426,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if (selectedKecamatan) {
                     const selectedKabKota = kabupatenKotaSelect.value;
                     const kodePosArray = kecamatanData[selectedKabKota][selectedKecamatan];
-
-                    // Jika hanya ada satu kode pos, langsung tampilkan
                     if (kodePosArray.length === 1) {
                         const kodePosOption = document.createElement("option");
                         kodePosOption.value = kodePosArray[0];
                         kodePosOption.textContent = kodePosArray[0];
                         kodePosSelect.appendChild(kodePosOption);
                     }
-                    // Jika ada lebih dari satu kode pos, tampilkan semuanya
                     else {
                         kodePosArray.forEach(function (kodePos) {
                             const kodePosOption = document.createElement("option");
