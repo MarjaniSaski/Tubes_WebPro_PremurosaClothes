@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     for ($i = 0; $i < count($files['name']); $i++) {
         if ($files['error'][$i] === UPLOAD_ERR_OK) {
-            $file_name = 'ORDERS_' . time() . '_' . $i . '_' . $_SESSION['username'] . '.' . pathinfo($files['name'][$i], PATHINFO_EXTENSION);
+            $file_name = 'SWAPPRODUCT_' . time() . '_' . $i . '_' . $_SESSION['username'] . '.' . pathinfo($files['name'][$i], PATHINFO_EXTENSION);
             $file_path = $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/images/' . $file_name;
             
             if (move_uploaded_file($files['tmp_name'][$i], $file_path)) {
@@ -138,9 +138,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form id="exchangeForm" method="POST" enctype="multipart/form-data">
                 <div class="row align-items-start">
                     <div class="border rounded shadow-sm p-4 bg-light d-flex flex-column align-items-center">
-                        <h1 class="text-center text-pink-500 font-bold mb-3 text-3xl">Upload here!</h1>
+                        <h1 class="text-center text-pink-400 font-bold mb-3 text-3xl">Upload here!</h1>
                         <div class="d-flex justify-content-center">
-                            <label for="fileInput" class="cursor-pointer text-pink-600 font-semibold">Choose Files <i class="fa-regular fa-hand-pointer"></i></label>
+                            <label for="fileInput" class="cursor-pointer text-pink-400 font-semibold">Choose Files <i class="fa-regular fa-hand-pointer"></i></label>
                             <input type="file" id="fileInput" class="d-none" accept="image/*" name="foto[]" multiple>
                         </div>
                         <div id="preview" class="mt-4 text-center"></div>
@@ -408,6 +408,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             });
         });
+        
     </script>
 </body>
 
