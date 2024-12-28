@@ -147,13 +147,13 @@ ob_end_flush();
                     <table class="min-w-full table-auto bg-white shadow-md rounded-lg">
                         <thead>
                             <tr class="bg-white-100 text-sm">
-                                <th class="px-6 py-3 text-left">Voucher Name</th>
-                                <th class="px-6 py-3 text-left">Voucher Code</th>
-                                <th class="px-6 py-3 text-left">Discount</th>
-                                <th class="px-6 py-3 text-left">Poin</th>
-                                <th class="px-6 py-3 text-left">Usage Period</th>
-                                <th class="px-6 py-3 text-left">Max Period</th>
-                                <th class="px-6 py-3 text-left">Actions</th>
+                                <th class="px-6 py-3 text-center">Voucher Name</th>
+                                <th class="px-6 py-3 text-center">Voucher Code</th>
+                                <th class="px-6 py-3 text-center">Discount</th>
+                                <th class="px-6 py-3 text-center">Poin</th>
+                                <th class="px-6 py-3 text-center">Usage Period</th>
+                                <th class="px-6 py-3 text-center">Max Period</th>
+                                <th class="px-6 py-3 text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="voucher-table-body">
@@ -161,12 +161,12 @@ ob_end_flush();
                             foreach ($datavoucher as $key => $vouchers) {
                             ?>
                                 <tr class="bg-white-200 text-sm">
-                                    <td class="px-6 py-3 text-left"><?= $vouchers['voucher_name'] ?></td>
-                                    <td class="px-6 py-3 text-left"><?= $vouchers['voucher_code'] ?></td>
-                                    <td class="px-6 py-3 text-left"><?= $vouchers['discount'] ?></td>
-                                    <td class="px-6 py-3 text-left"><?= $vouchers['points'] ?></td>
-                                    <td class="px-6 py-3 text-left"><?= $vouchers['usage_period'] ?></td>
-                                    <td class="px-6 py-3 text-left"><?= $vouchers['max_period']?></td>
+                                    <td class="px-6 py-3 text-center"><?= $vouchers['voucher_name'] ?></td>
+                                    <td class="px-6 py-3 text-center"><?= $vouchers['voucher_code'] ?></td>
+                                    <td class="px-6 py-3 text-center"><?= $vouchers['discount'] ?></td>
+                                    <td class="px-6 py-3 text-center"><?= $vouchers['points'] ?></td>
+                                    <td class="px-6 py-3 text-center"><?= $vouchers['usage_period'] ?></td>
+                                    <td class="px-6 py-3 text-center"><?= $vouchers['max_period']?></td>
                                     <td>
                                         <div class="flex justify-center space-x-2">
                                             <!-- Tombol Edit -->
@@ -204,11 +204,12 @@ ob_end_flush();
                     <table class="min-w-full table-auto bg-white shadow-md rounded-lg">
                         <thead>
                             <tr class="bg-white-200 text-sm">
-                                <th class="px-6 py-3 text-left">Product Name</th>
-                                <th class="px-6 py-3 text-left">Product Code</th>
-                                <th class="px-6 py-3 text-left">Poin</th>
-                                <th class="px-6 py-3 text-left">Details</th>
-                                <th class="px-6 py-3 text-left">Actions</th>
+                                <th class="px-6 py-3 text-center">Product Name</th>
+                                <th class="px-6 py-3 text-center">Product Code</th>
+                                <th class="px-6 py-3 text-center">Poin</th>
+                                <th class="px-6 py-3 text-center">Details</th>
+                                <th class="px-6 py-3 text-center">Status</th>
+                                <th class="px-6 py-3 text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="product-table-body">
@@ -216,10 +217,15 @@ ob_end_flush();
                             foreach ($data as $key => $produk) {
                             ?>
                                 <tr class="bg-white-200 text-sm">
-                                    <td class="px-6 py-3 text-left"><?= $produk['nama'] ?></td>
-                                    <td class="px-6 py-3 text-left"><?= $produk['id_produk'] ?></td>
-                                    <td class="px-6 py-3 text-left"><?= $produk['poin'] ?></td>
-                                    <td class="px-6 py-3 text-left"><?= $produk['detail'] ?></td>
+                                    <td class="px-6 py-3 text-center"><?= $produk['nama'] ?></td>
+                                    <td class="px-6 py-3 text-center"><?= $produk['id_produk'] ?></td>
+                                    <td class="px-6 py-3 text-center"><?= $produk['poin'] ?></td>
+                                    <td class="px-6 py-3 text-center"><?= $produk['detail'] ?></td>
+                                    <td class="py-2 px-4 border-b text-center">
+                                        <span class="<?= $produk['status'] == 'Belum Terjual' ? 'bg-orange-200 text-orange-800' : 'bg-green-200 text-green-800' ?> py-1 px-3 rounded-full text-xs">
+                                            <?= ucfirst($produk['status']) ?>
+                                        </span>
+                                    </td>
                                     <td>
                                         <div class="flex justify-center space-x-2">
                                             <a href="editproduk.php?id_produk=<?= urlencode($produk['id_produk']) ?>">

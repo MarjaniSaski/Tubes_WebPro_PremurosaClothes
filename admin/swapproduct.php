@@ -138,15 +138,15 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
     <table class="min-w-full bg-white">
         <thead>
             <tr>
-                <th class="py-2 px-4 border-b">ID</th>
-                <th class="py-2 px-4 border-b">Customer Name</th>
-                <th class="py-2 px-4 border-b">Date</th>
-                <th class="py-2 px-4 border-b">Jenis Barang</th>
-                <th class="py-2 px-4 border-b">Jenis Bahan</th>
-                <th class="py-2 px-4 border-b">Details</th>
-                <th class="py-2 px-4 border-b">Status</th>
-                <th class="py-2 px-4 border-b">Poin</th>
-                <th class="py-2 px-4 border-b">Action</th>
+                <th class="py-2 px-4 border-b text-center">ID</th>
+                <th class="py-2 px-4 border-b text-center">Customer Name</th>
+                <th class="py-2 px-4 border-b text-center">Date</th>
+                <th class="py-2 px-4 border-b text-center">Jenis Barang</th>
+                <th class="py-2 px-4 border-b text-center">Jenis Bahan</th>
+                <th class="py-2 px-4 border-b text-center">Details</th>
+                <th class="py-2 px-4 border-b text-center">Status</th>
+                <th class="py-2 px-4 border-b text-center">Poin</th>
+                <th class="py-2 px-4 border-b text-center">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -154,11 +154,11 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                 foreach ($data as $key => $swap) {
                 ?>
                     <tr data-id="<?= $swap['id_order'] ?>">
-                        <td class="py-2 px-4 border-b"><?= $swap['id_order'] ?></td>
-                        <td class="py-2 px-4 border-b"><?= $swap['nama_lengkap'] ?></td>
-                        <td class="py-2 px-4 border-b"><?= $swap['tanggal_penjemputan'] ?></td>
-                        <td class="py-2 px-4 border-b"><?= $swap['jenis_barang'] ?></td>
-                        <td class="py-2 px-4 border-b"><?= $swap['jenis_bahan'] ?></td>
+                        <td class="py-2 px-4 border-b text-center"><?= $swap['id_order'] ?></td>
+                        <td class="py-2 px-4 border-b text-center"><?= $swap['nama_lengkap'] ?></td>
+                        <td class="py-2 px-4 border-b text-center"><?= $swap['tanggal_penjemputan'] ?></td>
+                        <td class="py-2 px-4 border-b text-center"><?= $swap['jenis_barang'] ?></td>
+                        <td class="py-2 px-4 border-b text-center"><?= $swap['jenis_bahan'] ?></td>
                         <td class="py-2 px-4 border-b text-center">
                             <button onclick="showDetails('<?= $swap['foto'] ?>')" class="text-blue-500 hover:text-blue-700 focus:outline-none">
                                 <img src="../images/<?= $swap['foto'] ?>" alt="Foto Detail" class="w-16 h-16 object-cover mx-auto rounded-md">
@@ -172,13 +172,13 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                                 <img id="modalImage" src="" alt="Details Image" class="w-full h-auto rounded-lg">
                             </div>
                         </div>
-                        <td class="py-2 px-4 border-b">
+                        <td class="py-2 px-4 border-b text-center">
                             <span class="<?= $swap['status'] == 'Pending' ? 'bg-orange-200 text-orange-800' : 'bg-green-200 text-green-800' ?> py-1 px-3 rounded-full text-xs">
                                 <?= ucfirst($swap['status']) ?>
                             </span>
 
                         </td>
-                        <td class="py-2 px-4 border-b"><?= $swap['poin'] ?></td>
+                        <td class="py-2 px-4 border-b text-center"><?= $swap['poin'] ?></td>
                         <td class="py-2 px-4 border-b text-center">
                         <a href="update_poin.php?id_order=<?= urlencode($swap['id_order']) ?>">
                             <button class="text-blue-500 hover:text-blue-700 focus:outline-none">
