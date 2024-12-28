@@ -32,6 +32,17 @@ $result = $getPoinTukar->get_result();
 $resultPoinTukar = $result->fetch_row()[0] ?? 0;
 $getPoinTukar->close();
 
+// Mendapatkan total poin yang digunakan dari tabel shipping_data
+$getPointUsed = $conn->prepare("SELECT SUM(points_used) FROM `shipping_data` WHERE user_id = ?");
+$getPointUsed->bind_param("i", $user_id);
+$getPointUsed->execute();
+$result = $getPointUsed->get_result();
+$resultPointUsed = $result->fetch_row()[0] ?? 0;
+$getPointUsed->close();
+
+// Menghitung total poin yang tersisa setelah dikurangi poin yang digunakan
+$totalPoinTersisa = $resultPoinTukar - $resultPointUsed;
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tukar_pakaian'])) {
     updateJumlahPenukaran($user_id, $conn);
 }
@@ -107,7 +118,7 @@ $conn->close();
                 <div class="card shadow-lg border-0 rounded-lg overflow-hidden">
                     <img src="<?= HOST ?>/foto/jml.poin.png" alt="Gambar" class="card-img-top">
                     <div class="card-body text-center">
-                        <h3 class="card-title text-3xl font-bold"><?= $resultPoinTukar ?></h3>
+                        <h3 class="card-title text-3xl font-bold"><?= $totalPoinTersisa ?></h3>
                         <p class="text-gray-600">JUMLAH POIN</p>
                         <div class="d-flex justify-content-center gap-3 mt-4">
                             <button type="button" class="btn bg-pink-500 hover:bg-pink-700 text-white font-medium py-3 px-5 w-full rounded-lg shadow-md transition duration-300" onclick="window.location.href='tukarpoin.php';">

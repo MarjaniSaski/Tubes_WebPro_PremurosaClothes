@@ -130,10 +130,12 @@ if (!isset($_SESSION['wishlist'])) {
         position: absolute;
         right: 0;
         background-color: #fff;
-        min-width: 200px;
+        min-width: 200px; 
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 1;
         border-radius: 0.5rem;
+        padding: 8px; 
+        margin-top: -8px; 
     }
 
     .sort-dropdown-content a {
@@ -145,7 +147,9 @@ if (!isset($_SESSION['wishlist'])) {
     }
 
     .sort-dropdown-content a:hover {
-        background-color: #f8d7e9;
+        background-color: #ffc0cb;
+        color: white; 
+        transition: background-color 0.3s ease, color 0.3s ease; 
     }
 
     .show {
@@ -239,6 +243,17 @@ if (!isset($_SESSION['wishlist'])) {
         color: #666;
         font-size: 1rem;
     }
+
+    .flex.justify-end {
+        margin-top: -75px;
+    }
+
+    .btn:hover {
+        background-color:rgb(254, 168, 225); 
+        color: white;
+        transition: background-color 0.3s ease, color 0.3s ease; 
+    }
+
 </style>
 
 <section class="container mx-auto mt-8">
@@ -271,10 +286,12 @@ if (!isset($_SESSION['wishlist'])) {
 <section class="container mx-auto mt-8">
     <div class="flex justify-end mb-4">
         <div class="sort-dropdown">
-            <button onclick="toggleDropdown()" class="btn bg-pink-400 text-black flex justify-between items-center font-semibold rounded-lg px-4 py-2" style="width: 200px;">
-                <span id="currentSort"><?php echo htmlspecialchars($filter); ?></span>
-                <i class="fas fa-chevron-down ml-2"></i>
-            </button>
+        <button onclick="toggleDropdown()" 
+                class="btn bg-pink-400 text-black flex justify-between items-center font-semibold rounded-lg px-4 py-2" 
+                style="width: 200px;">
+            <span id="currentSort"><?php echo htmlspecialchars($filter); ?></span>
+            <i class="fas fa-chevron-down ml-2"></i>
+        </button>
             <div id="sortDropdown" class="sort-dropdown-content">
                 <a href="?filter=Terlaris<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">Terlaris</a>
                 <a href="?filter=Harga Tertinggi<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">Harga Tertinggi</a>

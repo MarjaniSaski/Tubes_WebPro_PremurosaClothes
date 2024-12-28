@@ -12,40 +12,66 @@ $sqlStatement = "SELECT * FROM vouchers";
 $query = mysqli_query($conn, $sqlStatement);
 $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
-$resultData = $conn->query("SELECT first_name, last_name FROM user WHERE id = '$user_id'");
+// Mendapatkan data pengguna
+$sqlUser = "SELECT first_name, last_name FROM user WHERE id = ?";
+$stmtUser = $conn->prepare($sqlUser);
+$stmtUser->bind_param("i", $user_id);
+$stmtUser->execute();
+$userData = $stmtUser->get_result()->fetch_assoc();
+$fullname = $userData['first_name'] . ' ' . $userData['last_name'];
+$stmtUser->close();
 
-if ($resultData && $resultData->num_rows > 0) {
-    // Fetch the result as an associative array
-    $row = $resultData->fetch_assoc();
-    $fullname = $row['first_name'] . ' ' . $row['last_name'];
-} else {
-    // Handle the case where no data is found
-    $fullname = "Nama Tidak Ditemukan";
-}
-
-// Query untuk menjumlahkan poin berdasarkan nama lengkap
+// Mendapatkan total poin yang dimiliki, mengurangi poin yang sudah digunakan (point_used)
 $getPoinTukar = $conn->prepare("SELECT SUM(poin) FROM orders WHERE nama_lengkap = ?");
 $getPoinTukar->bind_param("s", $fullname);
-
-if ($getPoinTukar->execute()) {
-    $result = $getPoinTukar->get_result();
-    $resultPoinTukar = $result->fetch_row()[0];
-
-    // Jika tidak ada poin yang ditemukan, set poin menjadi 0
-    if ($resultPoinTukar === null) {
-        $resultPoinTukar = 0;
-    }
-} else {
-    echo "Error: " . $getPoinTukar->error;
-}
-
+$getPoinTukar->execute();
+$result = $getPoinTukar->get_result();
+$resultPoinTukar = $result->fetch_row()[0] ?? 0;
 $getPoinTukar->close();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['poin'])) {
-    $user_id = $_SESSION['user_id']; // Ambil ID user dari session
-    updateJumlahPenukaran($user_id, $conn, $resultPoinTukar);
-}
+// Mendapatkan total poin yang digunakan dari tabel shipping_data
+$getPointUsed = $conn->prepare("SELECT SUM(points_used) FROM `shipping_data` WHERE user_id = ?");
+$getPointUsed->bind_param("i", $user_id);
+$getPointUsed->execute();
+$result = $getPointUsed->get_result();
+$resultPointUsed = $result->fetch_row()[0] ?? 0;
+$getPointUsed->close();
 
+// Menghitung total poin yang tersisa setelah dikurangi poin yang digunakan
+$totalPoinTersisa = $resultPoinTukar - $resultPointUsed;
+
+// Proses penukaran poin
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['points_used'])) {
+    $pointsUsed = intval($_POST['points_used']);
+
+    if ($pointsUsed > $totalPoints) {
+        echo "<script>alert('Poin tidak mencukupi!');</script>";
+    } else {
+        // Memulai transaksi
+        $conn->begin_transaction();
+        try {
+            // Catat penukaran poin
+            $sqlRedeem = "INSERT INTO point_redemptions (user_id, points_used, status) VALUES (?, ?, 'processed')";
+            $stmtRedeem = $conn->prepare($sqlRedeem);
+            $stmtRedeem->bind_param("ii", $user_id, $pointsUsed);
+            $stmtRedeem->execute();
+            $stmtRedeem->close();
+
+            // Update poin di tabel orders (mengurangi poin)
+            $sqlUpdatePoints = "UPDATE orders SET poin = poin - ? WHERE nama_lengkap = ? AND poin >= ?";
+            $stmtUpdatePoints = $conn->prepare($sqlUpdatePoints);
+            $stmtUpdatePoints->bind_param("isi", $pointsUsed, $fullname, $pointsUsed);
+            $stmtUpdatePoints->execute();
+            $stmtUpdatePoints->close();
+
+            $conn->commit();
+            echo "<script>alert('Penukaran berhasil!');</script>";
+        } catch (Exception $e) {
+            $conn->rollback();
+            echo "<script>alert('Terjadi kesalahan: {$e->getMessage()}');</script>";
+        }
+    }
+}
 $conn->close();
 ?>
 
@@ -118,7 +144,7 @@ $conn->close();
     <div>
       <div class="d-flex align-items-center border border-pink-700 rounded-lg px-4 py-2 text-pink-500 text-lg font-semibold">
         <i class="bi bi-coin me-2" style="font-size: 30px;"></i>
-        <?= $resultPoinTukar ?>
+        <?= $totalPoinTersisa ?>
       </div>
     </div>
   </div>
@@ -316,7 +342,6 @@ $conn->close();
       productPopup.classList.remove('show');
     }
   }
-
   function redirectToKatalogSwap(id_produk) {
     // Redirect ke halaman katalogswap.php dengan ID produk sebagai parameter
     window.location.href = `katalogswap.php?id_produk=${id_produk}`;
