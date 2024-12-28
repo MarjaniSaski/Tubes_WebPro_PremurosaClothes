@@ -12,13 +12,14 @@ if (!$product_id) {
 }
 
 try {
-    $stmt = $conn->prepare("DELETE FROM produk WHERE id_produk = ?");
+    // Update product status to "Sudah Terjual"
+    $stmt = $conn->prepare("UPDATE produk SET status = 'Sudah Terjual' WHERE id_produk = ?");
     $stmt->bind_param("i", $product_id);
     
     if ($stmt->execute()) {
-        echo json_encode(['success' => true]);
+        echo json_encode(['success' => true, 'message' => 'Product status updated to Sold']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to delete product']);
+        echo json_encode(['success' => false, 'message' => 'Failed to update product status']);
     }
     
     $stmt->close();

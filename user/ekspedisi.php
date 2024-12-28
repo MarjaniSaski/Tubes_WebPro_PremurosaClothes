@@ -72,7 +72,6 @@ $can_redeem = $totalPoinTersisa >= $product_points;
                      alt="<?php echo htmlspecialchars($product_data['nama']); ?>"
                      class="max-w-[75%] h-auto rounded-lg shadow-lg">
             </div>
-            
             <!-- Product Details - Right Side (70%) -->
             <div class="col-span-8 space-y-4">
                 <div class="bg-pink-50 p-4 rounded-lg">

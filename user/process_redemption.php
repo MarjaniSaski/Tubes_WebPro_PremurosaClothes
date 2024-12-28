@@ -79,6 +79,15 @@ try {
     $redemption_id = $conn->insert_id;
     $stmt_redeem->close();
 
+    // Update product status to 'sudah terjual'
+    $sql_update_product = "UPDATE produk SET status = 'sudah terjual' WHERE id_produk = ?";
+    $stmt_update_product = $conn->prepare($sql_update_product);
+    $stmt_update_product->bind_param("i", $data['product_id']);
+    if (!$stmt_update_product->execute()) {
+        throw new Exception('Gagal memperbarui status produk menjadi "sudah terjual"');
+    }
+    $stmt_update_product->close();
+    
     // Record shipping data - Removed created_at column
     $sql_shipping = "INSERT INTO shipping_data (
         user_id, name, phone, address, province,

@@ -4,7 +4,8 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 $user_id = $_SESSION['user_id'];
 
-$sqlStatement = "SELECT * FROM produk";
+// Hanya ambil produk dengan status "Belum Terjual"
+$sqlStatement = "SELECT * FROM produk WHERE status = 'Belum Terjual'";
 $query = mysqli_query($conn, $sqlStatement);
 $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
@@ -44,7 +45,7 @@ $totalPoinTersisa = $resultPoinTukar - $resultPointUsed;
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['points_used'])) {
     $pointsUsed = intval($_POST['points_used']);
 
-    if ($pointsUsed > $totalPoints) {
+    if ($pointsUsed > $totalPoinTersisa) {
         echo "<script>alert('Poin tidak mencukupi!');</script>";
     } else {
         // Memulai transaksi
