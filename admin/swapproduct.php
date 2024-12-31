@@ -12,13 +12,6 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
     #myModal {
         display: none;
     }
-    .pending {
-        @apply text-orange-500; /* Warna oranye untuk pending */
-    }
-
-    .completed {
-        @apply text-green-500; /* Warna hijau untuk completed */
-    }
     .form-container {
         display: flex;
         padding: 2rem;
@@ -270,5 +263,8 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
     }
     function goBack() {
         window.history.back(); // Navigasi kembali ke halaman sebelumnya
-    }
+    }
 </script>
+<?php
+include "template/footer_admin.php"
+?>

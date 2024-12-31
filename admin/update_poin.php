@@ -103,7 +103,8 @@ ob_end_flush();
         .preview-title {
             color: #6b46c1;
             font-size: 1.25rem;
-            margin-bottom: 1rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
             text-align: center;
         }
 
@@ -123,7 +124,7 @@ ob_end_flush();
 
         .form-title {
             color: #6b46c1;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 2rem;
             text-align: center;
@@ -172,16 +173,28 @@ ob_end_flush();
         }
 
         .btn-cancel {
-            background:rgb(151, 160, 173);
+            background: rgb(151, 160, 173);
             color: white;
             border: none;
+            transition: background-color 0.3s ease; 
         }
 
+        .btn-cancel:hover {
+            background: rgb(171, 180, 193);
+        }
+
+
         .btn-save {
-            background:rgb(168, 136, 242);
+            background: rgb(168, 136, 242);
             color: white;
             border: none;
+            transition: background-color 0.3s ease; 
         }
+
+        .btn-save:hover {
+            background: rgb(188, 158, 252); 
+        }
+
 
         .status-badge {
             padding: 0.25rem 1rem;
@@ -257,5 +270,8 @@ ob_end_flush();
                 </div>
             </form>
         </div>
-    </div>
+    </div>
+  <?php
+    include "template/footer_admin.php"
+    ?>
 </html>

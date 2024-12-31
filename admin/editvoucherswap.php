@@ -131,4 +131,7 @@ ob_end_flush();
     </script>
 
 </body>
+<?php
+include "template/footer_admin.php"
+?>
 </html>

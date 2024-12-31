@@ -31,15 +31,23 @@ $resultPoinTukar = $result->fetch_row()[0] ?? 0;
 $getPoinTukar->close();
 
 // Mendapatkan total poin yang digunakan dari tabel shipping_data
-$getPointUsed = $conn->prepare("SELECT SUM(points_used) FROM `shipping_data` WHERE user_id = ?");
+$getPointUsed = $conn->prepare("SELECT SUM(points_used) FROM shipping_data WHERE user_id = ?");
 $getPointUsed->bind_param("i", $user_id);
 $getPointUsed->execute();
 $result = $getPointUsed->get_result();
 $resultPointUsed = $result->fetch_row()[0] ?? 0;
 $getPointUsed->close();
 
-// Menghitung total poin yang tersisa setelah dikurangi poin yang digunakan
-$totalPoinTersisa = $resultPoinTukar - $resultPointUsed;
+$getPointUsedVoucher = $conn->prepare("SELECT COALESCE(SUM(points_used), 0) as points_used_voucher FROM tukar_voucher WHERE user_id = ?");
+$getPointUsedVoucher->bind_param("i", $user_id);
+$getPointUsedVoucher->execute();
+$result = $getPointUsedVoucher->get_result();
+$row = $result->fetch_assoc();
+$resultPointUsedVoucher = $row['points_used_voucher'] ?? 0;
+$getPointUsedVoucher->close();
+
+// Calculate remaining points
+$totalPoinTersisa = $resultPoinTukar - ($resultPointUsed + $resultPointUsedVoucher);
 
 // Proses penukaran poin
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['points_used'])) {
@@ -154,26 +162,28 @@ $conn->close();
 <!-- Main Content -->
 <main>
   <!-- Voucher Section -->
-  <section class="mb-10">
-    <div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
-      <h2 class="text-xl font-bold pl-4">
-          <i class="bi bi-ticket-perforated text-pink-900 mr-3"></i> Voucher
-      </h2>
-    </div>
-    <br>
-    <div class="flex gap-3 overflow-x-auto mr-5">
-      <?php foreach ($datavoucher as $key => $voucher) { ?>
-        <!-- Voucher Card as Button -->
-        <button class="bg-gradient-to-r from-pink-600 to-pink-400 text-pink-200 rounded-lg p-4 w-48 text-center shadow-lg transform hover:translate-x-[-10px] ml-4">
-          <div class="text-center">
-            <h3 class="text-xl font-bold"><?= $voucher['voucher_name'] ?></h3>
-            <p class="text-sm">Min. Blj Rp <?= $voucher['max_amount'] ?></p>
-            <p class="text-sm">S/D: <?= $voucher['max_period'] ?></p>
-          </div>
-        </button>
-      <?php } ?>
-    </div>
-  </section>
+<section class="mb-10">
+  <div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
+    <h2 class="text-xl font-bold pl-4">
+        <i class="bi bi-ticket-perforated text-pink-900 mr-3"></i> Voucher
+    </h2>
+  </div>
+  <br>
+  <div class="flex gap-3 overflow-x-auto mr-5">
+    <?php foreach ($datavoucher as $key => $voucher) { ?>
+      <!-- Voucher Card as Button -->
+      <button onclick="window.location.href='voucher.php?voucher_code=<?= $voucher['voucher_code'] ?>'" 
+              class="bg-gradient-to-r from-pink-600 to-pink-400 text-pink-200 rounded-lg p-4 w-48 text-center shadow-lg transform hover:translate-x-[-10px] ml-4">
+        <div class="text-center">
+          <h3 class="text-xl font-bold"><?= $voucher['voucher_name'] ?></h3>
+          <p class="text-sm">Min. Blj Rp <?= $voucher['max_amount'] ?></p>
+          <p class="text-sm">S/D: <?= $voucher['max_period'] ?></p>
+        </div>
+      </button>
+    <?php } ?>
+  </div>
+</section>
+
 
   <!-- Product Section -->
   <section>
@@ -274,17 +284,17 @@ $conn->close();
   // Close voucher pop-up
   closeVoucherBtn.onclick = function() {
     voucherPopup.classList.remove('show');
-  }
+  };
 
   cancelVoucherBtn.onclick = function() {
     voucherPopup.classList.remove('show');
-  }
+  };
 
   // Claim voucher
   claimVoucherBtn.onclick = function() {
     alert('Voucher claimed successfully!');
     voucherPopup.classList.remove('show');
-  }
+  };
 
   // Product Pop-up logic
   const productPopup = document.getElementById('productPopup');
@@ -322,17 +332,17 @@ $conn->close();
   // Close product pop-up
   closeProductBtn.onclick = function() {
     productPopup.classList.remove('show');
-  }
+  };
 
   cancelProductBtn.onclick = function() {
     productPopup.classList.remove('show');
-  }
+  };
 
   // Claim product
   claimProductBtn.onclick = function() {
     alert('Product claimed successfully!');
     productPopup.classList.remove('show');
-  }
+  };
 
   // Close pop-up if clicked outside
   window.onclick = function(event) {
@@ -342,12 +352,12 @@ $conn->close();
     if (event.target === productPopup) {
       productPopup.classList.remove('show');
     }
-  }
+  };
+
   function redirectToKatalogSwap(id_produk) {
     // Redirect ke halaman katalogswap.php dengan ID produk sebagai parameter
     window.location.href = `katalogswap.php?id_produk=${id_produk}`;
-}
-
+  }
 </script>
 
 </body>

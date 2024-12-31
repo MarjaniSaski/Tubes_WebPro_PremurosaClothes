@@ -1,11 +1,9 @@
 <?php
-// Memulai output buffering untuk menghindari pengiriman output sebelum header
 ob_start();
 
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
-// Pastikan pengguna sudah login
 if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'buyer') {
     header("Location: login.php");
     exit();
@@ -34,9 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Query untuk update data pengguna, pastikan nama depan dan belakang tetap
-    $sql = "UPDATE user SET username = ?, email = ?, phone = ?, gender = ?, foto = ? WHERE id = ?";
+    $tgl_lahir = $_POST['tgl_lahir'];
+
+    $sql = "UPDATE user SET username = ?, email = ?, phone = ?, gender = ?, foto = ?, tgl_lahir = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssi", $username, $email, $phone, $gender, $profile_picture, $insert_id);
+    $stmt->bind_param("ssssssi", $username, $email, $phone, $gender, $profile_picture, $tgl_lahir, $insert_id);
 
     if ($stmt->execute()) {
         echo "<script>alert('Profil berhasil diperbarui!'); window.location.href = 'profile.php';</script>";
@@ -45,30 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $stmt->close();
 }
-    
-
-    // if (empty($_FILES['profile_picture']['name'])) {
-    //     $profile_picture_name = 'Default_Picture.jpg';
-    // } else {
-    //     $profile_picture = $_FILES['profile_picture'];
-    //     $profile_picture_name = time() . '_' . $profile_picture['name'];
-    //     $profile_picture_path = $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/images/' . $profile_picture_name;
-    //     move_uploaded_file($profile_picture_name, $profile_picture_path);
-    // }
-    
-
-//     // Query untuk update data pengguna
-//     $sql = "UPDATE user SET first_name = ?, last_name = ?, username = ?, email = ?, phone = ?, gender = ?, foto = ? WHERE id = ?";
-//     $stmt = $conn->prepare($sql);
-//     $stmt->bind_param("sssssssi", $first_name, $last_name, $username, $email, $phone, $gender, $profile_picture, $insert_id);
-
-//     if ($stmt->execute()) {
-//         echo "<script>alert('Profil berhasil diperbarui!'); window.location.href = 'profile.php';</script>";
-//     } else {
-//         echo "<script>alert('Terjadi kesalahan saat memperbarui profil.');</script>";
-//     }
-//     $stmt->close();
-// }
 
 // Query untuk mendapatkan data pengguna
 $tmp_id = $_SESSION['user_id'];
@@ -85,6 +61,7 @@ if ($user = $result->fetch_assoc()) {
     $email = $user['email'];
     $phone = $user['phone'];
     $gender = $user['gender'];
+    $tgl_lahir = $user['tgl_lahir'];
     if ($user['foto'] == null or $user['foto'] == 'Default_Pictures.jpg') {
         $profile_picture = 'Default_Pictures.jpg';
     } else {
@@ -95,18 +72,22 @@ if ($user = $result->fetch_assoc()) {
     die("Data pengguna tidak ditemukan!");
 }
 
-
 $stmt->close();
 $conn->close();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-</head>
-<style>
+
+    <style>
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding-left: 10px;
+            padding-right: 15px;
+        }
+
+        main{
+            flex-grow: 1;
+        }
+        
         .popup-modal {
             position: fixed;
             top: 0;
@@ -208,98 +189,107 @@ $conn->close();
             animation: checkmark 0.8s ease forwards;
         }
     </style>
-</head>
-<body style="background: linear-gradient(to bottom, rgba(249, 199, 232, 0.95), rgba(255, 255, 255, 0.95));">
 
-<div id="popupModal" class="popup-modal">
-    <div class="popup-content">
-        <div class="popup-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path class="checkmark" d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round">
-            </svg>
-        </div>
-        <h2 class="popup-title">Berhasil!</h2>
-        <p id="popupMessage" class="popup-message">Perubahan profil Anda telah disimpan</p>
-        <button id="closePopup" class="popup-button">Selesai</button>
-    </div>
-</div>
-    <div class="container mt-5 p-4 bg-white rounded-lg shadow-md max-w-md mx-auto">
-        <h2 class="text-center mb-4 font-bold text-xl">My Profile</h2>
-    
-        <form id="profileForm" method="POST" enctype="multipart/form-data">
-            <div class="text-center mb-4">
-                <div class="relative w-32 h-32 mx-auto">
-                    <?php if ($profile_picture): ?>
-                        <img id="profilePicture" src="/Tubes_WebPro_PremurosaClothes/images/<?= htmlspecialchars($profile_picture); ?>" class="rounded-full w-full h-full object-cover border-4 border-pink-200" alt="Foto Profil" />
-                    <?php else: ?>
-                        <img id="profilePicture" class="rounded-full w-full h-full object-cover border-4 border-pink-200" alt="Foto Profil" />
-                    <?php endif; ?>
-                    <input type="file" id="profile_picture" name="profile_picture" accept="image/*" style="display:none;">
+<main>
+    <body class="bg-gray-50">
+        <div class="container p-4 bg-white rounded-lg shadow">
+            <h2 class="text-center mb-4 font-medium text-xl text-pink-500">Informasi Profile</h2>
+            <form id="profileForm" method="POST" enctype="multipart/form-data">
+                <div class="text-center mb-4">
+                    <div class="relative w-32 h-32 mx-auto">
+                        <?php if ($profile_picture): ?>
+                            <img id="profilePicture" src="/Tubes_WebPro_PremurosaClothes/images/<?= htmlspecialchars($profile_picture); ?>" class="rounded-full w-full h-full object-cover border-4 border-pink-200" alt="Foto Profil" />
+                        <?php else: ?>
+                            <img id="profilePicture" class="rounded-full w-full h-full object-cover border-4 border-pink-500" alt="Foto Profil" />
+                        <?php endif; ?>
+                        <input type="file" id="profile_picture" name="profile_picture" accept="image/*" style="display:none;">
+                        <input type="hidden" name="existing_profile_picture" value="<?= htmlspecialchars($profile_picture); ?>">
+                    </div>
+                </div> 
+                <div class="mb-3">
+                    <label for="first_name" class="form-label text-sm">Nama Depan</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($first_name); ?>" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="last_name" class="form-label text-sm">Nama Belakang</label>
+                    <input type="text" id="last_name" name="last_name" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($last_name); ?>" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label for="username" class="form-label text-sm">Username</label>
+                    <input type="text" id="username" name="username" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($username); ?>" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label text-sm">Email</label>
+                    <input type="email" id="email" name="email" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($email); ?>" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label text-sm">Nomor Telepon</label>
+                    <input type="text" id="phone" name="phone" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($phone); ?>" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="tgl_lahir" class="form-label text-sm">Tanggal Lahir</label>
+                    <input type="date" id="tgl_lahir" name="tgl_lahir" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($tgl_lahir); ?>" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="gender" class="form-label text-sm">Jenis Kelamin</label>
+                    <select id="gender" name="gender" class="form-control rounded-md text-sm" disabled>
+                        <option value="Pria" <?= $gender == 'Pria' ? 'selected' : ''; ?>>Pria</option>
+                        <option value="Wanita" <?= $gender == 'Wanita' ? 'selected' : ''; ?>>Wanita</option>
+                    </select>
+                </div>
+                <div class="text-center">
+                    <button type="button" id="editButton" class="bg-pink-600 text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-purple-600">
+                        Edit
+                    </button>
+                    <button type="submit" class="bg-pink-600 text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-purple-600" id="saveButton" style="display:none;">
+                        Simpan
+                    </button>
+                    <button type="button" id="backButton" class="bg-pink-400 text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-purple-400">
+                        Kembali
+                    </button>
+                </div>
+            </form>
+
+            <div id="popupModal" class="popup-modal">
+                <div class="popup-content">
+                    <div class="popup-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path class="checkmark" d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round">
+                        </svg>
+                    </div>
+                    <h2 class="popup-title">Berhasil!</h2>
+                    <p id="popupMessage" class="popup-message">Perubahan profil Anda telah disimpan</p>
+                    <button id="closePopup" class="popup-button">Selesai</button>
                 </div>
             </div>
-    
-            <input type="hidden" name="existing_profile_picture" value="<?= htmlspecialchars($profile_picture); ?>">
-            
-            <div class="mb-3">
-                <label for="first_name" class="form-label text-sm">Nama Depan</label>
-                <input type="text" id="first_name" name="first_name" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($first_name); ?>" readonly>
-            </div>
-            <div class="mb-3">
-                <label for="last_name" class="form-label text-sm">Nama Belakang</label>
-                <input type="text" id="last_name" name="last_name" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($last_name); ?>" readonly>
-            </div>
-
-            <div class="mb-3">
-                <label for="username" class="form-label text-sm">Username</label>
-                <input type="text" id="username" name="username" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($username); ?>" disabled>
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label text-sm">Email</label>
-                <input type="email" id="email" name="email" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($email); ?>" disabled>
-            </div>
-           
-            <div class="mb-3">
-                <label for="phone" class="form-label text-sm">Nomor Telepon</label>
-                <input type="text" id="phone" name="phone" class="form-control rounded-md text-sm" value="<?= htmlspecialchars($phone); ?>" disabled>
-            </div>
-            <div class="mb-3">
-                <label for="gender" class="form-label text-sm">Jenis Kelamin</label>
-                <select id="gender" name="gender" class="form-control rounded-md text-sm" disabled>
-                    <option value="Pria" <?= $gender == 'Pria' ? 'selected' : ''; ?>>Pria</option>
-                    <option value="Wanita" <?= $gender == 'Wanita' ? 'selected' : ''; ?>>Wanita</option>
-                </select>
-            </div>
-            <div class="text-center">
-                <button type="button" id="editButton" class="bg-[#FB9EC6] text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-[#4f4784]">
-                    Edit
-                </button>
-                <button type="submit" class="bg-[#A888B5] text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-[#4f4784]" id="saveButton" style="display:none;">
-                    Simpan
-                </button>
-                <button type="button" id="logoutButton" class="bg-[#ff1493] text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-[#4f4784]">
-                    Keluar
-                </button>
-            </div>
-        </form>
-    </div>
+        </div>
     </body>
-    </html>
+</main>
 
 <script>
     // Script untuk mengaktifkan tombol edit
     document.getElementById('editButton').addEventListener('click', function() {
-    // Hanya izinkan kolom selain first_name dan last_name untuk diedit
+        // Sembunyikan tombol Edit
+        this.style.display = 'none';
+
+        // Tampilkan tombol Save
+        document.getElementById('saveButton').style.display = 'inline-block';
+
+        // Izinkan kolom selain first_name dan last_name untuk diedit
         document.getElementById('username').disabled = false;
         document.getElementById('email').disabled = false;
         document.getElementById('phone').disabled = false;
         document.getElementById('gender').disabled = false;
-        document.getElementById('saveButton').style.display = 'inline-block';
+        document.getElementById('tgl_lahir').disabled = false;
+
+        // Tampilkan input untuk mengganti foto profil
         document.getElementById('profile_picture').style.display = 'block';
     });
 
-    // Script untuk logout
-    document.getElementById('logoutButton').addEventListener('click', function() {
-        window.location.href = '/Tubes_WebPro_PremurosaClothes/login.php';
+    // Script untuk tombol kembali
+    document.getElementById('backButton').addEventListener('click', function() {
+        history.back();
     });
 
     // Script untuk menampilkan preview foto profil yang diunggah
@@ -313,7 +303,6 @@ $conn->close();
             reader.readAsDataURL(file);
         }
     });
-
 
      // Fungsi untuk menampilkan pop-up yang diperbarui
      function showPopup(message) {

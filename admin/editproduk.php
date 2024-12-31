@@ -173,4 +173,7 @@ ob_end_flush();
 </div>
 
 </body>
+<?php
+include "template/footer_admin.php"
+?>
 </html>

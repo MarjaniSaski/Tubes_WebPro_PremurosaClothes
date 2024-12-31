@@ -1,5 +1,59 @@
 <?php
-include "template/header_admin.php"
+include "template/header_admin.php";
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
+
+// Periksa koneksi database
+if (!$conn) {
+    die("Koneksi ke database gagal: " . mysqli_connect_error());
+}
+
+// Ambil total pengguna dengan role 'buyer'
+$buyerQuery = "SELECT COUNT(*) as total_buyers FROM user WHERE role = 'buyer'";
+$buyerResult = mysqli_query($conn, $buyerQuery);
+
+// Pastikan kueri berhasil dieksekusi
+if ($buyerResult) {
+    $buyerCount = mysqli_fetch_assoc($buyerResult)['total_buyers'];
+} else {
+    // Tangani error jika kueri gagal
+    $buyerCount = 0; // Set default value jika terjadi error
+}
+
+// Ambil total penukaran dari tabel orders
+$ordersQuery = "SELECT COUNT(*) as total_tukar FROM orders WHERE id_order IS NOT NULL"; // Correct query
+$ordersResult = mysqli_query($conn, $ordersQuery); // Execute the correct query
+
+// Pastikan kueri berhasil dieksekusi
+if ($ordersResult) {
+    $ordersCount = mysqli_fetch_assoc($ordersResult)['total_tukar']; // Correct the field name here
+} else {
+    // Tangani error jika kueri gagal
+    $ordersCount = 0; // Set default value jika terjadi error
+}
+
+// Ambil total penjualan dari tabel orderProduk
+$penjualanQuery = "SELECT SUM(harga) AS total_sales FROM orderProduk WHERE id_orderproduk IS NOT NULL";
+$penjualanResult = mysqli_query($conn, $penjualanQuery);
+
+// Pastikan kueri berhasil dieksekusi
+if ($penjualanResult) {
+    $penjualanCount = mysqli_fetch_assoc($penjualanResult)['total_sales'];
+} else {
+    // Tangani error jika kueri gagal
+    $penjualanCount = 0; // Set default value jika terjadi error
+}
+
+// Ambil total pesanan dari tabel emesanan
+$pemesananQuery = "SELECT COUNT(*) AS total_orders FROM pemesanan WHERE id_order IS NOT NULL";
+$pemesananResult = mysqli_query($conn, $pemesananQuery);
+
+// Pastikan kueri berhasil dieksekusi
+if ($pemesananResult) {
+    $pemesananCount = mysqli_fetch_assoc($pemesananResult)['total_orders'];
+} else {
+    // Tangani error jika kueri gagal
+    $pemesananCount = 0; // Set default value jika terjadi error
+}
 ?>
   <!-- Main Content -->
   <div class="flex-1">
@@ -11,7 +65,9 @@ include "template/header_admin.php"
                         <i class="bi bi-cart text-purple-500 text-3xl"></i>
                         <div>
                             <h2 class="text-gray-600 text-sm">Total Penjualan</h2>
-                            <p class="text-xl font-bold text-gray-800">Rp 2.750.000</p>
+                            <p class="text-xl font-bold text-gray-800">
+                                Rp <?php echo number_format($penjualanCount, 0, ',', '.'); ?>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -22,7 +78,7 @@ include "template/header_admin.php"
                         <i class="bi bi-arrow-repeat text-purple-500 text-3xl"></i>
                         <div>
                             <h2 class="text-gray-600 text-sm">Total Penukaran</h2>
-                            <p class="text-xl font-bold text-gray-800">8</p>
+                            <p class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($ordersCount); ?></p>
                         </div>
                     </div>
                 </div>
@@ -33,10 +89,11 @@ include "template/header_admin.php"
                         <i class="bi bi-person text-purple-500 text-3xl"></i>
                         <div>
                             <h2 class="text-gray-600 text-sm">Total Pengunjung</h2>
-                            <p class="text-xl font-bold text-gray-800">78</p>
+                            <p class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($buyerCount); ?></p>
                         </div>
                     </div>
                 </div>
+      
             
                 <!-- Total Pesanan -->
                 <div class="bg-white p-4 rounded shadow">
@@ -44,7 +101,7 @@ include "template/header_admin.php"
                         <i class="bi bi-box text-purple-500 text-3xl"></i>
                         <div>
                             <h2 class="text-gray-600 text-sm">Total Pesanan</h2>
-                            <p class="text-xl font-bold text-gray-800">15</p>
+                            <p class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($pemesananCount); ?></p>
                         </div>
                     </div>
                 </div>
@@ -205,7 +262,7 @@ include "template/header_admin.php"
                                     <!-- Order Row 1 -->
                                     <tr class="border-b hover:bg-gray-50">
                                         <td class="py-2 px-4"><input type="checkbox" /></td>
-                                        <td class="py-2 px-4">Lorem Ipsum</td>
+                                        <td class="py-2 px-4">Floral Blouse</td>
                                         <td class="py-2 px-4">#25426</td>
                                         <td class="py-2 px-4">Nov 8th, 2024</td>
                                         <td class="py-2 px-4 flex items-center">
@@ -222,7 +279,7 @@ include "template/header_admin.php"
                                     <!-- Order Row 2 -->
                                     <tr class="border-b hover:bg-gray-50">
                                         <td class="py-2 px-4"><input type="checkbox" /></td>
-                                        <td class="py-2 px-4">Lorem Ipsum</td>
+                                        <td class="py-2 px-4">Blue Jeans</td>
                                         <td class="py-2 px-4">#25425</td>
                                         <td class="py-2 px-4">Nov 7th, 2024</td>
                                         <td class="py-2 px-4 flex items-center">
@@ -239,7 +296,7 @@ include "template/header_admin.php"
                                     <!-- Order Row 3 -->
                                     <tr class="hover:bg-gray-50">
                                         <td class="py-2 px-4"><input type="checkbox" /></td>
-                                        <td class="py-2 px-4">Lorem Ipsum</td>
+                                        <td class="py-2 px-4">Cargo Men</td>
                                         <td class="py-2 px-4">#25424</td>
                                         <td class="py-2 px-4">Nov 6th, 2024</td>
                                         <td class="py-2 px-4 flex items-center">

@@ -361,4 +361,7 @@ ob_end_flush();
             document.getElementById('popup-add-product').classList.remove('active');
         }
     </script>
+    <?php
+        include "template/footer_admin.php"
+    ?>
 </html>

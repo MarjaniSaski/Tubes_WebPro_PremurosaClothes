@@ -75,26 +75,26 @@ $can_redeem = $totalPoinTersisa >= $product_points;
             <!-- Product Details - Right Side (70%) -->
             <div class="col-span-8 space-y-4">
                 <div class="bg-pink-50 p-4 rounded-lg">
-                    <p class="mb-2"><span class="font-semibold text-pink-700">Nama Produk:</span> 
+                    <p class="mb-2"><span class="font-semibold text-pink-400">Nama Produk:</span> 
                         <span class="text-gray-700"><?php echo htmlspecialchars($product_data['nama']); ?></span>
                     </p>
-                    <p class="mb-2"><span class="font-semibold text-pink-700">Ukuran:</span> 
+                    <p class="mb-2"><span class="font-semibold text-pink-400">Ukuran:</span> 
                         <span class="text-gray-700"><?php echo htmlspecialchars($product_data['size']); ?></span>
                     </p>
-                    <p class="mb-2"><span class="font-semibold text-pink-700">Poin Dibutuhkan:</span> 
+                    <p class="mb-2"><span class="font-semibold text-pink-400">Poin Dibutuhkan:</span> 
                         <span class="text-gray-700"><?php echo number_format($product_points); ?></span>
                     </p>
                 </div>
                 
                 <div class="bg-pink-50 p-4 rounded-lg">
-                    <p class="mb-2"><span class="font-semibold text-pink-700">Total Poin Anda:</span> 
+                    <p class="mb-2"><span class="font-semibold text-pink-400">Total Poin Anda:</span> 
                         <span class="text-gray-700"><?php echo number_format($totalPoinTersisa); ?></span>
                     </p>
-                    <p class="mb-2"><span class="font-semibold text-pink-700">Sisa Poin Setelah Penukaran:</span> 
+                    <p class="mb-2"><span class="font-semibold text-pink-400">Sisa Poin Setelah Penukaran:</span> 
                         <span class="text-gray-700"><?php echo number_format($totalPoinTersisa - $product_points); ?></span>
                     </p>
                     <?php if (!$can_redeem): ?>
-                        <p class="text-red-500 font-semibold mt-2">Poin tidak mencukupi untuk penukaran</p>
+                        <p class="text-red-700 font-semibold mt-2">Warning: Poin tidak mencukupi untuk penukaran!!!</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -102,9 +102,8 @@ $can_redeem = $totalPoinTersisa >= $product_points;
     </div>
 </div>
 <div class="container mt-5">
-    <?php if ($can_redeem): ?>
     <div class="bg-white p-5 rounded shadow">
-        <h3 class="mb-4 text-gray-800 font-semibold">Atur Pengiriman</h3>
+        <h1 class="mb-4 text-pink-500 font-bold text-3xl">Atur Pengiriman</h1>
         <form id="shipping-form" method="POST" class="w-full">
             <input type="hidden" id="user_id" value="<?php echo $user_id; ?>">
             <input type="hidden" id="product_id" value="<?php echo $product_id; ?>">
@@ -116,7 +115,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
             <!-- Shipping Form -->
             <div class="space-y-4">
                 <div class="mb-3">
-                    <label for="name" class="block text-pink-700 font-medium mb-2">Nama Lengkap</label>
+                    <label for="name" class="block text-pink-500 font-medium mb-2">Nama Lengkap</label>
                     <input 
                         type="text" 
                         id="name" 
@@ -126,7 +125,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
                 </div>
                 
                 <div class="mb-3">
-                    <label for="phone" class="block text-pink-700 font-medium mb-2">Nomor Telepon</label>
+                    <label for="phone" class="block text-pink-500 font-medium mb-2">Nomor Telepon</label>
                     <input 
                         type="text" 
                         id="phone" 
@@ -135,7 +134,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
                 </div>
                 
                 <div class="mb-3">
-                    <label for="address" class="block text-pink-700 font-medium mb-2">Alamat Lengkap</label>
+                    <label for="address" class="block text-pink-500 font-medium mb-2">Alamat Lengkap</label>
                     <textarea 
                         id="address" 
                         class="block w-full p-2 border border-pink-200 rounded focus:border-pink-500 focus:ring-pink-500" 
@@ -145,7 +144,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
                 </div>
                 
                 <div class="mb-3">
-                    <label for="province" class="block text-pink-700 font-medium mb-2">Provinsi, Kab/Kota, Kecamatan, Kode Pos</label>
+                    <label for="province" class="block text-pink-500 font-medium mb-2">Provinsi, Kab/Kota, Kecamatan, Kode Pos</label>
                     <input 
                         type="text" 
                         id="province" 
@@ -156,7 +155,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
 
             <!-- Expedition Options -->
             <div class="mt-6">
-                <label class="block text-pink-700 font-medium mb-4">Pilih Ekspedisi</label>
+                <label class="block text-pink-500 font-medium mb-4">Pilih Ekspedisi</label>
                 <div class="grid grid-cols-4 gap-6">
                     <?php 
                     $expeditions = ['jne', 'jnt', 'sicepat', 'wahana'];
@@ -177,14 +176,13 @@ $can_redeem = $totalPoinTersisa >= $product_points;
                 </div>
             </div>
 
-            <div class="text-end">
+            <div class="text-end mt-6">
                 <button type="submit" class="bg-pink-400 hover:bg-pink-600 text-white font-medium py-2 px-4 rounded">
                     Konfirmasi Penukaran
                 </button>
             </div>
         </form>
     </div>
-    <?php endif; ?>
 </div>
 
 <script>
