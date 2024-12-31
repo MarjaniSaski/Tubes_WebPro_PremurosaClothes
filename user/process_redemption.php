@@ -43,8 +43,16 @@ try {
     $resultPointUsed = $row['points_used'];
     $getPointUsed->close();
 
+    $getPointUsedVoucher = $conn->prepare("SELECT COALESCE(SUM(points_used), 0) as points_used_voucher FROM tukar_voucher WHERE user_id = ?");
+    $getPointUsedVoucher->bind_param("i", $user_id);
+    $getPointUsedVoucher->execute();
+    $result = $getPointUsedVoucher->get_result();
+    $row = $result->fetch_assoc();
+    $resultPointUsedVoucher = $row['points_used_voucher'] ?? 0;
+    $getPointUsedVoucher->close();
+
     // Calculate remaining points
-    $totalPoinTersisa = $resultPoinTukar - $resultPointUsed;
+    $totalPoinTersisa = $resultPoinTukar - ($resultPointUsed + $resultPointUsedVoucher);
 
     // Verify product points
     $sql_product = "SELECT poin FROM produk WHERE id_produk = ?";

@@ -37,8 +37,16 @@ $row = $result->fetch_assoc();
 $resultPointUsed = $row['points_used'] ?? 0;
 $getPointUsed->close();
 
+$getPointUsedVoucher = $conn->prepare("SELECT COALESCE(SUM(points_used), 0) as points_used_voucher FROM tukar_voucher WHERE user_id = ?");
+$getPointUsedVoucher->bind_param("i", $user_id);
+$getPointUsedVoucher->execute();
+$result = $getPointUsedVoucher->get_result();
+$row = $result->fetch_assoc();
+$resultPointUsedVoucher = $row['points_used_voucher'] ?? 0;
+$getPointUsedVoucher->close();
+
 // Calculate remaining points
-$totalPoinTersisa = $resultPoinTukar - $resultPointUsed;
+$totalPoinTersisa = $resultPoinTukar - ($resultPointUsed + $resultPointUsedVoucher);
 
 // Get product data
 $sql_product = "SELECT nama, foto, poin, size FROM produk WHERE id_produk = ?";
