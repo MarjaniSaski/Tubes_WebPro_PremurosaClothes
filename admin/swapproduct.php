@@ -12,6 +12,13 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
     #myModal {
         display: none;
     }
+    .pending {
+        @apply text-orange-500; /* Warna oranye untuk pending */
+    }
+
+    .completed {
+        @apply text-green-500; /* Warna hijau untuk completed */
+    }
     .form-container {
         display: flex;
         padding: 2rem;
@@ -115,7 +122,7 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
         cursor: pointer;
     }
 </style>
-
+<main>
 <div class="flex-1 p-10">
     <div class="bg-white p-6 rounded-lg shadow-md mb-6">
     <h2 class="text-2xl font-bold mb-4">Swap Pending</h2>
@@ -241,7 +248,7 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
         </div>
     </div>
 </div>
-
+</main>>
 <script>
    function showDetails(imageSrc) {
         var modal = document.getElementById("myModal");
@@ -263,7 +270,7 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
     }
     function goBack() {
         window.history.back(); // Navigasi kembali ke halaman sebelumnya
-    }
+    }
 </script>
 <?php
 include "template/footer_admin.php"

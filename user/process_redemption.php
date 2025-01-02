@@ -78,7 +78,7 @@ try {
 
     // Record point redemption - Removed created_at column
     $sql_redeem = "INSERT INTO point_redemptions (user_id, points_used, status) 
-                   VALUES (?, ?, 'processed')";
+                   VALUES (?, ?, 'proses')";
     $stmt_redeem = $conn->prepare($sql_redeem);
     $stmt_redeem->bind_param("ii", $data['user_id'], $product_points);
     if (!$stmt_redeem->execute()) {
@@ -100,12 +100,12 @@ try {
     $sql_shipping = "INSERT INTO shipping_data (
         user_id, name, phone, address, province,
         product_id, product_name, product_size,
-        expedition, points_used, redemption_id
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        expedition, points_used, redemption_id, foto
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
     
     $stmt_shipping = $conn->prepare($sql_shipping);
     $stmt_shipping->bind_param(
-        "issssisssii",
+        "issssisssiis",
         $data['user_id'],
         $data['name'],
         $data['phone'],
@@ -116,7 +116,8 @@ try {
         $data['product_size'],
         $data['expedition'],
         $product_points,
-        $redemption_id
+        $redemption_id,
+        $data['foto']
     );
     
     if (!$stmt_shipping->execute()) {

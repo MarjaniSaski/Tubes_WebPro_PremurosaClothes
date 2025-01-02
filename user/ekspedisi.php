@@ -118,7 +118,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
             <input type="hidden" id="product_name" value="<?php echo htmlspecialchars($product_data['nama']); ?>">
             <input type="hidden" id="product_size" value="<?php echo htmlspecialchars($product_data['size']); ?>">
             <input type="hidden" id="points_used" value="<?php echo $product_points; ?>">
-            <input type="hidden" id="product_image" value="<?php echo htmlspecialchars($product_data['foto']); ?>">
+            <input type="hidden" id="foto" value="<?php echo htmlspecialchars($product_data['foto']); ?>">
 
             <!-- Shipping Form -->
             <div class="space-y-4">
@@ -218,7 +218,8 @@ document.getElementById('shipping-form')?.addEventListener('submit', function(e)
         address: document.getElementById('address').value.trim(),
         province: document.getElementById('province').value.trim(),
         expedition: expedition.value,
-        points_used: document.getElementById('points_used').value
+        points_used: document.getElementById('points_used').value,
+        foto: document.getElementById('foto').value
     };
 
     // Validate form data

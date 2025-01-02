@@ -270,7 +270,7 @@ ob_end_flush();
                 </div>
             </form>
         </div>
-    </div>
+    </div>
   <?php
     include "template/footer_admin.php"
     ?>

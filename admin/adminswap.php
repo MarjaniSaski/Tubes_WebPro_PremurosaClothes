@@ -2,6 +2,7 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/template/header_admin.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
+// Mengambil data pesanan yang telah selesai
 $sqlStatement = "SELECT * FROM orders WHERE status = 'Completed'";
 $query = mysqli_query($conn, $sqlStatement);
 $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
@@ -13,28 +14,27 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
     }
 
     .pending {
-        @apply text-orange-500;
+        color: orange;
     }
 
     .completed {
-        @apply text-green-500;
+        color: green;
     }
 </style>
 
 <div class="flex-1 p-10">
     <div class="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 class="text-2xl font-bold mb-4">Swap Completed </h2>
+        <h2 class="text-2xl font-bold mb-4">Swap Completed</h2>
         <p class="text-gray-500 mb-6">Status Swap Terbaru.</p>
     </div>
 
     <div class="flex justify-between items-center mb-6">
-    <div class="relative inline-block text-left ml-auto">
-        <!-- Button text is "Status Pending" -->
-        <button id="status-pending-button" type="button" class="inline-flex justify-center rounded-md border bg-purple-500 text-white py-2 px-4 hover:bg-purple-300 shadow-sm text-sm font-semibold" onclick="window.location.href='swapproduct.php';">
-            Status Pending
-        </button>
+        <div class="relative inline-block text-left ml-auto">
+            <button id="status-pending-button" type="button" class="inline-flex justify-center rounded-md border bg-purple-500 text-white py-2 px-4 hover:bg-purple-300 shadow-sm text-sm font-semibold" onclick="window.location.href='swapproduct.php';">
+                Status Pending
+            </button>
+        </div>
     </div>
-</div>
 
     <div class="overflow-x-auto mb-6">
         <table class="min-w-full bg-white">
@@ -51,9 +51,7 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                 </tr>
             </thead>
             <tbody>
-                <?php
-                foreach ($data as $key => $swap) {
-                ?>
+                <?php foreach ($data as $swap) : ?>
                     <tr data-id="<?= $swap['id_order'] ?>">
                         <td class="py-2 px-4 border-b"><?= $swap['id_order'] ?></td>
                         <td class="py-2 px-4 border-b"><?= $swap['nama_lengkap'] ?></td>
@@ -72,12 +70,16 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
                         </td>
                         <td class="py-2 px-4 border-b"><?= $swap['poin'] ?></td>
                     </tr>
-                <?php
-                }
-                ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
     </div>
+</div>
+
+<!-- Modal for Image Details -->
+<div id="myModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
 </div>
 
 <script>
@@ -102,3 +104,7 @@ $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
         }
     };
 </script>
+
+<?php
+include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/admin/template/footer_admin.php';
+?>

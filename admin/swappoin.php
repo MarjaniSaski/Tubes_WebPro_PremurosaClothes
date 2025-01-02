@@ -72,9 +72,48 @@ if (isset($_POST['btnvoucher'])) {
     }
 }
 
+
 $sqlStatement = "SELECT * FROM vouchers";
 $query = mysqli_query($conn, $sqlStatement);
 $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
+
+$sqlStatement = "
+    SELECT 
+        shipping_data.id AS shipping_id,
+        shipping_data.user_id,
+        shipping_data.name,
+        shipping_data.phone,
+        shipping_data.address,
+        shipping_data.province,
+        shipping_data.product_id,
+        shipping_data.product_name,
+        shipping_data.product_size,
+        shipping_data.expedition,
+        shipping_data.points_used,
+        shipping_data.shipping_date,
+        shipping_data.foto,
+        point_redemptions.id AS redemption_id,
+        point_redemptions.points_used AS redemption_points,
+        point_redemptions.status AS redemption_status,
+        point_redemptions.redemption_date
+    FROM 
+        shipping_data
+    LEFT JOIN 
+        point_redemptions 
+    ON 
+        shipping_data.redemption_id = point_redemptions.id
+";
+
+// Execute the query
+$query = mysqli_query($conn, $sqlStatement);
+
+// Check if query execution was successful
+if (!$query) {
+    die("Error executing query: " . mysqli_error($conn));
+}
+
+// Fetch all results as an associative array
+$riwayatproduk = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
 ob_end_flush();
 ?>
@@ -129,131 +168,204 @@ ob_end_flush();
         }
     </style>
     
-            <!-- Content -->
-            <div class="p-6">
-                <!-- Buttons -->
-                <div class="flex justify-end mb-4 space-x-4">
-                    <button onclick="showPopupAddVoucher()" class="bg-purple-300 text-black font-semibold text-sm px-4 py-2 rounded-lg shadow">
-                        <i class="fa-solid fa-plus"></i> ADD NEW VOUCHER
-                    </button>
-                    <button onclick="showPopupAddProduct()" class="bg-purple-300 text-black font-semibold text-sm px-4 py-2 rounded-lg shadow">
-                        <i class="fa-solid fa-plus"></i> ADD NEW PRODUCT
-                    </button>
-                </div>
-    
-                <!-- Tabel Voucher -->
-                <div class="mt-4 table-container">
-                    <h2 class="text-xl font-bold mb-4">Voucher List</h2>
-                    <table class="min-w-full table-auto bg-white shadow-md rounded-lg">
-                        <thead>
-                            <tr class="bg-white-100 text-sm">
-                                <th class="px-6 py-3 text-center">Voucher Name</th>
-                                <th class="px-6 py-3 text-center">Voucher Code</th>
-                                <th class="px-6 py-3 text-center">Discount</th>
-                                <th class="px-6 py-3 text-center">Poin</th>
-                                <th class="px-6 py-3 text-center">Usage Period</th>
-                                <th class="px-6 py-3 text-center">Max Period</th>
-                                <th class="px-6 py-3 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="voucher-table-body">
-                        <?php
-                            foreach ($datavoucher as $key => $vouchers) {
-                            ?>
-                                <tr class="bg-white-200 text-sm">
-                                    <td class="px-6 py-3 text-center"><?= $vouchers['voucher_name'] ?></td>
-                                    <td class="px-6 py-3 text-center"><?= $vouchers['voucher_code'] ?></td>
-                                    <td class="px-6 py-3 text-center"><?= $vouchers['discount'] ?></td>
-                                    <td class="px-6 py-3 text-center"><?= $vouchers['points'] ?></td>
-                                    <td class="px-6 py-3 text-center"><?= $vouchers['usage_period'] ?></td>
-                                    <td class="px-6 py-3 text-center"><?= $vouchers['max_period']?></td>
-                                    <td>
-                                        <div class="flex justify-center space-x-2">
-                                            <!-- Tombol Edit -->
-                                            <a href="editvoucherswap.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>">
-                                                <button class="flex justify-center items-center px-2 py-1">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20h9" />
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 3.5a2.121 2.121 0 013 0l1.5 1.5a2.121 2.121 0 010 3L7 19l-4 1 1-4L16.5 3.5z" />
-                                                    </svg>
-                                                </button>
-                                            </a>
-                                            <!-- Tombol Hapus -->
-                                            <a href="deletevoucher.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>" 
-                                            onclick="return confirm('Yakin akan menghapus data?')">
-                                                <button class="flex justify-center items-center px-2 py-1">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-2 14H7l-2-14m4-4h8a2 2 0 012 2v1H6V5a2 2 0 012-2z" />
-                                                    </svg>
-                                                </button>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-                <br>
-    
-                <!-- Tabel Produk -->
-                <div class="mt-4 table-container">
-                    <h2 class="text-xl font-bold mb-4">Product List</h2>
-                    <table class="min-w-full table-auto bg-white shadow-md rounded-lg">
-                        <thead>
-                            <tr class="bg-white-200 text-sm">
-                                <th class="px-6 py-3 text-center">Product Name</th>
-                                <th class="px-6 py-3 text-center">Product Code</th>
-                                <th class="px-6 py-3 text-center">Poin</th>
-                                <th class="px-6 py-3 text-center">Details</th>
-                                <th class="px-6 py-3 text-center">Status</th>
-                                <th class="px-6 py-3 text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="product-table-body">
-                            <?php
-                            foreach ($data as $key => $produk) {
-                            ?>
-                                <tr class="bg-white-200 text-sm">
-                                    <td class="px-6 py-3 text-center"><?= $produk['nama'] ?></td>
-                                    <td class="px-6 py-3 text-center"><?= $produk['id_produk'] ?></td>
-                                    <td class="px-6 py-3 text-center"><?= $produk['poin'] ?></td>
-                                    <td class="px-6 py-3 text-center"><?= $produk['detail'] ?></td>
-                                    <td class="py-2 px-4 border-b text-center">
-                                        <span class="<?= $produk['status'] == 'Belum Terjual' ? 'bg-orange-200 text-orange-800' : 'bg-green-200 text-green-800' ?> py-1 px-3 rounded-full text-xs">
-                                            <?= ucfirst($produk['status']) ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="flex justify-center space-x-2">
-                                            <a href="editproduk.php?id_produk=<?= urlencode($produk['id_produk']) ?>">
-                                                <button class="flex justify-center items-center px-2 py-1">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20h9" />
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 3.5a2.121 2.121 0 013 0l1.5 1.5a2.121 2.121 0 010 3L7 19l-4 1 1-4L16.5 3.5z" />
-                                                        </svg>
-                                                </button>                                        
-                                            </a>
-                                            <a href="deleteprodukswap.php?id_produk=<?= urlencode($produk['id_produk']) ?>"
-                                                onclick="return confirm('Yakin akan menghapus data?')">
-                                                <button class="flex justify-center items-center px-2 py-1">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-2 14H7l-2-14m4-4h8a2 2 0 012 2v1H6V5a2 2 0 012-2z" />
-                                                    </svg>
-                                                </button>
-                                            </a>
-                                        </div>   
-                                    </td>
-                                </tr>
-                            <?php
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+    <!-- Content -->
+    <div class="p-6">
+        <!-- Buttons -->
+        <div class="flex justify-end mb-4 space-x-4">
+            <button onclick="showPopupAddVoucher()" class="bg-purple-300 text-black font-semibold text-sm px-4 py-2 rounded-lg shadow">
+                <i class="fa-solid fa-plus"></i> ADD NEW VOUCHER
+            </button>
+            <button onclick="showPopupAddProduct()" class="bg-purple-300 text-black font-semibold text-sm px-4 py-2 rounded-lg shadow">
+                <i class="fa-solid fa-plus"></i> ADD NEW PRODUCT
+            </button>
+        </div>
+
+        <!-- Tabel Voucher -->
+        <div class="mt-4 table-container">
+            <h2 class="text-xl font-bold mb-4">Daftar Voucher</h2>
+            <table class="min-w-full table-auto bg-white shadow-md rounded-lg">
+                <thead>
+                    <tr class="bg-white-100 text-sm">
+                        <th class="px-6 py-3 text-center">Nama Voucher</th>
+                        <th class="px-6 py-3 text-center">Kode Voucher</th>
+                        <th class="px-6 py-3 text-center">Diskon</th>
+                        <th class="px-6 py-3 text-center">Poin</th>
+                        <th class="px-6 py-3 text-center">Masa Pemakaian</th>
+                        <th class="px-6 py-3 text-center">Batas Pemakaian</th>
+                        <th class="px-6 py-3 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="voucher-table-body">
+                <?php
+                    foreach ($datavoucher as $key => $vouchers) {
+                    ?>
+                        <tr class="bg-white-200 text-sm">
+                            <td class="px-6 py-3 text-center"><?= $vouchers['voucher_name'] ?></td>
+                            <td class="px-6 py-3 text-center"><?= $vouchers['voucher_code'] ?></td>
+                            <td class="px-6 py-3 text-center"><?= $vouchers['discount'] ?></td>
+                            <td class="px-6 py-3 text-center"><?= $vouchers['points'] ?></td>
+                            <td class="px-6 py-3 text-center"><?= $vouchers['usage_period'] ?></td>
+                            <td class="px-6 py-3 text-center"><?= $vouchers['max_period']?></td>
+                            <td>
+                                <div class="flex justify-center space-x-2">
+                                    <!-- Tombol Edit -->
+                                    <a href="editvoucherswap.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>">
+                                        <button class="flex justify-center items-center px-2 py-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20h9" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 3.5a2.121 2.121 0 013 0l1.5 1.5a2.121 2.121 0 010 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                            </svg>
+                                        </button>
+                                    </a>
+                                    <!-- Tombol Hapus -->
+                                    <a href="deletevoucher.php?voucher_code=<?= urlencode($vouchers['voucher_code']) ?>" 
+                                    onclick="return confirm('Yakin akan menghapus data?')">
+                                        <button class="flex justify-center items-center px-2 py-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-2 14H7l-2-14m4-4h8a2 2 0 012 2v1H6V5a2 2 0 012-2z" />
+                                            </svg>
+                                        </button>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <br>
+
+        <!-- Tabel Produk -->
+        <div class="mt-4 table-container">
+            <h2 class="text-xl font-bold mb-4">Daftar Produk Tukar</h2>
+            <table class="min-w-full table-auto bg-white shadow-md rounded-lg">
+                <thead>
+                    <tr class="bg-white-200 text-sm">
+                        <th class="px-6 py-3 text-center">Nama Produk</th>
+                        <th class="px-6 py-3 text-center">Kode Produk</th>
+                        <th class="px-6 py-3 text-center">Poin</th>
+                        <th class="px-6 py-3 text-center">Detail</th>
+                        <th class="px-6 py-3 text-center">Status</th>
+                        <th class="px-6 py-3 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="product-table-body">
+                    <?php
+                    foreach ($data as $key => $produk) {
+                    ?>
+                        <tr class="bg-white-200 text-sm">
+                            <td class="px-6 py-3 text-center"><?= $produk['nama'] ?></td>
+                            <td class="px-6 py-3 text-center"><?= $produk['id_produk'] ?></td>
+                            <td class="px-6 py-3 text-center"><?= $produk['poin'] ?></td>
+                            <td class="px-6 py-3 text-center"><?= $produk['detail'] ?></td>
+                            <td class="py-2 px-4 border-b text-center">
+                                <span class="<?= $produk['status'] == 'Belum Terjual' ? 'bg-orange-200 text-orange-800' : 'bg-green-200 text-green-800' ?> py-1 px-3 rounded-full text-xs">
+                                    <?= ucfirst($produk['status']) ?>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="flex justify-center space-x-2">
+                                    <a href="editproduk.php?id_produk=<?= urlencode($produk['id_produk']) ?>">
+                                        <button class="flex justify-center items-center px-2 py-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20h9" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 3.5a2.121 2.121 0 013 0l1.5 1.5a2.121 2.121 0 010 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                                </svg>
+                                        </button>                                        
+                                    </a>
+                                    <a href="deleteprodukswap.php?id_produk=<?= urlencode($produk['id_produk']) ?>"
+                                        onclick="return confirm('Yakin akan menghapus data?')">
+                                        <button class="flex justify-center items-center px-2 py-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-2 14H7l-2-14m4-4h8a2 2 0 012 2v1H6V5a2 2 0 012-2z" />
+                                            </svg>
+                                        </button>
+                                    </a>
+                                </div>   
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <!-- Tabel Produk Yang Harus Dikirim-->
+        <div class="mt-4 table-container">
+            <h2 class="text-xl font-bold mb-4">Daftar Produk Yang Harus Dikirim </h2>
+            <table class="min-w-full table-auto bg-white shadow-md rounded-lg">
+                <thead>
+                    <tr class="bg-white-200 text-sm">
+                        <th class="px-6 py-3 text-center">Nama Produk</th>
+                        <th class="px-6 py-3 text-center">Foto</th>
+                        <th class="px-6 py-3 text-center">ID User</th>
+                        <th class="px-6 py-3 text-center">Nama</th>
+                        <th class="px-6 py-3 text-center">Alamat</th>
+                        <th class="px-6 py-3 text-center">Ekspedisi</th>
+                        <th class="px-6 py-3 text-center">Status</th>
+                        <th class="px-6 py-3 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="product-table-body">
+                    <?php
+                     foreach ($riwayatproduk as $key => $produktukar) {
+                    ?>
+                        <tr class="bg-white-200 text-sm">
+                            <td class="px-6 py-3 text-center"><?= htmlspecialchars($produktukar['product_name']) ?></td>
+                            <td class="px-6 py-3 text-center">
+                                <?php if (!empty($produktukar['foto'])): ?>
+                                    <img src="../images/<?= htmlspecialchars($produktukar['foto']) ?>" alt="Foto Detail" class="w-16 h-16 object-cover mx-auto rounded-md">
+                                <?php else: ?>
+                                    <span>No image</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="px-6 py-3 text-center"><?= htmlspecialchars($produktukar['user_id']) ?></td>
+                            <td class="px-6 py-3 text-center"><?= htmlspecialchars($produktukar['name']) ?></td>
+                            <td class="px-6 py-3 text-center"><?= htmlspecialchars($produktukar['address']) ?>, <?= htmlspecialchars($produktukar['province']) ?></td>
+                            <td class="px-6 py-3 text-center"><?= htmlspecialchars($produktukar['expedition']) ?></td>
+                            <td class="py-2 px-4 text-center">
+                                <?php
+                                // Ensure that 'status' field is correctly accessed and handle different statuses
+                                if ($produktukar['redemption_status'] === 'diterima') {
+                                    echo '<span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">
+                                            <i class="fas fa-check-circle mr-1"></i>' . ucfirst($produktukar['redemption_status']) . '
+                                        </span>';
+                                } elseif ($produktukar['redemption_status'] === 'dikirim') {
+                                    echo '<span class="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                                            <i class="fas fa-spinner mr-1"></i>' . ucfirst($produktukar['redemption_status']) . '
+                                        </span>';
+                                } elseif ($produktukar['redemption_status'] === 'proses') {
+                                    echo '<span class="text-xs font-medium text-yellow-600 bg-yellow-100 px-2 py-1 rounded-full">
+                                            <i class="fas fa-spinner mr-1"></i>' . ucfirst($produktukar['redemption_status']) . '
+                                        </span>';
+                                } else {
+                                    echo '<span class="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>Status Tidak Diketahui
+                                        </span>';
+                                }
+                                ?>
+                            </td>
+                            <td class="px-6 py-3 text-center">
+                                <div class="flex justify-center space-x-2">
+                                    <a href="status_produktukar.php?id=<?= urlencode($produktukar['shipping_id']) ?>">
+                                        <button class="flex justify-center items-center px-2 py-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20h9" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 3.5a2.121 2.121 0 013 0l1.5 1.5a2.121 2.121 0 010 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                                </svg>
+                                        </button>                                        
+                                    </a>
+                                </div>   
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
         </div>
     </div>
     

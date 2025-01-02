@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
-<head>
+
 <style>
+    main {
+     flex-grow: 1;
+    }
     .footer {
         background-color: #a855f7;
         color: #fff;
@@ -33,7 +36,7 @@
         font-size: 14px;
     }
 </style>
-</head>
+
 <body>
 
 <footer class="footer">
