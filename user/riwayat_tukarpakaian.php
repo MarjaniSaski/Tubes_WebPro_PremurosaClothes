@@ -1,5 +1,3 @@
-riwayat_tukarpakaian.php
-
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
@@ -32,6 +30,7 @@ $data = $query->fetch_all(MYSQLI_ASSOC);
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
 </head>
+<main>
 <body class="bg-gray-50">
     <div class="container mx-auto px-4 py-8 max-w-7xl">
         <div class="bg-white p-4 rounded-lg shadow">
@@ -88,6 +87,7 @@ $data = $query->fetch_all(MYSQLI_ASSOC);
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
 </body>
+</main>
+<?php include "template/footer_user.php";?>
 </html>
 
-<?php include "template/footer_user.php"; ?>

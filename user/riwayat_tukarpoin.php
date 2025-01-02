@@ -45,6 +45,25 @@ $riwayatproduk = mysqli_fetch_all($query, MYSQLI_ASSOC);
 $sqlStatement = "SELECT * FROM tukar_voucher";
 $query = mysqli_query($conn, $sqlStatement);
 $riwayatvoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
+
+$user_id = $_SESSION['user_id'];
+
+// Ambil nama lengkap pengguna dari tabel pengguna
+$sqlUser = "SELECT CONCAT(first_name, ' ', last_name) AS nama_lengkap FROM user WHERE id = ?";
+$stmtUser = $conn->prepare($sqlUser);
+$stmtUser->bind_param("i", $user_id);
+$stmtUser->execute();
+$resultUser = $stmtUser->get_result();
+$userData = $resultUser->fetch_assoc();
+$namaLengkap = $userData['nama_lengkap'];
+
+// Ambil data orders yang sesuai dengan nama lengkap pengguna
+$sqlStatement = "SELECT * FROM orders WHERE nama_lengkap = ?";
+$stmtOrder = $conn->prepare($sqlStatement);
+$stmtOrder->bind_param("s", $namaLengkap);
+$stmtOrder->execute();
+$query = $stmtOrder->get_result();
+$data = $query->fetch_all(MYSQLI_ASSOC);
 ?>
 
     <style>
@@ -61,23 +80,20 @@ $riwayatvoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
         <div class="container">
             <div class="bg-white p-4 rounded-lg shadow justify-content-center">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-semibold text-pink-600">Riwayat Tukar Poin Produk Anda!</h2>
-                    <button class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
+                    <h2 class="text-xl font-semibold text-pink-600"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Tukar Poin Produk</h2>
                 </div>
                             
                 <!-- Table Riwayat -->
-                <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                    <table class="w-full table-auto text-left text-sm">
-                        <thead>
-                            <tr class="border-b bg-gray-50">
-                                <th class="py-3 px-4 text-gray-600 text-center">ID Produk</th>
-                                <th class="py-3 px-4 text-gray-600 text-center">Nama Produk</th>
-                                <th class="py-3 px-4 text-gray-600 text-center">Foto Produk</th>
-                                <th class="py-3 px-4 text-gray-600 text-center">Poin yang digunakan</th>
-                                <th class="py-3 px-4 text-gray-600 text-center">Tanggal Penukaran</th>
-                                <th class="py-3 px-4 text-gray-600 text-center">Status</th>
+                <div class="bg-white  overflow-hidden">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs uppercase bg-pink-100">
+                            <tr>
+                                <th class="py-3 px-4 text-center text-pink-600">ID Produk</th>
+                                <th class="py-3 px-4 text-center text-pink-600">Nama Produk</th>
+                                <th class="py-3 px-4 text-center text-pink-600">Foto Produk</th>
+                                <th class="py-3 px-4 text-center text-pink-600">Poin yang digunakan</th>
+                                <th class="py-3 px-4 text-center text-pink-600">Tanggal Penukaran</th>
+                                <th class="py-3 px-4 text-center text-pink-600">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -132,21 +148,18 @@ $riwayatvoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
         <div class="container">
             <div class="bg-white p-4 rounded-lg shadow justify-content-center">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-semibold text-pink-600">Riwayat Tukar Poin Voucher Anda!</h2>
-                    <button class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </button>
+                    <h2 class="text-xl font-semibold text-pink-600"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Tukar Poin Voucher</h2>
                 </div>
                 <!-- Table Riwayat Voucher -->
-                <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                    <table class="w-full table-auto text-left text-sm">
-                        <thead>
-                            <tr class="border-b bg-gray-50">
-                                <th class="py-3 px-4 text-gray-600 text-center">Kode Voucher</th>
-                                <th class="py-3 px-4 text-gray-600 text-center">Nama Voucher</th>
-                                <th class="py-3 px-4 text-gray-600 text-center">Poin yang digunakan</th>
-                                <th class="py-3 px-4 text-gray-600 text-center">Tanggal Penukaran</th>
-                                <th class="py-3 px-4 text-gray-600 text-center">Status</th>
+                <div class="bg-white overflow-hidden text-xs">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs uppercase bg-pink-100">
+                            <tr>
+                                <th class="py-3 px-4 text-center text-pink-600">Kode Voucher</th>
+                                <th class="py-3 px-4 text-center text-pink-600">Nama Voucher</th>
+                                <th class="py-3 px-4 text-center text-pink-600">Poin yang digunakan</th>
+                                <th class="py-3 px-4 text-center text-pink-600">Tanggal Penukaran</th>
+                                <th class="py-3 px-4 text-center text-pink-600">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -188,3 +201,4 @@ $riwayatvoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 <?php
 include "template/footer_user.php";
 ?>
+

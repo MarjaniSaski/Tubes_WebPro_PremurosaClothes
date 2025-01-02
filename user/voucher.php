@@ -50,11 +50,19 @@ $totalPoinTersisa = $resultPoinTukar - ($resultPointUsed + $resultPointUsedVouch
 
 $sql_voucher = "SELECT voucher_name, discount, points, usage_period, max_period, usage_quota, max_amount 
                FROM vouchers 
-               WHERE voucher_code = ?";
+               WHERE voucher_code = ? AND usage_quota > 0";
 $stmt_voucher = $conn->prepare($sql_voucher);
 $stmt_voucher->bind_param("i", $voucher_code);
 $stmt_voucher->execute();
-$voucher_data = $stmt_voucher->get_result()->fetch_assoc();
+$result = $stmt_voucher->get_result();
+
+// Check if voucher exists and has available quota
+if (!$result->num_rows) {
+    header("Location: tukarpoin.php");
+    exit();
+}
+
+$voucher_data = $result->fetch_assoc();
 $voucher_points = $voucher_data['points'];
 $stmt_voucher->close();
 ?>

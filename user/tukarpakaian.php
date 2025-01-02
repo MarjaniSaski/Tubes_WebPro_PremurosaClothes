@@ -75,9 +75,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $stmt->close();
     } else {
-        echo "<script>alert('Gagal mengunggah gambar. Silakan coba lagi.');</script>";
-    }
+        echo "<script src=\"https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script>
+        <script type=\"text/javascript\">
+        Swal.fire({
+            title: 'Error!',
+            text: 'Gagal mengunggah gambar!',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'tukarpakaian.php';
+            }
+        });
+        </script>
+    ";
 };
+}
     
 ?>
 
@@ -146,9 +159,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form id="exchangeForm" method="POST" enctype="multipart/form-data">
                 <div class="row align-items-start">
                     <div class="border rounded shadow-sm p-4 bg-light d-flex flex-column align-items-center">
-                        <h1 class="text-center text-pink-600 font-bold mb-3 text-3xl">Unggah disini!</h1>
+                        <h1 class="text-center text-pink-600 font-bold mb-3 text-3xl">
+                            <i class="fa-solid fa-upload"></i> Unggah disini</h1>
                         <div class="d-flex justify-content-center">
-                            <label for="fileInput" class="cursor-pointer text-pink-600 font-medium">Klik untuk mengunggah gambar <i class="fa-regular fa-hand-pointer"></i></label>
+                            <label for="fileInput" class="cursor-pointer text-pink-600 font-medium">Klik untuk mengunggah gambar</i></label>
                             <input type="file" id="fileInput" class="d-none" accept="image/png, image/jpg, image/jpeg" name="foto[]" multiple>
                         </div>
                         <p class="text-center text-gray-400">(Unggah dalam bentuk PNG/JPG/JPEG)</p>
@@ -241,7 +255,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                         <br>
                         <br>
-                        <br>
                         <div class="d-flex justify-content-end">
                             <button type="button" class="btn bg-gray-200 text-black hover:bg-gray-400 border-0 me-3" onclick="window.location.href='menuswap.php';">Kembali</button>
                             <button type="submit" name="btnpenjemputan" class="btn bg-pink-500 hover:bg-pink-600 text-Black">Atur Penjemputan</button>
@@ -253,7 +266,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <!-- Kolom Syarat dan Ketentuan -->
             <div>
                 <h2 style="font-size: 25px; color: #D5006D; font-weight: bold;">
-                    <i class="bi bi-stars text-pink-500 mr-3"></i>Syarat dan Ketentuan
+                    <br>
+                    <br>
+                    <br>
+                    <i class="bi bi-stars text-pink-600 mr-3"></i>Syarat dan Ketentuan
                 </h2>
                 <br>
                 <p>Pastikan Anda Membaca dan Memahami Seluruh Ketentuan Berikut Sebelum Melakukan Penukaran Pakaian!</p>

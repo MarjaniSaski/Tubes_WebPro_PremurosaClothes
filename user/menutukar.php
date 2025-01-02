@@ -4,83 +4,48 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
 $user_id = $_SESSION['user_id'];
 
-// Hanya ambil produk dengan status "Belum Terjual"
-$sqlStatement = "SELECT * FROM produk WHERE status = 'Belum Terjual'";
+$sqlStatement = "SELECT * FROM produk";
 $query = mysqli_query($conn, $sqlStatement);
 $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
-$sqlStatement = "SELECT * FROM vouchers WHERE usage_quota > 0 ORDER BY points ASC";
+$sqlStatement = "SELECT * FROM vouchers";
 $query = mysqli_query($conn, $sqlStatement);
 $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
-// Mendapatkan data pengguna
-$sqlUser = "SELECT first_name, last_name FROM user WHERE id = ?";
-$stmtUser = $conn->prepare($sqlUser);
-$stmtUser->bind_param("i", $user_id);
-$stmtUser->execute();
-$userData = $stmtUser->get_result()->fetch_assoc();
-$fullname = $userData['first_name'] . ' ' . $userData['last_name'];
-$stmtUser->close();
+$resultData = $conn->query("SELECT first_name, last_name FROM user WHERE id = '$user_id'");
 
-// Mendapatkan total poin yang dimiliki, mengurangi poin yang sudah digunakan (point_used)
+if ($resultData && $resultData->num_rows > 0) {
+    // Fetch the result as an associative array
+    $row = $resultData->fetch_assoc();
+    $fullname = $row['first_name'] . ' ' . $row['last_name'];
+} else {
+    // Handle the case where no data is found
+    $fullname = "Nama Tidak Ditemukan";
+}
+
+// Query untuk menjumlahkan poin berdasarkan nama lengkap
 $getPoinTukar = $conn->prepare("SELECT SUM(poin) FROM orders WHERE nama_lengkap = ?");
 $getPoinTukar->bind_param("s", $fullname);
-$getPoinTukar->execute();
-$result = $getPoinTukar->get_result();
-$resultPoinTukar = $result->fetch_row()[0] ?? 0;
+
+if ($getPoinTukar->execute()) {
+    $result = $getPoinTukar->get_result();
+    $resultPoinTukar = $result->fetch_row()[0];
+
+    // Jika tidak ada poin yang ditemukan, set poin menjadi 0
+    if ($resultPoinTukar === null) {
+        $resultPoinTukar = 0;
+    }
+} else {
+    echo "Error: " . $getPoinTukar->error;
+}
+
 $getPoinTukar->close();
 
-// Mendapatkan total poin yang digunakan dari tabel shipping_data
-$getPointUsed = $conn->prepare("SELECT SUM(points_used) FROM shipping_data WHERE user_id = ?");
-$getPointUsed->bind_param("i", $user_id);
-$getPointUsed->execute();
-$result = $getPointUsed->get_result();
-$resultPointUsed = $result->fetch_row()[0] ?? 0;
-$getPointUsed->close();
-
-$getPointUsedVoucher = $conn->prepare("SELECT COALESCE(SUM(points_used), 0) as points_used_voucher FROM tukar_voucher WHERE user_id = ?");
-$getPointUsedVoucher->bind_param("i", $user_id);
-$getPointUsedVoucher->execute();
-$result = $getPointUsedVoucher->get_result();
-$row = $result->fetch_assoc();
-$resultPointUsedVoucher = $row['points_used_voucher'] ?? 0;
-$getPointUsedVoucher->close();
-
-// Calculate remaining points
-$totalPoinTersisa = $resultPoinTukar - ($resultPointUsed + $resultPointUsedVoucher);
-
-// Proses penukaran poin
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['points_used'])) {
-    $pointsUsed = intval($_POST['points_used']);
-
-    if ($pointsUsed > $totalPoinTersisa) {
-        echo "<script>alert('Poin tidak mencukupi!');</script>";
-    } else {
-        // Memulai transaksi
-        $conn->begin_transaction();
-        try {
-            // Catat penukaran poin
-            $sqlRedeem = "INSERT INTO point_redemptions (user_id, points_used, status) VALUES (?, ?, 'processed')";
-            $stmtRedeem = $conn->prepare($sqlRedeem);
-            $stmtRedeem->bind_param("ii", $user_id, $pointsUsed);
-            $stmtRedeem->execute();
-            $stmtRedeem->close();
-
-            // Update poin di tabel orders (mengurangi poin)
-            $sqlUpdatePoints = "UPDATE orders SET poin = poin - ? WHERE nama_lengkap = ? AND poin >= ?";
-            $stmtUpdatePoints = $conn->prepare($sqlUpdatePoints);
-            $stmtUpdatePoints->bind_param("isi", $pointsUsed, $fullname, $pointsUsed);
-            $stmtUpdatePoints->execute();
-            $stmtUpdatePoints->close();
-
-            $conn->commit();
-            echo "<script>alert('Penukaran berhasil!');</script>";
-        } catch (Exception $e) {
-            $conn->rollback();
-            echo "<script>alert('Terjadi kesalahan: {$e->getMessage()}');</script>";
-        }
-    }
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['poin'])) {
+    $user_id = $_SESSION['user_id']; // Ambil ID user dari session
+    updateJumlahPenukaran($user_id, $conn, $resultPoinTukar);
 }
+
 $conn->close();
 ?>
 
@@ -153,7 +118,7 @@ $conn->close();
     <div>
       <div class="d-flex align-items-center border border-pink-700 rounded-lg px-4 py-2 text-pink-500 text-lg font-semibold">
         <i class="bi bi-coin me-2" style="font-size: 30px;"></i>
-        <?= $totalPoinTersisa ?>
+        <?= $resultPoinTukar ?>
       </div>
     </div>
   </div>
@@ -162,28 +127,26 @@ $conn->close();
 <!-- Main Content -->
 <main>
   <!-- Voucher Section -->
-<section class="mb-10">
-  <div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
-    <h2 class="text-xl font-bold pl-4">
-        <i class="bi bi-ticket-perforated text-pink-900 mr-3"></i> Voucher
-    </h2>
-  </div>
-  <br>
-  <div class="flex gap-3 overflow-x-auto mr-5">
-    <?php foreach ($datavoucher as $key => $voucher) { ?>
-      <!-- Voucher Card as Button -->
-      <button onclick="window.location.href='voucher.php?voucher_code=<?= $voucher['voucher_code'] ?>'" 
-              class="bg-gradient-to-r from-pink-600 to-pink-400 text-pink-200 rounded-lg p-4 w-48 text-center shadow-lg transform hover:translate-x-[-10px] ml-4">
-        <div class="text-center">
-          <h3 class="text-xl font-bold"><?= $voucher['voucher_name'] ?></h3>
-          <p class="text-sm">Min. Blj Rp <?= $voucher['max_amount'] ?></p>
-          <p class="text-sm">S/D: <?= $voucher['max_period'] ?></p>
-        </div>
-      </button>
-    <?php } ?>
-  </div>
-</section>
-
+  <section class="mb-10">
+    <div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
+      <h2 class="text-xl font-bold pl-4">
+          <i class="bi bi-ticket-perforated text-pink-900 mr-3"></i> Voucher
+      </h2>
+    </div>
+    <br>
+    <div class="flex gap-3 overflow-x-auto mr-5">
+      <?php foreach ($datavoucher as $key => $voucher) { ?>
+        <!-- Voucher Card as Button -->
+        <button class="bg-gradient-to-r from-pink-600 to-pink-400 text-pink-200 rounded-lg p-4 w-48 text-center shadow-lg transform hover:translate-x-[-10px] ml-4">
+          <div class="text-center">
+            <h3 class="text-xl font-bold"><?= $voucher['voucher_name'] ?></h3>
+            <p class="text-sm">Min. Blj Rp <?= $voucher['max_amount'] ?></p>
+            <p class="text-sm">S/D: <?= $voucher['max_period'] ?></p>
+          </div>
+        </button>
+      <?php } ?>
+    </div>
+  </section>
 
   <!-- Product Section -->
   <section>
@@ -284,17 +247,17 @@ $conn->close();
   // Close voucher pop-up
   closeVoucherBtn.onclick = function() {
     voucherPopup.classList.remove('show');
-  };
+  }
 
   cancelVoucherBtn.onclick = function() {
     voucherPopup.classList.remove('show');
-  };
+  }
 
   // Claim voucher
   claimVoucherBtn.onclick = function() {
     alert('Voucher claimed successfully!');
     voucherPopup.classList.remove('show');
-  };
+  }
 
   // Product Pop-up logic
   const productPopup = document.getElementById('productPopup');
@@ -332,17 +295,17 @@ $conn->close();
   // Close product pop-up
   closeProductBtn.onclick = function() {
     productPopup.classList.remove('show');
-  };
+  }
 
   cancelProductBtn.onclick = function() {
     productPopup.classList.remove('show');
-  };
+  }
 
   // Claim product
   claimProductBtn.onclick = function() {
     alert('Product claimed successfully!');
     productPopup.classList.remove('show');
-  };
+  }
 
   // Close pop-up if clicked outside
   window.onclick = function(event) {
@@ -352,12 +315,13 @@ $conn->close();
     if (event.target === productPopup) {
       productPopup.classList.remove('show');
     }
-  };
+  }
 
   function redirectToKatalogSwap(id_produk) {
     // Redirect ke halaman katalogswap.php dengan ID produk sebagai parameter
     window.location.href = `katalogswap.php?id_produk=${id_produk}`;
-  }
+}
+
 </script>
 
 </body>

@@ -93,6 +93,12 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
         .dropdown-menu {
             z-index: 1050;
         }
+        
+        .dropdown-item:active, 
+        .dropdown-item:focus {
+            background-color: #FF69B4 !important;
+            color: #fff !important; 
+        }
 
         .floating-chat {
             position: fixed;
@@ -115,6 +121,9 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
             transform: translateY(-5px);
             box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
         }
+       
+
+
     </style>
 </head>
 <body>
@@ -125,8 +134,9 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
                 <div class="d-flex gap-4 navbar-links">
                     <a href="indexuser.php" class="text-dark text-decoration-none fw-bold">HOME</a>
                     <a href="product.php" class="text-dark text-decoration-none fw-bold">PRODUCT</a>
+                    <a href="newarrival.php" class="text-dark text-decoration-none fw-bold">NEW ARRIVAL</a>
                     <a href="menuswap.php" class="text-dark text-decoration-none fw-bold">SWAP</a>
-                    <a href="productthrift.php" class="text-dark text-decoration-none fw-bold">THRIFT</a>
+                    <!-- <a href="productthrift.php" class="text-dark text-decoration-none fw-bold">THRIFT</a> -->
                 </div>
 
                 <!-- Logo -->
@@ -176,9 +186,9 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
                             <li><a class="dropdown-item d-flex align-items-center gap-2" href="wishlist.php">
                                 <i class="fa-solid fa-heart"></i> Wishlist
                             </a></li>
-                            <li><a class="dropdown-item d-flex align-items-center gap-2" href="settings.php">
+                            <!-- <li><a class="dropdown-item d-flex align-items-center gap-2" href="settings.php">
                                 <i class="fa-solid fa-gear"></i> Settings
-                            </a></li>
+                            </a></li> -->
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="../login.php">
                                 <i class="fa-solid fa-right-from-bracket"></i> Logout
