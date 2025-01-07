@@ -9,7 +9,7 @@ $sqlStatement = "SELECT * FROM produk WHERE status = 'Belum Terjual'";
 $query = mysqli_query($conn, $sqlStatement);
 $data = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
-$sqlStatement = "SELECT * FROM vouchers WHERE usage_quota > 0 ORDER BY points ASC";
+$sqlStatement = "SELECT * FROM vouchers";
 $query = mysqli_query($conn, $sqlStatement);
 $datavoucher = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
