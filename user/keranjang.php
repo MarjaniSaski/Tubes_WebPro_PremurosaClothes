@@ -186,7 +186,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
                     </div>
                 </div>
                 <button id="checkoutBtn" class="checkout-btn" disabled>
-                    CHECKOUT
+                    Buat Pesanan
                 </button>
             </div>
         </div>

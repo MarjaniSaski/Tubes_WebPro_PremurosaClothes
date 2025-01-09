@@ -195,40 +195,40 @@ body {
 
 <div class="voucher-container">
     <div class="voucher-header">
-        <h2 class="voucher-title">Voucher Details</h2>
+        <h2 class="voucher-title">Detail Voucher</h2>
         <div class="user-points">Poin Anda: <?= number_format($totalPoinTersisa) ?></div>
     </div>
     <div class="voucher-details">
         <div class="detail-card">
-            <div class="detail-label">Voucher Name</div>
+            <div class="detail-label">Nama Voucher</div>
             <div class="detail-value"><?= htmlspecialchars($voucher_data['voucher_name']) ?></div>
         </div>
         <div class="detail-card">
-            <div class="detail-label">Discount</div>
+            <div class="detail-label">Diskon</div>
             <div class="detail-value"><?= htmlspecialchars($voucher_data['discount']) ?>% OFF</div>
         </div>
         <div class="detail-card">
-            <div class="detail-label">Points Required</div>
+            <div class="detail-label">Poin Yang Dibutuhkan</div>
             <div class="detail-value"><?= htmlspecialchars($voucher_data['points']) ?> Points</div>
         </div>
         <div class="usage-period-container">
             <div class="detail-card">
-                <div class="detail-label">Usage </div>
-                <div class="detail-label">Period </div>
+                <div class="detail-label">Periode </div>
+                <div class="detail-label">Penggunaan </div>
                 <div class="detail-value"><?= htmlspecialchars($voucher_data['usage_period']) ?></div>
             </div>
             <div class="detail-card">
-                <div class="detail-label">Maximum </div>
-                <div class="detail-label">Period</div>
+                <div class="detail-label">Batas </div>
+                <div class="detail-label">Pengunaan</div>
                 <div class="detail-value"><?= htmlspecialchars($voucher_data['max_period']) ?></div>
             </div>
         </div>
         <div class="detail-card">
-            <div class="detail-label">Usage Quota</div>
+            <div class="detail-label">Kuota Penggunaan </div>
             <div class="detail-value"><?= htmlspecialchars($voucher_data['usage_quota']) ?> uses</div>
         </div>
         <div class="detail-card">
-            <div class="detail-label">Maximum Amount</div>
+            <div class="detail-label">Harga Maksimum</div>
             <div class="detail-value">Rp <?= number_format($voucher_data['max_amount'], 0, ',', '.') ?></div>
         </div>
     </div>

@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
             <div class="text-center mt-4">
                 <p class="text-sm">Sudah punya akun? 
-                    <a href="login.php" class="text-pink-500 font-semibold hover:underline">Log In</a>
+                    <a href="login.php" class="text-pink-500 font-semibold hover:underline">Masuk</a>
                 </p>
             </div>
         </div>

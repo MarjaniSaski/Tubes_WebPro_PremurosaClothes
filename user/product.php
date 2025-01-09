@@ -202,7 +202,7 @@ if (!isset($_SESSION['wishlist'])) {
 
 <div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
     <h2 class="text-xl font-bold pl-4">
-        <i class="bi bi-bag-heart-fill text-pink-500 mr-3"></i> Product
+        <i class="bi bi-bag-heart-fill text-pink-500 mr-3"></i> Produk
     </h2>
 </div>
 

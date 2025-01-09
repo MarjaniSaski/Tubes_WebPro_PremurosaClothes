@@ -104,21 +104,21 @@ if (!isset($_SESSION['wishlist'])) {
             <div class="card bg-purple-500 rounded-lg shadow-lg overflow-hidden transition-all transform hover:scale-105 hover:opacity-100 opacity-80 hover:shadow-xl">
                 <img src="<?= HOST ?>/foto/T1.png" class="card-img-top" alt="Tops" style="height: 250px; object-fit: cover;">
                 <!-- Link ke halaman Tops -->
-                <a href="tops.php" class="btn btn-purple w-100 py-3 text-white font-semibold">TOPS</a>
+                <a href="tops.php" class="btn btn-purple w-100 py-3 text-white font-semibold">ATASAN</a>
             </div>
         </div>
         <div class="col">
             <div class="card bg-purple-500 rounded-lg shadow-lg overflow-hidden transition-all transform hover:scale-105 hover:opacity-100 opacity-80 hover:shadow-xl">
                 <img src="<?= HOST ?>/foto/C1.png" class="card-img-top" alt="Bottoms" style="height: 250px; object-fit: cover;">
                 <!-- Link ke halaman Bottoms -->
-                <a href="bottoms.php" class="btn btn-purple py-3 text-white font-semibold">BOTTOMS</a>
+                <a href="bottoms.php" class="btn btn-purple py-3 text-white font-semibold">BAWAHAN</a>
             </div>
         </div>
         <div class="col">
             <div class="card bg-purple-500 rounded-lg shadow-lg overflow-hidden transition-all transform hover:scale-105 hover:opacity-100 opacity-80 hover:shadow-xl">
                 <img src="<?= HOST ?>/foto/B1.png" class="card-img-top" alt="Dresses" style="height: 250px; object-fit: cover;">
                 <!-- Link ke halaman Dresses -->
-                <a href="dresses.php" class="btn btn-purple w-100 py-3 text-white font-semibold">DRESSES</a>
+                <a href="dresses.php" class="btn btn-purple w-100 py-3 text-white font-semibold">GAUN</a>
             </div>
         </div>
     </div>

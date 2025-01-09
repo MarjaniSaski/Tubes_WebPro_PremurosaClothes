@@ -10,13 +10,14 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $product_id = $_GET['id_produk']; 
 
-// Get user data first since we need the name for the orders query
-$sql_user = "SELECT first_name, last_name FROM user WHERE id = ?";
+// Modify the user data query to include phone
+$sql_user = "SELECT first_name, last_name, phone FROM user WHERE id = ?";
 $stmt_user = $conn->prepare($sql_user);
 $stmt_user->bind_param("i", $user_id);
 $stmt_user->execute();
 $user_data = $stmt_user->get_result()->fetch_assoc();
 $nama_lengkap = $user_data['first_name'] . ' ' . $user_data['last_name'];
+$phone = $user_data['phone'];
 $stmt_user->close();
 
 // Get total points earned from orders
@@ -112,7 +113,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
                         <span class="text-gray-700"><?php echo number_format($totalPoinTersisa - $product_points); ?></span>
                     </p>
                     <?php if (!$can_redeem): ?>
-                        <p class="text-red-700 font-semibold mt-2">Warning: Poin tidak mencukupi untuk penukaran!!!</p>
+                        <p class="text-red-700 font-semibold mt-2">Peringatan: Poin tidak mencukupi untuk penukaran!!!</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -148,7 +149,8 @@ $can_redeem = $totalPoinTersisa >= $product_points;
                         type="text" 
                         id="phone" 
                         class="block w-full p-2 border border-pink-200 rounded focus:border-pink-500 focus:ring-pink-500" 
-                        required>
+                        value="<?php echo htmlspecialchars($phone); ?>" 
+                        readonly>
                 </div>
                 
                 <div class="mb-3">

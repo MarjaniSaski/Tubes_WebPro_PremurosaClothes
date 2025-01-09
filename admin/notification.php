@@ -1,216 +1,160 @@
 <?php include "template/header_admin.php"; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Notifications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --purple-primary: #9333EA;
+            --purple-light: #F3E8FF;
+            --purple-dark: #7E22CE;
+        }
 
-<div class="container mx-auto p-4">
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden notification-container">
-        <!-- Header -->
-        <div class="bg-purple-600 px-6 py-4">
-            <div class="flex justify-between items-center">
-                <h1 class="text-white text-xl font-semibold">Notifikasi</h1>
-                <div class="flex items-center space-x-4">
-                    <button id="markAllRead" class="text-purple-200 hover:text-white text-sm">
-                        Tandai semua sudah dibaca
-                    </button>
-                </div>
-            </div>
-        </div>
+        .notification-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            background-color: white;
+            border-left: 4px solid transparent;
+        }
 
-        <!-- Tab Navigation -->
-        <div class="bg-white border-b border-gray-200">
-            <div class="flex" role="tablist">
-                <button class="tab-btn px-6 py-3 text-purple-600 border-b-2 border-purple-600 font-medium" data-tab="all">
-                    Semua <span id="all-count">(5)</span>
-                </button>
-                <button class="tab-btn px-6 py-3 text-gray-500 hover:text-purple-600" data-tab="orders">
-                    Pesanan <span id="orders-count">(3)</span>
-                </button>
-                <button class="tab-btn px-6 py-3 text-gray-500 hover:text-purple-600" data-tab="pickups">
-                    Penjemputan <span id="pickups-count">(2)</span>
-                </button>
-            </div>
-        </div>
+        .notification-card.checked {
+            background-color: var(--purple-light);
+            border-left: 4px solid var(--purple-primary);
+        }
 
-        <!-- Notification Lists -->
-        <div class="overflow-y-auto scrollbar-custom" style="height: calc(100% - 8rem);">
-            <div id="notification-list">
-                <!-- Template notifikasi akan diisi oleh JavaScript -->
-            </div>
-        </div>
-    </div>
-</div>
+        .notification-badge {
+            background-color: var(--purple-primary);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 9999px;
+        }
 
-<style>
-.notification-container {
-    height: calc(100vh - 2rem);
-}
+        .notification-icon {
+            background-color: #F3E8FF;
+            color: var(--purple-primary);
+        }
 
-.notification-item {
-    transition: all 0.2s ease;
-}
+        .checkbox-btn {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: 2px solid var(--purple-primary);
+            border-radius: 4px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
 
-.notification-item.unread {
-    background-color: #f3e8ff;
-}
+        .checkbox-btn:checked {
+            background-color: var(--purple-primary);
+            border-color: var(--purple-dark);
+        }
 
-.action-buttons {
-    display: none;
-}
+        .checkbox-btn:checked::before {
+            content: '✔';
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 4px;
+            font-size: 14px;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
 
-.notification-item:hover .action-buttons {
-    display: flex;
-}
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-.scrollbar-custom::-webkit-scrollbar {
-    width: 6px;
-}
+        main {
+            flex-grow: 1; /* Ini penting - membuat main mengisi ruang tersedia */
+        }
+        .content-container {
+            flex: 1 0 auto;
+            padding-bottom: 2rem; /* Memberikan jarak dengan footer */
+        }
 
-.scrollbar-custom::-webkit-scrollbar-thumb {
-    background:rgb(219, 183, 252);
-    border-radius: 3px;
-}
+        footer {
+            margin-top: auto; /* Mendorong footer ke bawah */
+            flex-shrink: 0;
+            width: 100%;
+            background-color: #f8f9fa;
+            border-top: 1px ;
+            position: fixed;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="content-container">
+        <main>
+            <div class="container mx-auto py-6 px-4">
+                <div class="bg-white shadow rounded-lg p-6">
+                    <div class="flex justify-between items-center border-b pb-4 mb-4">
+                        <h1 class="text-xl font-semibold text-gray-700">Notifikasi</h1>
+                        <span class="notification-badge">3</span>
+                    </div>
 
-.notification-item.read {
-    background-color:rgb(219, 183, 252); /* Purple background for read notifications */
-}
-
-.notification-item.unread {
-    background-color: #f3e8ff; /* Purple background for unread notifications */
-}
-</style>
-
-<script>
-const notifications = [
-    {
-        id: 1,
-        type: 'order',
-        title: 'Pesanan Baru #12345',
-        content: 'Amanda Salima - Rp 299.000',
-        time: '2 menit yang lalu',
-        unread: true,
-        icon: 'shopping-bag'
-    },
-    {
-        id: 2,
-        type: 'pickup',
-        title: 'Permintaan Penjemputan #89012',
-        content: 'Lokasi: Jl. Sukajadi No. 123, Bandung',
-        time: '5 menit yang lalu',
-        unread: true,
-        icon: 'map-marker-alt'
-    },
-    {
-        id: 3,
-        type: 'order',
-        title: 'Pesanan Baru #12346',
-        content: 'Widya Mustika - Rp 190.000',
-        time: '10 menit yang lalu',
-        unread: true,
-        icon: 'shopping-bag'
-    }
-];
-
-function renderNotifications(filter = 'all') {
-    const container = document.getElementById('notification-list');
-    container.innerHTML = '';
-    
-    // Filter notifications based on selected tab (all, orders, pickups)
-    const filteredNotifications = filter === 'all' 
-        ? notifications 
-        : notifications.filter(n => n.type === filter);
-
-    filteredNotifications.forEach(notification => {
-        const html = `
-            <div class="notification-item ${notification.unread ? 'unread' : 'read'}" data-id="${notification.id}" onclick="toggleReadStatus(${notification.id})">
-                <div class="p-4 border-b hover:bg-purple-50">
-                    <div class="flex items-start space-x-4">
-                        <div class="${notification.unread ? 'bg-purple-100' : 'bg-gray-100'} rounded-full p-2">
-                            <i class="fas fa-${notification.icon} ${notification.unread ? 'text-purple-600' : 'text-gray-600'} text-lg"></i>
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="font-semibold text-gray-800">${notification.title}</h3>
-                                    <p class="text-gray-600 mt-1">${notification.content}</p>
-                                    <span class="text-sm text-gray-500">${notification.time}</span>
-                                </div>
-                                <div class="action-buttons space-x-2">
-                                    <button onclick="markAsRead(${notification.id})" class="text-purple-600 hover:text-purple-800 p-1">
-                                        <i class="fas fa-check"></i>
-                                    </button>
-                                    <button onclick="deleteNotification(${notification.id})" class="text-red-600 hover:text-red-800 p-1">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
+                    <div class="space-y-4">
+                        <!-- Notifikasi Pesanan Baru -->
+                        <div class="notification-card p-4 rounded-lg flex items-center gap-4 shadow">
+                            <div class="notification-icon p-3 rounded-full">
+                                <i class="fas fa-shopping-bag text-2xl"></i>
                             </div>
+                            <div class="flex-1">
+                                <h2 class="text-lg font-medium text-gray-800">Pesanan Baru #12345</h2>
+                                <p class="text-sm text-gray-600">Amanda Salima - Rp 299.000</p>
+                                <span class="text-xs text-gray-400 mt-2 inline-flex items-center gap-1">
+                                    <i class="fas fa-clock"></i>2 menit yang lalu
+                                </span>
+                            </div>
+                            <input type="checkbox" class="checkbox-btn" onclick="this.closest('.notification-card').classList.toggle('checked');">
+                        </div>
+
+                        <!-- Notifikasi Penjemputan -->
+                        <div class="notification-card p-4 rounded-lg flex items-center gap-4 shadow">
+                            <div class="notification-icon p-3 rounded-full">
+                                <i class="fas fa-map-marker-alt text-2xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-lg font-medium text-gray-800">Permintaan Penjemputan #89012</h2>
+                                <p class="text-sm text-gray-600">Lokasi: Jl. Sukajadi No. 123, Bandung</p>
+                                <span class="text-xs text-gray-400 mt-2 inline-flex items-center gap-1">
+                                    <i class="fas fa-clock"></i>5 menit yang lalu
+                                </span>
+                            </div>
+                            <input type="checkbox" class="checkbox-btn" onclick="this.closest('.notification-card').classList.toggle('checked');">
+                        </div>
+
+                        <!-- Notifikasi Pesanan Lain -->
+                        <div class="notification-card p-4 rounded-lg flex items-center gap-4 shadow">
+                            <div class="notification-icon p-3 rounded-full">
+                                <i class="fas fa-shopping-bag text-2xl"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h2 class="text-lg font-medium text-gray-800">Pesanan Baru #12346</h2>
+                                <p class="text-sm text-gray-600">Widya Mustika - Rp 190.000</p>
+                                <span class="text-xs text-gray-400 mt-2 inline-flex items-center gap-1">
+                                    <i class="fas fa-clock"></i>10 menit yang lalu
+                                </span>
+                            </div>
+                            <input type="checkbox" class="checkbox-btn" onclick="this.closest('.notification-card').classList.toggle('checked');">
                         </div>
                     </div>
                 </div>
             </div>
-        `;
-        container.innerHTML += html;
-    });
-    
-    updateCounts();
-}
-
-function updateCounts() {
-    document.getElementById('all-count').textContent = `(${notifications.length})`;
-    document.getElementById('orders-count').textContent = 
-        `(${notifications.filter(n => n.type === 'order').length})`;
-    document.getElementById('pickups-count').textContent = 
-        `(${notifications.filter(n => n.type === 'pickup').length})`;
-}
-
-function markAsRead(id) {
-    const notification = notifications.find(n => n.id === id);
-    if (notification) {
-        notification.unread = false;
-        renderNotifications(currentTab);
-    }
-}
-
-function deleteNotification(id) {
-    const index = notifications.findIndex(n => n.id === id);
-    if (index > -1) {
-        notifications.splice(index, 1);
-        renderNotifications(currentTab);
-    }
-}
-
-function toggleReadStatus(id) {
-    const notification = notifications.find(n => n.id === id);
-    if (notification) {
-        notification.unread = !notification.unread;
-        renderNotifications(currentTab);
-    }
-}
-
-let currentTab = 'all';
-
-document.addEventListener('DOMContentLoaded', () => {
-    renderNotifications(); // Initial render for "all" notifications
-
-    // Tab handling
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.tab-btn').forEach(b => {
-                b.classList.remove('text-purple-600', 'border-b-2', 'border-purple-600');
-                b.classList.add('text-gray-500');
-            });
-            e.target.classList.add('text-purple-600', 'border-b-2', 'border-purple-600');
-            e.target.classList.remove('text-gray-500');
-            
-            // Update current tab and render notifications accordingly
-            currentTab = btn.dataset.tab;
-            renderNotifications(currentTab); // Re-render based on the selected tab
-        });
-    });
-
-    // Mark all as read
-    document.getElementById('markAllRead').addEventListener('click', () => {
-        notifications.forEach(n => n.unread = false);
-        renderNotifications(currentTab);
-    });
-});
-</script>
-
-<?php include "template/footer_admin.php"; ?>
+        </main>
+    </div>
+    <footer>
+        <?php include "template/footer_admin.php"; ?>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>

@@ -14,21 +14,18 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
         :root {
             --pink-primary: #FF69B4;
             --pink-light: #FFB6C1;
-            --paink-dark: #FF1493;
+            --pink-dark: #FF1493;
         }
 
         .notification-card {
             transition: transform 0.2s, box-shadow 0.2s;
+            background-color: white; /* Default color */
+            border-left: 4px solid transparent; /* No border initially */
         }
 
-        .notification-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .notification-card.unread {
-            background-color: #FFF5F7;
-            border-left: 4px solid var(--pink-primary);
+        .notification-card.checked {
+            background-color: var(--pink-light); /* Pink color when read */
+            border-left: 4px solid var(--pink-primary); /* Pink left border */
         }
 
         .notification-badge {
@@ -39,18 +36,36 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
             border-radius: 9999px;
         }
 
-        .delete-btn {
-            color: #dc3545;
-            transition: color 0.2s;
-        }
-
-        .delete-btn:hover {
-            color: #bb2d3b;
-        }
-
         .notification-icon {
             background-color: #FFF5F7;
             color: var(--pink-primary);
+        }
+
+        /* Styling untuk checkbox */
+        .checkbox-btn {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: 2px solid var(--pink-primary);
+            border-radius: 4px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .checkbox-btn:checked {
+            background-color: var(--pink-primary);
+            border-color: var(--pink-dark);
+        }
+
+        .checkbox-btn:checked::before {
+            content: '✔';
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 4px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -65,7 +80,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
             <!-- Item Notifikasi -->
             <div class="space-y-4">
                 <!-- Item 1 -->
-                <div class="notification-card unread p-4 rounded-lg flex items-center gap-4 shadow">
+                <div class="notification-card p-4 rounded-lg flex items-center gap-4 shadow">
                     <div class="notification-icon p-3 rounded-full">
                         <i class="bi bi-tag-fill text-2xl"></i>
                     </div>
@@ -76,13 +91,11 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
                             <i class="bi bi-clock"></i>5 menit yang lalu
                         </span>
                     </div>
-                    <button class="delete-btn" onclick="this.closest('.notification-card').remove();">
-                        <i class="bi bi-trash text-lg"></i>
-                    </button>
+                    <input type="checkbox" class="checkbox-btn" onclick="this.closest('.notification-card').classList.toggle('checked');">
                 </div>
 
                 <!-- Item 2 -->
-                <div class="notification-card p-4 rounded-lg flex items-center gap-4">
+                <div class="notification-card p-4 rounded-lg flex items-center gap-4 shadow">
                     <div class="notification-icon p-3 rounded-full">
                         <i class="bi bi-box-seam text-2xl"></i>
                     </div>
@@ -93,13 +106,11 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
                             <i class="bi bi-clock"></i>1 jam yang lalu
                         </span>
                     </div>
-                    <button class="delete-btn" onclick="this.closest('.notification-card').remove();">
-                        <i class="bi bi-trash text-lg"></i>
-                    </button>
+                    <input type="checkbox" class="checkbox-btn" onclick="this.closest('.notification-card').classList.toggle('checked');">
                 </div>
 
                 <!-- Item 3 -->
-                <div class="notification-card unread p-4 rounded-lg flex items-center gap-4">
+                <div class="notification-card p-4 rounded-lg flex items-center gap-4 shadow">
                     <div class="notification-icon p-3 rounded-full">
                         <i class="bi bi-stars text-2xl"></i>
                     </div>
@@ -110,9 +121,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
                             <i class="bi bi-clock"></i>2 jam yang lalu
                         </span>
                     </div>
-                    <button class="delete-btn" onclick="this.closest('.notification-card').remove();">
-                        <i class="bi bi-trash text-lg"></i>
-                    </button>
+                    <input type="checkbox" class="checkbox-btn" onclick="this.closest('.notification-card').classList.toggle('checked');">
                 </div>
             </div>
         </div>

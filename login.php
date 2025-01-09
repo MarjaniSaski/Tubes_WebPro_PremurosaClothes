@@ -94,14 +94,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <!-- Submit Button -->
                 <button type="submit" class="btn btn-pink w-full py-2 text-lg rounded-lg font-semibold bg-pink-300 text-white hover:bg-pink-400">
-                    Login
+                    Masuk
                 </button>
             </form>
 
             <!-- Register Link -->
             <div class="text-center mt-4">
                 <p class="text-sm">Belum punya akun? 
-                    <a href="register.php" class="text-pink-500 font-semibold hover:underline">Sign In</a>
+                    <a href="register.php" class="text-pink-500 font-semibold hover:underline">Daftar</a>
                 </p>
             </div>
         </div>
@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (data.status === 'success') {
                     // Login berhasil, tampilkan SweetAlert2
                     Swal.fire({
-                        title: 'Login Berhasil!',
+                        title: 'Berhasil Masuk!',
                         text: 'Selamat datang kembali.',
                         icon: 'success',
                         confirmButtonText: 'OK'

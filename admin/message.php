@@ -71,7 +71,7 @@
                         </div>
                         <div class="ml-3">
                             <h6 class="font-semibold" id="chat-user-name">Budi Santoso</h6>
-                            <span class="text-sm text-green-500">● Online</span>
+                            <span class="text-sm text-green-500">● Aktif</span>
                         </div>
                     </div>
                 </div>

@@ -117,14 +117,28 @@ $riwayatproduk = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
 ob_end_flush();
 ?>
-<body>
     
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        footer {
+            flex-shrink: 0;
+        }
+        
         .main-content {
             margin-left: 16rem;
             margin-top: 4rem;
         }
-    
+        
         .popup-container {
             position: fixed;
             top: 0;
@@ -140,12 +154,12 @@ ob_end_flush();
             opacity: 0;
             transition: visibility 0.2s, opacity 0.2s;
         }
-    
+        
         .popup-container.active {
             visibility: visible;
             opacity: 1;
         }
-    
+        
         .popup {
             background: #ffffff;
             border-radius: 12px;
@@ -154,37 +168,38 @@ ob_end_flush();
             max-width: 90%;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
+        
         .flex {
             display: flex;
         }
-
+        
         .items-center {
             align-items: center;
         }
-
+        
         .justify-center {
             justify-content: center;
         }
-
+        
         .gap-2 {
             gap: 0.5rem; /* Atur jarak antar ikon dan teks */
         }
-
+        
         .whitespace-nowrap {
             white-space: nowrap;
         }
-
+        
         .rounded-full {
             border-radius: 9999px;
         }
-
+        
         .text-xs {
             font-size: 0.75rem; /* Atur sesuai kebutuhan */
         }
 
     </style>
     
+<body>
     <!-- Content -->
     <div class="p-6">
         <!-- Buttons -->
@@ -397,40 +412,40 @@ ob_end_flush();
     <!-- Pop-Up Add Voucher -->
     <div id="popup-add-voucher" class="popup-container">
         <div class="popup">
-            <h2 class="text-lg font-bold mb-4">Add New Voucher</h2>
+            <h2 class="text-lg font-bold mb-4">Tambah Voucher</h2>
             <form method="post">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium mb-1">Voucher Name</label>
-                        <input type="text" name="voucher_name" placeholder="Add voucher name" class="w-full border rounded px-3 py-2">
+                        <label class="block text-sm font-medium mb-1">Nama Voucher</label>
+                        <input type="text" name="voucher_name" placeholder="Tambah nama voucher" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Voucher Code</label>
-                        <input type="text" name="voucher_code" placeholder="Add voucher code" class="w-full border rounded px-3 py-2">
+                        <label class="block text-sm font-medium mb-1">Kode Voucher</label>
+                        <input type="text" name="voucher_code" placeholder="Tambah kode voucher" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Discount</label>
+                        <label class="block text-sm font-medium mb-1">Diskon</label>
                         <input type="text" name="discount" placeholder="% DISC" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Poin</label>
-                        <input type="text" name="points" placeholder="Add poin" class="w-full border rounded px-3 py-2">
+                        <input type="text" name="points" placeholder="Tambah poin" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Usage Period</label>
+                        <label class="block text-sm font-medium mb-1">Periode Penggunaan</label>
                         <input type="datetime-local" name="usage_period" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Max Period</label>
+                        <label class="block text-sm font-medium mb-1">Maksimum Penggunaan</label>
                         <input type="datetime-local" name="max_period" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Usage Quota</label>
-                        <input type="text" name="usage_quota" placeholder="Add max quota" class="w-full border rounded px-3 py-2">
+                        <label class="block text-sm font-medium mb-1">Kuota Penggunaan</label>
+                        <input type="text" name="usage_quota" placeholder="Tambah kuota penggunaan" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Max Amount</label>
-                        <input type="text" name="max_amount" placeholder="Add max amount for buyer" class="w-full border rounded px-3 py-2">
+                        <label class="block text-sm font-medium mb-1">Harga Maksimum</label>
+                        <input type="text" name="max_amount" placeholder="Tambah harga maksimum" class="w-full border rounded px-3 py-2">
                     </div>
                 </div>
                 <div class="flex justify-end mt-6 space-x-4">
@@ -444,42 +459,43 @@ ob_end_flush();
     <!-- Pop-Up Add Product -->
     <div id="popup-add-product" class="popup-container">
         <div class="popup">
-            <h2 class="text-lg font-bold mb-4">Add Product</h2>
+            <h2 class="text-lg font-bold mb-4">Tambah Produk</h2>
             <form method="post" enctype="multipart/form-data">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-2">
-                        <label class="block text-sm font-medium mb-1">Product Name</label>
-                        <input type="text" name="nama" placeholder="Add product name" class="w-full border rounded px-3 py-2">
+                        <label class="block text-sm font-medium mb-1">Nama Produk</label>
+                        <input type="text" name="nama" placeholder="Tambah nama produk" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-1">Product Code</label>
-                        <input type="text" name="id_produk" placeholder="Add product code" class="w-full border rounded px-3 py-2">
+                        <label class="block text-sm font-medium mb-1">Kode Produk</label>
+                        <input type="text" name="id_produk" placeholder="Tambah kode produk" class="w-full border rounded px-3 py-2">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Poin</label>
-                        <input type="text" name="poin" placeholder="Add poin" class="w-full border rounded px-3 py-2">
+                        <input type="text" name="poin" placeholder="Tambah poin" class="w-full border rounded px-3 py-2">
                     </div>
                     <div class="col-span-2">
-                        <label class="block text-sm font-medium mb-1">Image</label>
-                        <!-- Input file for image upload -->
+                        <label class="block text-sm font-medium mb-1">Foto</label>
                         <input type="file" accept="image/*" class="w-full border rounded px-3 py-2" id="product-image" name="foto">
-                        <p class="text-sm text-gray-500 mt-2">Select an image from your device</p>
-    
-    
+                        <p class="text-sm text-gray-500 mt-2">Pilih gambar dari perangkat Anda</p>
                     </div>
+
                     <div class="col-span-2">
-                        <label class="block text-sm font-medium mb-1">Details</label>
+                        <label class="block text-sm font-medium mb-1">Detail</label>
                         <textarea placeholder="Add details" class="w-full border rounded px-3 py-2 h-24" name="detail"></textarea>
                     </div>
                 </div>
                 <div class="flex justify-end mt-6 space-x-4">
-                    <button type="button" onclick="hidePopupAddProduct()" class="bg-gray-300 px-6 py-2 rounded hover:bg-gray-400 text-sm">Cancel</button>
-                    <button type="submit" name="btnsubmit" class="bg-purple-500 text-white px-6 py-2 rounded hover:bg-purple-600 text-sm">Save</button>
+                    <button type="button" onclick="hidePopupAddProduct()" class="bg-gray-300 px-6 py-2 rounded hover:bg-gray-400 text-sm">Kembali</button>
+                    <button type="submit" name="btnsubmit" class="bg-purple-500 text-white px-6 py-2 rounded hover:bg-purple-600 text-sm">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
-</body>
+    </div>
+    <footer class="mt-auto">
+        <?php include "template/footer_admin.php"; ?>
+    </footer>
 
     <script>
         function showPopupAddVoucher() {
@@ -498,7 +514,5 @@ ob_end_flush();
             document.getElementById('popup-add-product').classList.remove('active');
         }
     </script>
-<?php
-include "template/footer_admin.php";
-?>
+</body>
 </html>

@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conn->prepare($sql);
-        $status = "Pending";
+        $status = "menunggu";
         $stmt->bind_param("ssssssssis", $foto_names, $jenis_barang, $jenis_bahan, $details, $nama_lengkap, $alamat_lengkap, $alamat, $tanggal_penjemputan, $berat_kg, $status);
 
         if ($stmt->execute()) {
@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <option value="" selected disabled>Pilih jenis barang...</option>
                                 <option value="top">Atasan</option>
                                 <option value="bottom">Bawahan</option>
-                                <option value="dress">Dress</option>
+                                <option value="dress">Gaun</option>
                             </select>
                         </div>
                         <div class="mb-3">

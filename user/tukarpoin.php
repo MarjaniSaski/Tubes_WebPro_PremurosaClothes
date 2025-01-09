@@ -145,7 +145,7 @@ $conn->close();
     <!-- Back Button -->
     <div>
       <button onclick="window.location.href='menuswap.php';" class="btn bg-pink-500 text-white rounded-lg px-4 py-2 shadow-sm hover:bg-pink-600">
-        Back
+        Kembali
       </button>
     </div>
 
@@ -189,7 +189,7 @@ $conn->close();
   <section>
     <div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
       <h2 class="text-xl font-bold pl-4">
-          <i class="bi bi-bag-heart text-pink-900 mr-3"></i> Product
+          <i class="bi bi-bag-heart text-pink-900 mr-3"></i> Produk
       </h2>
     </div>
     <br>

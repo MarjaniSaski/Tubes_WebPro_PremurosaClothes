@@ -29,8 +29,9 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
         }
 
         .dropdown-content {
-                display: none;
-            }
+            display: none;
+            padding-left: 1rem;
+        }
 
         .dropdown.show .dropdown-content {
             display: block;
@@ -43,17 +44,28 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
         .sidebar a {
             color: black;
             transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            align-items: center; /* Membuat ikon dan teks sejajar */
         }
 
         .sidebar a:hover,
-        .sidebar .active {
+        .sidebar .dropdown.show .dropdown-button {
             background-color: rgba(138, 65, 216, 0.85);
             color: white;
+        }
+
+        .sidebar .dropdown.show .dropdown-content {
+            display: block;
         }
 
         .sidebar .active {
             background-color: rgba(138, 65, 216, 0.85);
             color: white;
+        }
+
+        .sidebar a i {
+            margin-right: 15px; /* Tambahkan jarak antara ikon dan teks */
+            vertical-align: middle;
         }
 
         .dropdown-content {
@@ -61,7 +73,31 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
             padding: 10px;
             margin-top: 10px;
         }
-    
+
+        .dropdown-content a {
+            padding: 0.5rem 1rem;
+            margin: 0.25rem 0;
+            border-radius: 0.375rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(138, 65, 216, 0.85);
+            color: black;
+        }
+
+        .dropdown-content a.active {
+            background-color: rgba(138, 65, 216, 0.85);
+            color: white;
+        }
+
+        .dropdown.show .dropdown-button .fa-chevron-down {
+            transform: rotate(180deg);
+            transition: transform 0.3s ease;
+        }
+
+        .fa-chevron-down {
+            transition: transform 0.3s ease;
+        }
     </style>
 </head>
 
@@ -75,37 +111,41 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
             <ul class="text-black">
                 <li class="mb-5">
                     <a href="dashboard.php?page=dashboard" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200">
-                        <i class="bi bi-grid-fill"></i> DASHBOARD
+                        <i class="bi bi-grid-fill"></i> Beranda
                     </a>
                 </li>
                 <li class="mb-4">
                     <a href="producthome.php?page=products" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200">
-                        <i class="bi bi-box-seam"></i> PRODUCTS
+                        <i class="bi bi-box-seam"></i> Produk
                     </a>
                 </li>
                 <li class="mb-4">
                     <a href="orderlist.php?page=orders" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200">
-                        <i class="fa-solid fa-list-check"></i> ORDER LIST
+                        <i class="fa-solid fa-list-check"></i> Daftar Pesanan
                     </a>
                 </li>
                 <li class="mb-4 dropdown">
                     <a href="#" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200 dropdown-button">
-                        <i class="fa-solid fa-repeat"></i> SWAP
+                        <i class="fa-solid fa-repeat"></i> Tukar
                         <i class="fa-solid fa-chevron-down ml-2"></i>
                     </a>
                     <div class="dropdown-content">
-                        <a href="swappoin.php?page=swappoin" class="block px-4 py-2 text-black hover:bg-pink-200">Tukar Poin</a>
-                        <a href="swapproduct.php?page=swapproduct" class="block px-4 py-2 text-black hover:bg-pink-200">Tukar Produk</a>
+                        <a href="swappoin.php?page=swappoin" class="block px-4 py-2 text-black hover:bg-pink-200">
+                            <i class="bi bi-coin"></i> Tukar Poin
+                        </a>
+                        <a href="swapproduct.php?page=swapproduct" class="block px-4 py-2 text-black hover:bg-pink-200">
+                            <i class="bi bi-bag"></i> Tukar Produk
+                        </a>
                     </div>
                 </li>
                 <li class="mb-4">
                     <a href="message.php?page=message" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200">
-                        <i class="fa-regular fa-envelope"></i> MESSAGE
+                        <i class="fa-regular fa-envelope"></i> Pesan
                     </a>
                 </li>
                 <li class="mb-4">
                     <a href="notification.php?page=notification" class="block px-4 py-2 rounded font-semibold hover:bg-pink-200">
-                        <i class="fa-regular fa-bell"></i> NOTIFICATION
+                        <i class="fa-regular fa-bell"></i> Notifikasi
                     </a>
                 </li>
             </ul>
@@ -121,13 +161,13 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
         // Menentukan teks header berdasarkan nilai parameter page
         switch ($page) {
             case 'dashboard':
-                $headerText = 'Dashboard';
+                $headerText = 'Beranda';
                 break;
             case 'products':
-                $headerText = 'Products';
+                $headerText = 'Produk';
                 break;
             case 'orders':
-                $headerText = 'Order List';
+                $headerText = 'Daftar Pesanan';
                 break;
             case 'swappoin':
                 $headerText = 'Tukar Poin';
@@ -143,6 +183,9 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
                 break;
             case 'detailproduk':
                 $headerText = 'Detail Produk';
+                break;
+            case 'newproduk':
+                $headerText = 'Tambah Produk';
                 break;
             default:
                 $headerText = 'Dashboard';
@@ -162,17 +205,28 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
                         <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     </button>
                     <span class="absolute top-12 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Logout
+                        Keluar
                     </span>
                 </a>
             </div>
         </div>
 
         <script>
-          
             document.addEventListener('DOMContentLoaded', function () {
                 const dropdownButton = document.querySelector('.dropdown-button');
                 const dropdown = document.querySelector('.dropdown');
+                const dropdownContent = document.querySelector('.dropdown-content');
+
+                function isChild(child, parent) {
+                    let node = child.parentNode;
+                    while (node != null) {
+                        if (node === parent) {
+                            return true;
+                        }
+                        node = node.parentNode;
+                    }
+                    return false;
+                }
 
                 // Menangani klik pada tombol dropdown
                 dropdownButton.addEventListener('click', function (e) {
@@ -187,6 +241,12 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
                     }
                 });
 
+                dropdownContent.addEventListener('click', function (e) {
+                    // Don't close dropdown when clicking items
+                    e.stopPropagation();
+                });
+
+
                 // Menandai menu aktif berdasarkan URL
                 const menuItems = document.querySelectorAll('.sidebar a');
                 const currentUrl = window.location.href;
@@ -195,6 +255,7 @@ define('HOST', 'http://localhost/Tubes_WebPro_PremurosaClothes');
                     if (currentUrl.includes(item.getAttribute('href'))) {
                         item.classList.add('active');
                         if (item.closest('.dropdown-content')) {
+                            dropdown.classList.add('show');
                             dropdownButton.classList.add('active'); // Tandai menu utama "Swap" juga
                         }
                     }

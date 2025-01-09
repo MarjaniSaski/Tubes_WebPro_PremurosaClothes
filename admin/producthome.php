@@ -22,10 +22,10 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 <body class="min-h-screen flex flex-col">
     <main class="flex-1 p-6">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold">Daftar Produk</h2>
+            <h2 class="text-2xl font-bold"></h2>
             <div class="flex items-center">
                 <input type="text" placeholder="Search" class="border rounded p-2 mr-4">
-                <button class="bg-purple-500 text-white px-4 py-2 rounded" onclick="window.location.href='newproduk.php'">TAMBAH PRODUK</button>
+                <button class="bg-purple-500 text-white px-4 py-2 rounded" onclick="window.location.href='newproduk.php'">Tambah Produk</button>
             </div>
         </div>
         <div class="grid grid-cols-3 gap-6">

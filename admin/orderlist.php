@@ -35,7 +35,7 @@ include "template/header_admin.php"
                         <td class="py-2 px-4 border-b">
                             <select class="status bg-white py-1 px-3 rounded-full text-xs" id="status-25426">
                                 <option value="completed">Selesai</option>
-                                <option value="in-progress" selected>Sedang Diproses</option>
+                                <option value="in-progress">Sedang Diproses</option>
                                 <option value="cancelled">Dibatalkan</option>
                             </select>
                         </td>
@@ -49,7 +49,7 @@ include "template/header_admin.php"
                         <td class="py-2 px-4 border-b">
                             <select class="status bg-white py-1 px-3 rounded-full text-xs" id="status-25423">
                                 <option value="completed">Selesai</option>
-                                <option value="in-progress" selected>Sedang Diproses</option>
+                                <option value="in-progress">Sedang Diproses</option>
                                 <option value="cancelled">Dibatalkan</option>
                             </select>
                         </td>
@@ -61,9 +61,9 @@ include "template/header_admin.php"
                         <td class="py-2 px-4 border-b">5 Nov 2024</td>
                         <td class="py-2 px-4 border-b">Budi</td>
                         <td class="py-2 px-4 border-b">
-                            <select class="status bg-white py-1 px-3 rounded-full text-xs" id="status-25423">
+                            <select class="status bg-white py-1 px-3 rounded-full text-xs" id="status-25440">
                                 <option value="completed">Selesai</option>
-                                <option value="in-progress" selected>Sedang Diproses</option>
+                                <option value="in-progress">Sedang Diproses</option>
                                 <option value="cancelled">Dibatalkan</option>
                             </select>
                         </td>
@@ -75,83 +75,13 @@ include "template/header_admin.php"
                         <td class="py-2 px-4 border-b">6 Nov 2024</td>
                         <td class="py-2 px-4 border-b">Amel</td>
                         <td class="py-2 px-4 border-b">
-                            <select class="status bg-white py-1 px-3 rounded-full text-xs" id="status-25423">
+                            <select class="status bg-white py-1 px-3 rounded-full text-xs" id="status-25441">
                                 <option value="completed">Selesai</option>
-                                <option value="in-progress" selected>Sedang Diproses</option>
+                                <option value="in-progress">Sedang Diproses</option>
                                 <option value="cancelled">Dibatalkan</option>
                             </select>
                         </td>
                         <td class="py-2 px-4 border-b">Rp 300.000</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b">Army Cargo</td>
-                        <td class="py-2 px-4 border-b">#25442</td>
-                        <td class="py-2 px-4 border-b">6 Nov 2024</td>
-                        <td class="py-2 px-4 border-b">Varo</td>
-                        <td class="py-2 px-4 border-b">
-                            <select class="status bg-white py-1 px-3 rounded-full text-xs" id="status-25423">
-                                <option value="completed">Selesai</option>
-                                <option value="in-progress" selected>Sedang Diproses</option>
-                                <option value="cancelled">Dibatalkan</option>
-                            </select>
-                        </td>
-                        <td class="py-2 px-4 border-b">Rp 290.000</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b">Gray Cargo Men</td>
-                        <td class="py-2 px-4 border-b">#25445</td>
-                        <td class="py-2 px-4 border-b">6 Nov 2024</td>
-                        <td class="py-2 px-4 border-b">Saka</td>
-                        <td class="py-2 px-4 border-b">
-                            <select class="status bg-white py-1 px-3 rounded-full text-xs" id="status-25423">
-                                <option value="completed">Selesai</option>
-                                <option value="in-progress" selected>Sedang Diproses</option>
-                                <option value="cancelled">Dibatalkan</option>
-                            </select>
-                        </td>
-                        <td class="py-2 px-4 border-b">Rp 290.000</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b">Jeans Cargo</td>
-                        <td class="py-2 px-4 border-b">#25444</td>
-                        <td class="py-2 px-4 border-b">6 Nov 2024</td>
-                        <td class="py-2 px-4 border-b">Mikail</td>
-                        <td class="py-2 px-4 border-b">
-                            <select class="status bg-white py-1 px-3 rounded-full text-xs" id="status-25423">
-                                <option value="completed">Selesai</option>
-                                <option value="in-progress" selected>Sedang Diproses</option>
-                                <option value="cancelled">Dibatalkan</option>
-                            </select>
-                        </td>
-                        <td class="py-2 px-4 border-b">Rp 390.000</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b">Floral Pink Blouse</td>
-                        <td class="py-2 px-4 border-b">#25446</td>
-                        <td class="py-2 px-4 border-b">6 Nov 2024</td>
-                        <td class="py-2 px-4 border-b">Widya</td>
-                        <td class="py-2 px-4 border-b">
-                            <select class="status bg-white py-1 px-3 rounded-full text-xs" id="status-25423">
-                                <option value="completed">Selesai</option>
-                                <option value="in-progress" selected>Sedang Diproses</option>
-                                <option value="cancelled">Dibatalkan</option>
-                            </select>
-                        </td>
-                        <td class="py-2 px-4 border-b">Rp 300.000</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b">Chocolate Blouse</td>
-                        <td class="py-2 px-4 border-b">#25446</td>
-                        <td class="py-2 px-4 border-b">6 Nov 2024</td>
-                        <td class="py-2 px-4 border-b">Saski</td>
-                        <td class="py-2 px-4 border-b">
-                            <select class="status bg-white py-1 px-3 rounded-full text-xs" id="status-25423">
-                                <option value="completed">Selesai</option>
-                                <option value="in-progress" selected>Sedang Diproses</option>
-                                <option value="cancelled">Dibatalkan</option>
-                            </select>
-                        </td>
-                        <td class="py-2 px-4 border-b">Rp 290.000</td>
                     </tr>
                 </tbody>
             </table>
@@ -181,25 +111,40 @@ include "template/header_admin.php"
         }
     }
 
-    // Update status dari localStorage
-    document.querySelectorAll('.status').forEach(select => {
-        // Cek jika ada status yang disimpan di localStorage
-        const savedStatus = localStorage.getItem(select.id);
-        if (savedStatus) {
-            select.value = savedStatus; // Set value sesuai yang disimpan
-            updateColor(select); // Update warnanya
-        }
+    // Fungsi untuk menetapkan status secara otomatis
+    function assignRandomStatus(selectElements) {
+        const statuses = ['completed', 'in-progress', 'cancelled'];
+        let currentIndex = 0;
 
-        // Set event listener untuk perubahan status
-        select.addEventListener('change', function() {
-            localStorage.setItem(select.id, select.value); // Simpan status yang dipilih
-            updateColor(select); // Update warna
+        selectElements.forEach((select, index) => {
+            // Cek jika ada status yang disimpan di localStorage
+            const savedStatus = localStorage.getItem(select.id);
+            if (savedStatus) {
+                select.value = savedStatus; // Set value sesuai yang disimpan
+            } else {
+                // Tetapkan status secara siklis dari daftar statuses
+                select.value = statuses[currentIndex];
+                currentIndex = (currentIndex + 1) % statuses.length; // Perulangan status
+                localStorage.setItem(select.id, select.value); // Simpan status yang dipilih
+            }
+            
+            updateColor(select); // Update warna dropdown
+
+            // Set event listener untuk perubahan status
+            select.addEventListener('change', function () {
+                localStorage.setItem(select.id, select.value); // Simpan status yang dipilih
+                updateColor(select); // Update warna
+            });
         });
+    }
 
-        // Inisialisasi warna saat pertama kali
-        updateColor(select);
-    });
+    // Pilih semua elemen dropdown status
+    const statusDropdowns = document.querySelectorAll('.status');
+
+    // Panggil fungsi untuk menetapkan status
+    assignRandomStatus(statusDropdowns);
 </script>
+
 
 </body>
 <?php
