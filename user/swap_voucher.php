@@ -55,13 +55,13 @@ try {
     $totalPoinTersisa = $resultPoinTukar - ($resultPointUsed + $resultPointUsedVoucher);
     
     // Verify product points
-    $sql_voucher = "SELECT points, usage_quota FROM vouchers WHERE voucher_code = ?";
-    $stmt_voucher = $conn->prepare($sql_voucher);
+    $sql_voucher = "SELECT points, usage_quota FROM vouchers WHERE voucher_code = ? AND usage_quota > 0";
+$stmt_voucher = $conn->prepare($sql_voucher);
     $stmt_voucher->bind_param("i", $data['voucher_code']);
     $stmt_voucher->execute();
     $voucher_data = $stmt_voucher->get_result()->fetch_assoc();
     if (!$voucher_data) {
-        throw new Exception('Produk tidak ditemukan');
+        throw new Exception('Voucher tidak tersedia atau kuota telah habis');
     }
     $voucher_points = $voucher_data['points'];
     $usage_quota = $voucher_data['usage_quota'];
@@ -75,11 +75,6 @@ try {
     // Check if user has enough points
     if ($totalPoinTersisa < $voucher_points) {
         throw new Exception('Poin tidak mencukupi. Poin tersedia: ' . $totalPoinTersisa . ', Dibutuhkan: ' . $voucher_points);
-    }
-
-    // Check if the usage quota is available
-    if ($usage_quota <= 0) {
-        throw new Exception('Kuota penggunaan voucher habis');
     }
 
     // Record voucher exchange

@@ -6,21 +6,20 @@
      flex-grow: 1;
     }
     .footer {
-        background-color: #a855f7;
         color: #fff;
-        padding: 20px 0;
+        padding: 15px 20px;
         bottom: 0;
         width: 100%;
     }
 
-    .footer-content {
+    /* .footer-content {
         max-width: 1200px;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 0 20px;
-    }
+    } */
 
     .footer-links a {
         color: #fff;
@@ -39,12 +38,12 @@
 
 <body>
 
-<footer class="footer">
-    <div class="footer-content">
+<footer class="footer bg-purple-600">
+    <!-- <div class="footer-content"> -->
         <div class="copyright">
             &copy; 2024 Admin Premurosa Clothes. All rights reserved.
         </div>
-        <div class="footer-links">
+        <!-- <div class="footer-links">
             <a href="dashboard.php">Dashboard</a>
             <a href="producthome.php">Products</a>
             <a href="orderlist.php">Order List</a>
@@ -52,7 +51,7 @@
             <a href="massage.php">Massage</a>
             <a href="login.php">Logout</a>
         </div>
-    </div>
+    </div> -->
 </footer>
 
 </body>

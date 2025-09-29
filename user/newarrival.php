@@ -92,7 +92,7 @@ if (!isset($_SESSION['wishlist'])) {
 <!-- New Arrivals Section -->
 <div class="newarrivallogo bg-pink-200 p-3 flex items-center gap-3">
     <h2 class="text-xl font-bold pl-4">
-        <i class="bi bi-stars text-pink-500 mr-3"></i>New Arrivals
+        <i class="bi bi-stars text-pink-500 mr-3"></i>Produk Terbaru
     </h2>
 </div>
 <section class="container mx-auto mt-8">

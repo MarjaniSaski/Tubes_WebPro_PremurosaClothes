@@ -218,7 +218,7 @@ ob_end_flush();
     <div class="form-container">
         <!-- Preview Section -->
         <div class="preview-card">
-            <h3 class="preview-title" id="productName">Review Produk</h3>
+            <h3 class="preview-title" id="productName">Ulasan Produk</h3>
             <img src="../images/<?= $data['foto'] ?>" name="foto" id="previewImage" class="preview-image" alt="Product preview">
         </div>
 
@@ -227,12 +227,12 @@ ob_end_flush();
             <h2 class="form-title">Edit Status Produk</h2>
             <form method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label class="form-label">ID Order:</label>
+                    <label class="form-label">ID Pesanan:</label>
                     <input type="text" class="form-input" id="orderId" name="id_order" value="<?= htmlspecialchars($data['id_order']) ?>" readonly>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Customer Name:</label>
+                    <label class="form-label">Nama Pelanggan:</label>
                     <input type="text" class="form-input" id="customerName" name="nama_lengkap" value="<?= htmlspecialchars($data['nama_lengkap']) ?>" readonly>
                 </div>
 
@@ -249,8 +249,8 @@ ob_end_flush();
                 <div class="form-group">
                     <label class="form-label">Status:</label>
                     <select class="form-select" name="status" id="status" value="<?= htmlspecialchars($data['status']) ?>">
-                        <option value="pending">Pending</option>
-                        <option value="completed">Completed</option>
+                        <option value="pending">Menunggu</option>
+                        <option value="completed">Selesai</option>
                     </select>
                 </div>
 
@@ -260,13 +260,13 @@ ob_end_flush();
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Details:</label>
+                    <label class="form-label">Detail:</label>
                     <textarea class="form-textarea" name="details" id="details" readonly><?= htmlspecialchars($data['details']) ?></textarea>
                 </div>
 
                 <div class="button-group">
-                    <button type="button" onclick="window.history.back()" class="btn btn-cancel">Cancel</button>
-                    <button type="submit" name="BtnEdit"class="btn btn-save">Submit</button>
+                    <button type="button" onclick="window.history.back()" class="btn btn-cancel">Kembali</button>
+                    <button type="submit" name="BtnEdit"class="btn btn-save">Kirim</button>
                 </div>
             </form>
         </div>

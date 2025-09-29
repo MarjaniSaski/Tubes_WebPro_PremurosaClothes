@@ -113,10 +113,10 @@ if ($pemesananResult) {
                 <!-- Sales Graph -->
                 <div class="col-span-2 bg-white p-4 rounded shadow">
                     <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-black text-xl font-semibold">Sale Graph</h2>
+                        <h2 class="text-black text-xl font-semibold">Grafik Penjualan</h2>
                         <div class="flex space-x-2">
-                            <button class="px-4 py-1 text-sm font-medium text-white bg-purple-500 rounded">Monthly</button>
-                            <button class="px-4 py-1 text-sm font-medium text-purple-500 bg-gray-100 rounded">Yearly</button>
+                            <button class="px-4 py-1 text-sm font-medium text-white bg-purple-500 rounded">Bulanan</button>
+                            <button class="px-4 py-1 text-sm font-medium text-purple-500 bg-gray-100 rounded">Tahunan</button>
                         </div>
                     </div>
                     <div class="w-full border-b-2 border-gray-300 mb-4"></div>
@@ -129,7 +129,7 @@ if ($pemesananResult) {
 
                 <!-- New Arrivals -->
                 <div class="bg-white p-4 rounded shadow">
-                    <h2 class="text-black text-xl mb-2 font-semibold">New Arrival</h2>
+                    <h2 class="text-black text-xl mb-2 font-semibold">Produk Terbaru</h2>
                     <div class="w-full border-b-2 border-gray-300 mt-1 mb-4"></div>
                     <ul>
                         <li class="flex justify-between items-center mb-4">
@@ -156,7 +156,7 @@ if ($pemesananResult) {
             <div class="grid grid-cols-2 gap-4 mt-2 p-4">
                 <!-- Latest Customers -->
                 <div class="bg-white p-4 rounded shadow">
-                    <h2 class="text-black text-xl font-semibold mb-2">Latest Customers</h2>
+                    <h2 class="text-black text-xl font-semibold mb-2">Pelanggan Terbaru</h2>
                     <div class="w-full border-b-2 border-gray-300 mt-1 mb-4"></div>
                     <ul>
                         <li class="flex items-center mb-4">
@@ -200,36 +200,36 @@ if ($pemesananResult) {
 
                 <!-- Top Products -->
                 <div class="bg-white p-4 rounded shadow">
-                    <h2 class="text-black text-xl font-semibold mb-2">Top Products</h2>
+                    <h2 class="text-black text-xl font-semibold mb-2">Produk Unggulan</h2>
                     <div class="w-full border-b-2 border-gray-300 mt-1 mb-4"></div>
                     <ul>
                         <li class="flex flex-col mb-4 border-b border-gray-200 pb-2">
                             <div class="flex justify-between items-center">
                                 <span>Midi Dress</span>
-                                <span class="text-gray-700">5 Sales</span>
+                                <span class="text-gray-700">5 Terjual</span>
                             </div>
-                            <span class="text-sm text-gray-500 mt-1">Category: Dress</span>
+                            <span class="text-sm text-gray-500 mt-1">Kategori: Dress</span>
                         </li>
                         <li class="flex flex-col mb-4 border-b border-gray-200 pb-2">
                             <div class="flex justify-between items-center">
                                 <span>Cargo Army Men</span>
-                                <span class="text-gray-700">2 Sales</span>
+                                <span class="text-gray-700">2 Terjual</span>
                             </div>
-                            <span class="text-sm text-gray-500 mt-1">Category: Bottoms</span>
+                            <span class="text-sm text-gray-500 mt-1">Kategori: Bottoms</span>
                         </li>
                         <li class="flex flex-col mb-4 border-b border-gray-200 pb-2">
                             <div class="flex justify-between items-center">
                                 <span>Blouse Pink Flower</span>
-                                <span class="text-gray-700">1 Sales</span>
+                                <span class="text-gray-700">1 Terjual</span>
                             </div>
-                            <span class="text-sm text-gray-500 mt-1">Category: Tops</span>
+                            <span class="text-sm text-gray-500 mt-1">Kategori: Tops</span>
                         </li>
                         <li class="flex flex-col">
                             <div class="flex justify-between items-center">
                                 <span>Jeans</span>
-                                <span class="text-gray-700">1 Sales</span>
+                                <span class="text-gray-700">1 Terjual</span>
                             </div>
-                            <span class="text-sm text-gray-500 mt-1">Category: Bottoms</span>
+                            <span class="text-sm text-gray-500 mt-1">Kategori: Bottoms</span>
                         </li>
                     </ul>
                 </div>
@@ -238,7 +238,7 @@ if ($pemesananResult) {
                 <div class="grid grid-cols-1 md:grid-cols-1gap-6 p-4 mt-2">
                     <div class="bg-white p-4 mb-4 rounded-lg shadow-lg">
                         <div class="flex items-center justify-between mb-4">
-                            <h2 class="text-xl font-semibold text-gray-800">Recent Orders</h2>
+                            <h2 class="text-xl font-semibold text-gray-800">Pesanan Terbaru</h2>
                             <button class="text-gray-500 hover:text-gray-700">
                                 <i class="fas fa-ellipsis-h"></i>
                             </button>
@@ -250,12 +250,12 @@ if ($pemesananResult) {
                                 <thead>
                                     <tr class="border-b bg-gray-50">
                                         <th class="py-3 px-4 text-gray-600"><input type="checkbox" /></th>
-                                        <th class="py-3 px-4 text-gray-600">Product</th>
-                                        <th class="py-3 px-4 text-gray-600">Order ID</th>
-                                        <th class="py-3 px-4 text-gray-600">Date</th>
-                                        <th class="py-3 px-4 text-gray-600">Customer Name</th>
+                                        <th class="py-3 px-4 text-gray-600">Produk</th>
+                                        <th class="py-3 px-4 text-gray-600">ID Pesanan</th>
+                                        <th class="py-3 px-4 text-gray-600">Tanggal</th>
+                                        <th class="py-3 px-4 text-gray-600">Nama Pelanggan</th>
                                         <th class="py-3 px-4 text-gray-600">Status</th>
-                                        <th class="py-3 px-4 text-gray-600">Amount</th>
+                                        <th class="py-3 px-4 text-gray-600">Jumlah</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -264,14 +264,14 @@ if ($pemesananResult) {
                                         <td class="py-2 px-4"><input type="checkbox" /></td>
                                         <td class="py-2 px-4">Floral Blouse</td>
                                         <td class="py-2 px-4">#25426</td>
-                                        <td class="py-2 px-4">Nov 8th, 2024</td>
+                                        <td class="py-2 px-4">8 November 2024</td>
                                         <td class="py-2 px-4 flex items-center">
                                             <div class="w-2.5 h-2.5 bg-pink-500 rounded-full mr-2"></div>
                                             Amanda
                                         </td>
                                         <td class="py-2 px-4">
                                             <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                                                <i class="fas fa-check-circle mr-1"></i> Completed
+                                                <i class="fas fa-check-circle mr-1"></i> Selesai
                                             </span>
                                         </td>
                                         <td class="py-2 px-4">Rp 250.000</td>
@@ -281,14 +281,14 @@ if ($pemesananResult) {
                                         <td class="py-2 px-4"><input type="checkbox" /></td>
                                         <td class="py-2 px-4">Blue Jeans</td>
                                         <td class="py-2 px-4">#25425</td>
-                                        <td class="py-2 px-4">Nov 7th, 2024</td>
+                                        <td class="py-2 px-4">7 November 2024</td>
                                         <td class="py-2 px-4 flex items-center">
                                             <div class="w-2.5 h-2.5 bg-pink-500 rounded-full mr-2"></div>
                                             Salima
                                         </td>
                                         <td class="py-2 px-4">
                                             <span class="text-xs font-medium text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                                                <i class="fas fa-check-circle mr-1"></i> Completed
+                                                <i class="fas fa-check-circle mr-1"></i> Selesai
                                             </span>
                                         </td>
                                         <td class="py-2 px-4">Rp 250.000</td>
@@ -298,27 +298,20 @@ if ($pemesananResult) {
                                         <td class="py-2 px-4"><input type="checkbox" /></td>
                                         <td class="py-2 px-4">Cargo Men</td>
                                         <td class="py-2 px-4">#25424</td>
-                                        <td class="py-2 px-4">Nov 6th, 2024</td>
+                                        <td class="py-2 px-4">6 November 2024</td>
                                         <td class="py-2 px-4 flex items-center">
                                             <div class="w-2.5 h-2.5 bg-pink-500 rounded-full mr-2"></div>
                                             Saski
                                         </td>
                                         <td class="py-2 px-4">
                                             <span class="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
-                                                <i class="fas fa-spinner mr-1"></i> In progress
+                                                <i class="fas fa-spinner mr-1"></i> Sedang diproses
                                             </span>
                                         </td>
                                         <td class="py-2 px-4">Rp 250.000</td>
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-                
-                        <!-- Button Section -->
-                        <div class="mt-4 text-right">
-                            <button class="px-4 py-2 text-sm font-medium text-white bg-purple-500 rounded hover:bg-purple-400 transition duration-300 ease-in-out">
-                                SEE DETAILS &gt;
-                            </button>
                         </div>
                     </div>
                 </div>

@@ -119,7 +119,7 @@ $wishlist_products = array_filter($products, fn($product) => in_array($product['
 <body>
     <div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
         <h2 class="text-xl font-bold pl-4">
-            <i class="bi bi-heart-fill text-pink-500 mr-3"></i> My Wishlist
+            <i class="bi bi-heart-fill text-pink-500 mr-3"></i> Suka
         </h2>
     </div>
 
@@ -127,8 +127,8 @@ $wishlist_products = array_filter($products, fn($product) => in_array($product['
         <?php if (empty($wishlist_products)): ?>
             <div class="empty-wishlist flex flex-col items-center justify-center min-h-[60vh] text-center">
                 <i class="fas fa-heart-broken text-5xl text-pink-300 mb-4"></i>
-                <h3 class="text-lg font-medium mb-2">Your wishlist is empty</h3>
-                <p class="text-gray-600">Browse our products and add your favorites!</p>
+                <h3 class="text-lg font-medium mb-2">Produk yang Anda sukai masih kosong</h3>
+                <p class="text-gray-600">Lihat produk kami dan tambahkan produk yang Anda sukai!</p>
             </div>
         <?php else: ?>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6">

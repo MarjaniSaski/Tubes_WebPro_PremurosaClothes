@@ -62,8 +62,8 @@ if ($user = $result->fetch_assoc()) {
     $phone = $user['phone'];
     $gender = $user['gender'];
     $tgl_lahir = $user['tgl_lahir'];
-    if ($user['foto'] == null or $user['foto'] == 'Default_Pictures.jpg') {
-        $profile_picture = 'Default_Pictures.jpg';
+    if ($user['foto'] == null or $user['foto'] == 'Default_Picture.jpg') {
+        $profile_picture = 'Default_Picture.jpg';
     } else {
         $profile_picture = $user['foto'];
     }
@@ -193,7 +193,7 @@ $conn->close();
 <main>
     <body class="bg-gray-50">
         <div class="container p-4 bg-white rounded-lg shadow">
-            <h2 class="text-center mb-4 font-medium text-xl text-pink-500">Informasi Profile</h2>
+            <h2 class="text-center mb-4 font-medium text-xl text-pink-500">Informasi Profil</h2>
             <form id="profileForm" method="POST" enctype="multipart/form-data">
                 <div class="text-center mb-4">
                     <div class="relative w-32 h-32 mx-auto">
@@ -239,13 +239,13 @@ $conn->close();
                     </select>
                 </div>
                 <div class="text-center">
-                    <button type="button" id="editButton" class="bg-pink-600 text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-purple-600">
-                        Edit
+                    <button type="button" id="editButton" class="bg-pink-600 text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-pink-400">
+                        Ubah
                     </button>
-                    <button type="submit" class="bg-pink-600 text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-purple-600" id="saveButton" style="display:none;">
+                    <button type="submit" class="bg-pink-600 text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-pink-400" id="saveButton" style="display:none;">
                         Simpan
                     </button>
-                    <button type="button" id="backButton" class="bg-pink-400 text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-purple-400">
+                    <button type="button" id="backButton" class="bg-pink-400 text-white py-2 px-4 rounded-md shadow transition ease-in-out duration-300 hover:bg-pink-200">
                         Kembali
                     </button>
                 </div>

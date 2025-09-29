@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <input type="email" name="email" class="form-control" placeholder="Email" required>
                 </div>
                 <div class="mb-3">
-                    <input type="text" name="phone" class="form-control" placeholder="No Telepon" required>
+                    <input type="tel" name="phone" class="form-control" placeholder="No Telepon" required>
                 </div>
                 <div class="mb-3" style="position: relative;">
                     <input type="password" id="password" name="password" class="form-control" placeholder="Kata Sandi" style="padding-right: 40px;" required>
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
             <div class="text-center mt-4">
                 <p class="text-sm">Sudah punya akun? 
-                    <a href="login.php" class="text-pink-500 font-semibold hover:underline">Log In</a>
+                    <a href="login.php" class="text-pink-500 font-semibold hover:underline">Masuk</a>
                 </p>
             </div>
         </div>

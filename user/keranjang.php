@@ -9,6 +9,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart - Premurosa Clothes</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body{
@@ -185,7 +186,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
                     </div>
                 </div>
                 <button id="checkoutBtn" class="checkout-btn" disabled>
-                    CHECKOUT
+                    Buat Pesanan
                 </button>
             </div>
         </div>
@@ -193,7 +194,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     // Cart data structure
     const cartItems = [
         {
@@ -354,17 +355,42 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.target.closest('.delete-item')) {
             const button = event.target.closest('.delete-item');
             const itemId = parseInt(button.dataset.id);
-            
-            const index = cartItems.findIndex(item => item.id === itemId);
-            if (index !== -1) {
-                cartItems.splice(index, 1);
-                renderCartItems();
-            }
-        }
-    }); 
 
-    // Initialize cart
-    renderCartItems();
+            Swal.fire({
+                title: 'Hapus Item?',
+                text: 'Apakah Anda yakin ingin menghapus item ini dari keranjang?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const index = cartItems.findIndex(item => item.id === itemId);
+                    if (index !== -1) {
+                        cartItems.splice(index, 1);
+                        renderCartItems();
+                        Swal.fire('Berhasil', 'Item telah dihapus.', 'success');
+                    }
+                }
+            });
+        }
+    });
+
+    // Voucher application
+    document.getElementById('applyVoucher').addEventListener('click', function() {
+        const voucherCode = document.getElementById('voucherInput').value.trim();
+
+        if (!voucherCode) {
+            Swal.fire('Error', 'Masukkan kode voucher', 'error');
+            return;
+        }
+
+        // Add your voucher validation logic here
+        appliedVoucher = null; // Placeholder
+        updateTotal();
+
+        Swal.fire('Berhasil', 'Voucher berhasil diterapkan', 'success');
+    });
 
     // Checkout button click handler
     checkoutBtn.addEventListener('click', function() {
@@ -373,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
         );
 
         if (selectedItems.length === 0) {
-            alert('Pilih minimal satu produk untuk checkout');
+            Swal.fire('Error', 'Pilih minimal satu produk untuk checkout', 'error');
             return;
         }
 
@@ -381,20 +407,10 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Selected items for checkout:', selectedItems);
     });
 
-    // Voucher application
-    document.getElementById('applyVoucher').addEventListener('click', function() {
-        const voucherCode = document.getElementById('voucherInput').value.trim();
-        
-        if (!voucherCode) {
-            alert('Masukkan kode voucher');
-            return;
-        }
-
-        // Add your voucher validation logic here
-        appliedVoucher = null; // Placeholder
-        updateTotal();
-    });
+    // Initialize cart
+    renderCartItems();
 });
+
 </script>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/footer_user.php'; ?>

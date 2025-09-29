@@ -10,13 +10,14 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $product_id = $_GET['id_produk']; 
 
-// Get user data first since we need the name for the orders query
-$sql_user = "SELECT first_name, last_name FROM user WHERE id = ?";
+// Modify the user data query to include phone
+$sql_user = "SELECT first_name, last_name, phone FROM user WHERE id = ?";
 $stmt_user = $conn->prepare($sql_user);
 $stmt_user->bind_param("i", $user_id);
 $stmt_user->execute();
 $user_data = $stmt_user->get_result()->fetch_assoc();
 $nama_lengkap = $user_data['first_name'] . ' ' . $user_data['last_name'];
+$phone = $user_data['phone'];
 $stmt_user->close();
 
 // Get total points earned from orders
@@ -66,13 +67,23 @@ $can_redeem = $totalPoinTersisa >= $product_points;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redeem Points</title>
+    <title>Premurosa Clothes</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+    <style>
+       .expedition-option img {
+            object-fit: contain;
+        }
+
+        .expedition-option input[type="radio"] {
+            cursor: pointer;
+        }
+
+    </style>
 <body>
 <div class="container mt-5">
     <div class="bg-white p-5 rounded shadow">
-        <h3 class="mb-4 text-pink-600 font-semibold text-xl">Detail Produk Penukaran</h3>
+        <h3 class="mb-4 text-pink-600 font-bold text-2xl">Detail Produk Penukaran</h3>
         <div class="grid grid-cols-12 gap-8">
             <!-- Product Image - Left Side (30%) -->
             <div class="col-span-4 flex justify-center items-center">
@@ -102,7 +113,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
                         <span class="text-gray-700"><?php echo number_format($totalPoinTersisa - $product_points); ?></span>
                     </p>
                     <?php if (!$can_redeem): ?>
-                        <p class="text-red-700 font-semibold mt-2">Warning: Poin tidak mencukupi untuk penukaran!!!</p>
+                        <p class="text-red-700 font-semibold mt-2">Peringatan: Poin tidak mencukupi untuk penukaran!!!</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -111,7 +122,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
 </div>
 <div class="container mt-5">
     <div class="bg-white p-5 rounded shadow">
-        <h1 class="mb-4 text-pink-500 font-bold text-3xl">Atur Pengiriman</h1>
+        <h1 class="mb-4 text-black font-bold text-3xl">Atur Pengiriman</h1>
         <form id="shipping-form" method="POST" class="w-full">
             <input type="hidden" id="user_id" value="<?php echo $user_id; ?>">
             <input type="hidden" id="product_id" value="<?php echo $product_id; ?>">
@@ -123,7 +134,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
             <!-- Shipping Form -->
             <div class="space-y-4">
                 <div class="mb-3">
-                    <label for="name" class="block text-pink-500 font-medium mb-2">Nama Lengkap</label>
+                    <label for="name" class="block text-black font-medium mb-2">Nama Lengkap</label>
                     <input 
                         type="text" 
                         id="name" 
@@ -133,16 +144,17 @@ $can_redeem = $totalPoinTersisa >= $product_points;
                 </div>
                 
                 <div class="mb-3">
-                    <label for="phone" class="block text-pink-500 font-medium mb-2">Nomor Telepon</label>
+                    <label for="phone" class="block text-black font-medium mb-2">Nomor Telepon</label>
                     <input 
                         type="text" 
                         id="phone" 
                         class="block w-full p-2 border border-pink-200 rounded focus:border-pink-500 focus:ring-pink-500" 
-                        required>
+                        value="<?php echo htmlspecialchars($phone); ?>" 
+                        readonly>
                 </div>
                 
                 <div class="mb-3">
-                    <label for="address" class="block text-pink-500 font-medium mb-2">Alamat Lengkap</label>
+                    <label for="address" class="block text-black font-medium mb-2">Alamat Lengkap</label>
                     <textarea 
                         id="address" 
                         class="block w-full p-2 border border-pink-200 rounded focus:border-pink-500 focus:ring-pink-500" 
@@ -152,7 +164,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
                 </div>
                 
                 <div class="mb-3">
-                    <label for="province" class="block text-pink-500 font-medium mb-2">Provinsi, Kab/Kota, Kecamatan, Kode Pos</label>
+                    <label for="province" class="block text-black font-medium mb-2">Provinsi, Kab/Kota, Kecamatan, Kode Pos</label>
                     <input 
                         type="text" 
                         id="province" 
@@ -163,21 +175,18 @@ $can_redeem = $totalPoinTersisa >= $product_points;
 
             <!-- Expedition Options -->
             <div class="mt-6">
-                <label class="block text-pink-500 font-medium mb-4">Pilih Ekspedisi</label>
+                <label class="block text-black font-medium mb-4">Pilih Ekspedisi</label>
                 <div class="grid grid-cols-4 gap-6">
-                    <?php 
+                <?php 
                     $expeditions = ['jne', 'jnt', 'sicepat', 'wahana'];
                     foreach ($expeditions as $expedition): ?>
                         <div class="expedition-option text-center">
-                            <input type="radio" name="expedition" id="<?php echo $expedition; ?>" 
-                                   value="<?php echo $expedition; ?>" class="hidden" required>
-                            <label for="<?php echo $expedition; ?>" class="cursor-pointer">
-                                <div class="border-2 border-pink-200 rounded-lg p-4 hover:border-pink-500 transition-all
-                                            expedition-label">
-                                    <img src="<?php echo HOST; ?>/foto/<?php echo $expedition; ?>.png" 
-                                         alt="<?php echo $expedition; ?>" 
-                                         class="w-full h-auto mb-2">
-                                </div>
+                            <label for="<?php echo $expedition; ?>" class="cursor-pointer flex flex-col items-center">
+                                <input type="radio" name="expedition" id="<?php echo $expedition; ?>" 
+                                    value="<?php echo $expedition; ?>" class="mb-2">
+                                <img src="<?php echo HOST; ?>/foto/<?php echo $expedition; ?>.png" 
+                                    alt="<?php echo $expedition; ?>" 
+                                    class="w-40 h-40 object-contain">
                             </label>
                         </div>
                     <?php endforeach; ?>
@@ -185,7 +194,7 @@ $can_redeem = $totalPoinTersisa >= $product_points;
             </div>
 
             <div class="text-end mt-6">
-                <button type="submit" class="bg-pink-400 hover:bg-pink-600 text-white font-medium py-2 px-4 rounded">
+                <button type="submit" class="bg-pink-400 hover:bg-pink-200 text-white font-medium py-2 px-4 rounded">
                     Konfirmasi Penukaran
                 </button>
             </div>
@@ -288,14 +297,6 @@ document.querySelectorAll('.expedition-option').forEach(option => {
     option.addEventListener('click', function() {
         const radio = this.querySelector('input[type="radio"]');
         radio.checked = true;
-        
-        // Remove active class from all options
-        document.querySelectorAll('.expedition-option').forEach(opt => {
-            opt.classList.remove('bg-pink-200');
-        });
-        
-        // Add active class to selected option
-        this.classList.add('bg-pink-200');
     });
 });
 </script>

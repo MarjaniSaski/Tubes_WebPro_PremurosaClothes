@@ -65,15 +65,30 @@ if (isset($_POST['btnEdit'])) {
     ";
     
     $updateStmt = mysqli_prepare($conn, $updateQuery);
-    mysqli_stmt_bind_param($updateStmt, "si", $status, $riwayatproduk['redemption_id']);
-    
+    mysqli_stmt_bind_param($updateStmt, "si", $status, $riwayatproduk['redemption_id']);?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php
     if (mysqli_stmt_execute($updateStmt)) {
         echo "<script>
-                alert('Status updated successfully');
-                window.location.href = 'swappoin.php';
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Status berhasil diupdate',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    window.location.href = 'swappoin.php';
+                });
               </script>";
     } else {
-        echo "<script>alert('Failed to update status');</script>";
+        echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Coba lagi',
+                    showConfirmButton: true
+                });
+              </script>";
     }
 }
 ?>

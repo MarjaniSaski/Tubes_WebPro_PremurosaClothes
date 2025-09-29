@@ -88,7 +88,7 @@ if (!isset($_SESSION['wishlist'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produk dengan Rating</title>
+    <title>Premurosa Clothes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 <style>
@@ -143,7 +143,7 @@ if (!isset($_SESSION['wishlist'])) {
     }
 
     .sort-dropdown-content a:hover {
-        background-color: #f8d7e9;
+        background-color:rgb(248, 183, 218);
     }
 
     .show {
@@ -202,7 +202,7 @@ if (!isset($_SESSION['wishlist'])) {
 
 <div class="productlogo bg-pink-200 p-3 flex items-center gap-3">
     <h2 class="text-xl font-bold pl-4">
-        <i class="bi bi-bag-heart-fill text-pink-500 mr-3"></i> Product
+        <i class="bi bi-bag-heart-fill text-pink-500 mr-3"></i> Produk
     </h2>
 </div>
 

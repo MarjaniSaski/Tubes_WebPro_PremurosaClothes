@@ -147,8 +147,8 @@ if (!isset($_SESSION['wishlist'])) {
     }
 
     .sort-dropdown-content a:hover {
-        background-color: #ffc0cb;
-        color: white; 
+        background-color:rgb(248, 183, 218);
+        color: black; 
         transition: background-color 0.3s ease, color 0.3s ease; 
     }
 

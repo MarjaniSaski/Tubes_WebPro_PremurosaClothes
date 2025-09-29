@@ -2,6 +2,7 @@
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/user/template/header_user.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Tubes_WebPro_PremurosaClothes/config.php';
 
+// Cek apakah user sudah login
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -10,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $voucher_code = $_GET['voucher_code']; 
 
-// Get user data first since we need the name for the orders query
+// Ambil data user
 $sql_user = "SELECT first_name, last_name FROM user WHERE id = ?";
 $stmt_user = $conn->prepare($sql_user);
 $stmt_user->bind_param("i", $user_id);
@@ -19,35 +20,37 @@ $user_data = $stmt_user->get_result()->fetch_assoc();
 $nama_lengkap = $user_data['first_name'] . ' ' . $user_data['last_name'];
 $stmt_user->close();
 
-// Get total points earned from orders
-$getPoinTukar = $conn->prepare("SELECT SUM(poin) as total_poin FROM orders WHERE nama_lengkap = ?");
+// Ambil total poin dari orders
+$getPoinTukar = $conn->prepare("SELECT COALESCE(SUM(poin), 0) as total_poin FROM orders WHERE nama_lengkap = ?");
 $getPoinTukar->bind_param("s", $nama_lengkap);
 $getPoinTukar->execute();
 $result = $getPoinTukar->get_result();
 $row = $result->fetch_assoc();
-$resultPoinTukar = $row['total_poin'] ?? 0;
+$resultPoinTukar = $row['total_poin'];
 $getPoinTukar->close();
 
-// Get total points used from shipping_data
+// Ambil total poin yang sudah digunakan dari shipping_data
 $getPointUsed = $conn->prepare("SELECT COALESCE(SUM(points_used), 0) as points_used FROM shipping_data WHERE user_id = ?");
 $getPointUsed->bind_param("i", $user_id);
 $getPointUsed->execute();
 $result = $getPointUsed->get_result();
 $row = $result->fetch_assoc();
-$resultPointUsed = $row['points_used'] ?? 0;
+$resultPointUsed = $row['points_used'];
 $getPointUsed->close();
 
+// Ambil total poin yang sudah digunakan untuk voucher
 $getPointUsedVoucher = $conn->prepare("SELECT COALESCE(SUM(points_used), 0) as points_used_voucher FROM tukar_voucher WHERE user_id = ?");
 $getPointUsedVoucher->bind_param("i", $user_id);
 $getPointUsedVoucher->execute();
 $result = $getPointUsedVoucher->get_result();
 $row = $result->fetch_assoc();
-$resultPointUsedVoucher = $row['points_used_voucher'] ?? 0;
+$resultPointUsedVoucher = $row['points_used_voucher'];
 $getPointUsedVoucher->close();
 
-// Calculate remaining points
+// Hitung sisa poin
 $totalPoinTersisa = $resultPoinTukar - ($resultPointUsed + $resultPointUsedVoucher);
 
+// Ambil data voucher
 $sql_voucher = "SELECT voucher_name, discount, points, usage_period, max_period, usage_quota, max_amount 
                FROM vouchers 
                WHERE voucher_code = ?";
@@ -70,7 +73,7 @@ body {
 
 .voucher-container {
     max-width: 850px;
-    margin: 100px auto 50px; /* Added margin for spacing */
+    margin: 100px auto 50px;
     padding: 30px;
     background: #fff;
     border-radius: 20px;
@@ -93,6 +96,12 @@ body {
     font-weight: bold;
     letter-spacing: 2px;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.user-points {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    font-weight: 500;
 }
 
 .voucher-details {
@@ -128,7 +137,6 @@ body {
     font-size: 1.5rem;
     color: #333;
     font-weight: 600;
-    text-align:center;
 }
 
 .usage-period-container {
@@ -138,10 +146,10 @@ body {
 
 .btn-container {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     margin-top: 30px;
+    padding: 0 20px;
 }
-
 
 .btn-back, .btn-swap {
     display: inline-block;
@@ -158,7 +166,6 @@ body {
     text-decoration: none;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
-    margin: 0 10px;
 }
 
 .btn-back:hover, .btn-swap:hover {
@@ -179,6 +186,10 @@ body {
     .usage-period-container {
         flex-direction: column;
     }
+    .btn-container {
+        flex-direction: column;
+        gap: 15px;
+    }
 }
 
 @keyframes fadeIn {
@@ -195,78 +206,82 @@ body {
 
 <div class="voucher-container">
     <div class="voucher-header">
-        <h2 class="voucher-title">Voucher Details</h2>
+        <h2 class="voucher-title">Detail Voucher</h2>
         <div class="user-points">Poin Anda: <?= number_format($totalPoinTersisa) ?></div>
     </div>
     <div class="voucher-details">
         <div class="detail-card">
-            <div class="detail-label">Voucher Name</div>
+            <div class="detail-label">Nama Voucher</div>
             <div class="detail-value"><?= htmlspecialchars($voucher_data['voucher_name']) ?></div>
         </div>
         <div class="detail-card">
-            <div class="detail-label">Discount</div>
+            <div class="detail-label">Diskon</div>
             <div class="detail-value"><?= htmlspecialchars($voucher_data['discount']) ?>% OFF</div>
         </div>
         <div class="detail-card">
-            <div class="detail-label">Points Required</div>
+            <div class="detail-label">Poin Yang Dibutuhkan</div>
             <div class="detail-value"><?= htmlspecialchars($voucher_data['points']) ?> Points</div>
         </div>
         <div class="usage-period-container">
             <div class="detail-card">
-                <div class="detail-label">Usage </div>
-                <div class="detail-label">Period </div>
+                <div class="detail-label">Periode Penggunaan</div>
                 <div class="detail-value"><?= htmlspecialchars($voucher_data['usage_period']) ?></div>
             </div>
             <div class="detail-card">
-                <div class="detail-label">Maximum </div>
-                <div class="detail-label">Period</div>
+                <div class="detail-label">Batas Penggunaan</div>
                 <div class="detail-value"><?= htmlspecialchars($voucher_data['max_period']) ?></div>
             </div>
         </div>
         <div class="detail-card">
-            <div class="detail-label">Usage Quota</div>
-            <div class="detail-value"><?= htmlspecialchars($voucher_data['usage_quota']) ?> uses</div>
+            <div class="detail-label">Kuota Tersisa</div>
+            <div class="detail-value"><?= htmlspecialchars($voucher_data['usage_quota']) ?> kali</div>
         </div>
         <div class="detail-card">
-            <div class="detail-label">Maximum Amount</div>
+            <div class="detail-label">Maksimum Pembelian</div>
             <div class="detail-value">Rp <?= number_format($voucher_data['max_amount'], 0, ',', '.') ?></div>
         </div>
     </div>
-    <form id="voucher-form" method="POST" class="w-full">
-    <div class="btn-container">
-        <a href="tukarpoin.php" class="btn-back">Kembali</a>
-                <input type="hidden" id="user_id" value="<?php echo $user_id; ?>">
-                <input type="hidden" id="product_id" value="<?php echo $voucher_code; ?>">
-                <input type="hidden" id="product_name" value="<?php echo htmlspecialchars($voucher_data['voucher_name']); ?>">
-                <input type="hidden" id="points_used" value="<?php echo $voucher_points; ?>">
-                <button type="submit" class="btn-swap">Tukarkan</button>
-            </div>
+    
+    <form id="voucher-form" method="POST">
+        <div class="btn-container">
+            <a href="tukarpoin.php" class="btn-back">Kembali</a>
+            <input type="hidden" id="user_id" value="<?php echo $user_id; ?>">
+            <input type="hidden" id="product_id" value="<?php echo $voucher_code; ?>">
+            <input type="hidden" id="product_name" value="<?php echo htmlspecialchars($voucher_data['voucher_name']); ?>">
+            <input type="hidden" id="points_used" value="<?php echo $voucher_points; ?>">
+            <button type="submit" class="btn-swap">Tukarkan</button>
+        </div>
     </form>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="js/tukar_voucher.js"></script>
 
 <script>
-document.getElementById('voucher-form')?.addEventListener('submit', function (e) {
-e.preventDefault();
+    document.getElementById('voucher-form').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-    // Ambil data dari input form
+    // Ambil data dari form
     const userId = document.getElementById('user_id').value;
     const productId = document.getElementById('product_id').value;
     const productName = document.getElementById('product_name').value;
     const pointsUsed = document.getElementById('points_used').value;
-    const userPoints = parseInt(<?= $totalPoinTersisa ?>); 
-    if (userPoints < pointsUsed) { 
-        Swal.fire( 
-            'Poin Tidak Cukup!', 
-            'Anda tidak memiliki cukup poin untuk menukarkan voucher ini.', 
-            'error' 
-        ); 
-        return; 
+    const userPoints = parseInt(<?= $totalPoinTersisa ?>);
+
+    // Cek apakah poin mencukupi
+    if (userPoints < pointsUsed) {
+        Swal.fire(
+            'Poin Tidak Cukup!',
+            'Anda tidak memiliki cukup poin untuk menukarkan voucher ini.',
+            'error'
+        );
+        return;
     }
-    // Konfirmasi pengguna
+
+    // Konfirmasi penukaran
     Swal.fire({
         title: 'Konfirmasi Penukaran',
-        text: `Anda akan menukarkan voucher ${productName} dengan ${pointsUsed} poin. Apakah Anda yakin?`,
+        text: `Anda akan menukarkan voucher ${productName} dengan ${pointsUsed} poin. Lanjutkan?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Ya, Tukarkan!',
@@ -274,48 +289,47 @@ e.preventDefault();
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            // Kirim data ke server
             fetch('swap_voucher.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    user_id: userId,
-                    voucher_code: productId,
+                    user_id: parseInt(userId),
+                    voucher_code: parseInt(productId),
                     voucher_name: productName,
-                    points_used: pointsUsed,
+                    points_used: parseInt(pointsUsed)
                 }),
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire(
-                            'Berhasil!',
-                            data.message,
-                            'success'
-                        ).then(() => {
-                            // Redirect ke halaman tukarpoin setelah sukses
-                            window.location.href = 'tukarpoin.php';
-                        });
-                    } else {
-                        Swal.fire(
-                            'Gagal!',
-                            data.message,
-                            'error'
-                        );
-                    }
-                })
-                .catch(error => {
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: data.message,
+                        icon: 'success',
+                    }).then(() => {
+                        window.location.href = 'tukarpoin.php';
+                    });
+                } else {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Tukarkan';
                     Swal.fire(
-                        'Error!',
-                        'Terjadi Kesalahan!',
+                        'Gagal!',
+                        data.message,
                         'error'
                     );
-                    console.error('Error:', error);
-                });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire(
+                    'Error!',
+                    'Terjadi kesalahan dalam proses penukaran voucher!',
+                    'error'
+                );
+            });
         }
     });
 });
-
 </script>

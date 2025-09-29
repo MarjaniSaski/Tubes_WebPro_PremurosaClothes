@@ -86,41 +86,41 @@ if (!isset($_SESSION['wishlist'])) {
         color: red;
     }
 </style>
-<section class="container mx-auto mt-8">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <?php foreach ($products as $product): ?>
-            <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
-                <img src="<?= HOST . $product['image'] ?>" alt="<?= $product['name'] ?>" class="w-full mb-4 rounded-md">
-                <h3 class="text-sm font-medium"><?= $product['name'] ?></h3>
-                <p class="text-pink-500 font-bold">Rp<?= number_format($product['price'], 0, ',', '.') ?></p>
-                <div class="rating-wishlist flex items-center justify-center space-x-2">
-                    <div class="rating flex items-center">
-                        <?php
-                        $fullStars = floor($product['rating']);
-                        $halfStars = ($product['rating'] - $fullStars) >= 0.5 ? 1 : 0;
-                        $emptyStars = 5 - $fullStars - $halfStars;
-                        for ($i = 0; $i < $fullStars; $i++) {
-                            echo '<i class="fas fa-star"></i>';
-                        }
-                        if ($halfStars) {
-                            echo '<i class="fas fa-star-half-alt"></i>';
-                        }
-                        for ($i = 0; $i < $emptyStars; $i++) {
-                            echo '<i class="far fa-star"></i>';
-                        }
-                        ?>
-                        <span><?= $product['rating'] ?></span>
+    <section class="container mx-auto mt-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <?php foreach ($products as $product): ?>
+                <div class="card bg-pink-200 rounded-lg shadow-md p-4 text-center transition-transform transform hover:scale-105 hover:shadow-lg hover:bg-pink-300">
+                    <img src="<?= HOST . $product['image'] ?>" alt="<?= $product['name'] ?>" class="w-full mb-4 rounded-md">
+                    <h3 class="text-sm font-medium"><?= $product['name'] ?></h3>
+                    <p class="text-pink-500 font-bold">Rp<?= number_format($product['price'], 0, ',', '.') ?></p>
+                    <div class="rating-wishlist flex items-center justify-center space-x-2">
+                        <div class="rating flex items-center">
+                            <?php
+                            $fullStars = floor($product['rating']);
+                            $halfStars = ($product['rating'] - $fullStars) >= 0.5 ? 1 : 0;
+                            $emptyStars = 5 - $fullStars - $halfStars;
+                            for ($i = 0; $i < $fullStars; $i++) {
+                                echo '<i class="fas fa-star"></i>';
+                            }
+                            if ($halfStars) {
+                                echo '<i class="fas fa-star-half-alt"></i>';
+                            }
+                            for ($i = 0; $i < $emptyStars; $i++) {
+                                echo '<i class="far fa-star"></i>';
+                            }
+                            ?>
+                            <span><?= $product['rating'] ?></span>
+                        </div>
+                        <!-- Ikon wishlist -->
+                        <i class="fas fa-heart wishlist-icon <?= in_array($product['name'], $_SESSION['wishlist']) ? 'wishlist-active' : '' ?>" 
+                            data-name="<?= $product['name'] ?>" 
+                            onclick="toggleWishlist(this, '<?= $product['name'] ?>')">
+                        </i>
                     </div>
-                    <!-- Ikon wishlist -->
-                    <i class="fas fa-heart wishlist-icon <?= in_array($product['name'], $_SESSION['wishlist']) ? 'wishlist-active' : '' ?>" 
-                        data-name="<?= $product['name'] ?>" 
-                        onclick="toggleWishlist(this, '<?= $product['name'] ?>')">
-                    </i>
                 </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</section>
+            <?php endforeach; ?>
+        </div>
+    </section>
 <script>
     function toggleWishlist(icon, productName) {
     // Ambil wishlist dari localStorage
@@ -152,8 +152,6 @@ if (!isset($_SESSION['wishlist'])) {
       });
 }
 </script>
-<?php
-include "template/footer_user.php"
-?>
-</body>
-</html>
+    <?php
+    include "template/footer_user.php"
+    ?>

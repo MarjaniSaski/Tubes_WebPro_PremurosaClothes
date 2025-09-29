@@ -29,6 +29,9 @@ $stmt->close();
 // Tentukan apakah menggunakan ikon default atau gambar profil
 $is_default_picture = empty($user_data['foto']);
 $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialchars($user_data['foto']) : '';
+
+// Tentukan halaman saat ini
+$current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
 <!DOCTYPE html>
@@ -79,6 +82,51 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
             width: 100%;
         }
 
+        /* Menambahkan efek stay untuk link aktif */
+        .navbar-links a.active {
+            color: #FF1493 !important;
+        }
+
+        .navbar-links a.active::after {
+            width: 100%;
+        }
+
+        /* Styles untuk icon navigasi (search, notification, cart) */
+        .nav-icon {
+            position: relative;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-icon::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #FF1493;
+            transition: width 0.3s ease;
+        }
+
+        .nav-icon:hover {
+            color: #FF1493 !important;
+        }
+
+        .nav-icon:hover::after {
+            width: 100%;
+        }
+
+        /* Efek active untuk icon navigasi */
+        .nav-icon.active {
+            color: #FF1493 !important;
+        }
+
+        .nav-icon.active::after {
+            width: 100%;
+        }
+
         .profile-picture {
             display: flex;
             align-items: center;
@@ -92,6 +140,12 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
 
         .dropdown-menu {
             z-index: 1050;
+        }
+        
+        .dropdown-item:active, 
+        .dropdown-item:focus {
+            background-color: #FF69B4 !important;
+            color: #fff !important; 
         }
 
         .floating-chat {
@@ -123,10 +177,10 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <!-- Navigation Links -->
                 <div class="d-flex gap-4 navbar-links">
-                    <a href="indexuser.php" class="text-dark text-decoration-none fw-bold">HOME</a>
-                    <a href="product.php" class="text-dark text-decoration-none fw-bold">PRODUCT</a>
-                    <a href="menuswap.php" class="text-dark text-decoration-none fw-bold">SWAP</a>
-                    <a href="productthrift.php" class="text-dark text-decoration-none fw-bold">THRIFT</a>
+                    <a href="indexuser.php" class="text-dark text-decoration-none fw-bold <?= $current_page == 'indexuser.php' ? 'active' : '' ?>">Beranda</a>
+                    <a href="product.php" class="text-dark text-decoration-none fw-bold <?= $current_page == 'product.php' ? 'active' : '' ?>">Produk</a>
+                    <a href="newarrival.php" class="text-dark text-decoration-none fw-bold <?= $current_page == 'newarrival.php' ? 'active' : '' ?>">Terbaru</a>
+                    <a href="menuswap.php" class="text-dark text-decoration-none fw-bold <?= in_array($current_page, ['menuswap.php', 'tukarpakaian.php','riwayat_tukarpakaian.php','riwayat_tukarpoin.php','tukarpoin.php','voucher.php','katalogswap.php','ekspedisi.php']) ? 'active' : '' ?>">Tukar</a>
                 </div>
 
                 <!-- Logo -->
@@ -136,13 +190,13 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
 
                 <!-- User Menu -->
                 <div class="d-flex align-items-center gap-3">
-                    <a href="pencarian.php" class="text-dark nav-icon">
+                    <a href="pencarian.php" class="text-dark nav-icon <?= $current_page == 'pencarian.php' ? 'active' : '' ?>">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </a>
-                    <a href="notifikasi.php" class="text-dark nav-icon">
+                    <a href="notifikasi.php" class="text-dark nav-icon <?= $current_page == 'notifikasi.php' ? 'active' : '' ?>">
                         <i class="bi bi-bell-fill"></i>
                     </a>
-                    <a href="keranjang.php" class="text-dark nav-icon">
+                    <a href="keranjang.php" class="text-dark nav-icon <?= $current_page == 'keranjang.php' ? 'active' : '' ?>">
                         <i class="fa-solid fa-cart-shopping"></i>
                     </a>
                     <div class="vr"></div>
@@ -156,7 +210,7 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
                                     <img src="<?= $profile_picture_url ?>" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover;">
                                 <?php endif; ?>
                             </div>
-                            <span class="ms-2 fw-bold">Hi, <?= htmlspecialchars($_SESSION['username']); ?></span>
+                            <span class="ms-2 fw-bold">Halo, <?= htmlspecialchars($_SESSION['username']); ?></span>
                             <i class="bi bi-chevron-down ms-1"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUserMenu">
@@ -171,17 +225,14 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
                                 <span class="fw-semibold"><?= htmlspecialchars($_SESSION['username']); ?></span>
                             </li>
                             <li><a class="dropdown-item d-flex align-items-center gap-2" href="profile.php">
-                                <i class="fa-solid fa-user"></i> My Profile
+                                <i class="fa-solid fa-user"></i> Profil
                             </a></li>
                             <li><a class="dropdown-item d-flex align-items-center gap-2" href="wishlist.php">
-                                <i class="fa-solid fa-heart"></i> Wishlist
-                            </a></li>
-                            <li><a class="dropdown-item d-flex align-items-center gap-2" href="settings.php">
-                                <i class="fa-solid fa-gear"></i> Settings
+                                <i class="fa-solid fa-heart"></i> Suka
                             </a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="../login.php">
-                                <i class="fa-solid fa-right-from-bracket"></i> Logout
+                                <i class="fa-solid fa-right-from-bracket"></i> Keluar
                             </a></li>
                         </ul>
                     </div>
@@ -193,7 +244,7 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
     <!-- Floating Chat Button -->
     <div class="floating-chat" onclick="window.location.href='chat.php'">
         <i class="bi bi-chat-right-dots-fill"></i>
-        <span>Chat</span>
+        <span>Pesan</span>
     </div>
         
     <!-- Scripts -->
@@ -201,6 +252,5 @@ $profile_picture_url = !$is_default_picture ? HOST . "/images/" . htmlspecialcha
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-
 </body>
 </html>
